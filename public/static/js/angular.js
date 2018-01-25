@@ -23317,7 +23317,7 @@ FormController.prototype = {
    * it's the developers responsibility to make sure the current state propagates to the parent form.
    *
    * For example, if an input control is added that is already `$dirty` and has `$error` properties,
-   * calling `$setDirty()` and `$validate()` afterwards will propagate the state to the parent form.
+   * calling `$setDirty()` and `$model()` afterwards will propagate the state to the parent form.
    */
   $addControl: function(control) {
     // Breaking change - before, inputs whose name was "hasOwnProperty" were quietly ignored
@@ -25524,7 +25524,7 @@ function rangeInputType(scope, element, attr, ctrl, $sniffer, $browser) {
     ctrl.$validators.min = supportsRange ?
       // Since all browsers set the input to a valid value, we don't need to check validity
       function noopMinValidator() { return true; } :
-      // non-support browsers validate the min val
+      // non-support browsers model the min val
       function minValidator(modelValue, viewValue) {
         return ctrl.$isEmpty(viewValue) || isUndefined(minVal) || viewValue >= minVal;
       };
@@ -25536,7 +25536,7 @@ function rangeInputType(scope, element, attr, ctrl, $sniffer, $browser) {
     ctrl.$validators.max = supportsRange ?
       // Since all browsers set the input to a valid value, we don't need to check validity
       function noopMaxValidator() { return true; } :
-      // non-support browsers validate the max val
+      // non-support browsers model the max val
       function maxValidator(modelValue, viewValue) {
         return ctrl.$isEmpty(viewValue) || isUndefined(maxVal) || viewValue <= maxVal;
       };
@@ -28945,7 +28945,7 @@ NgModelController.prototype = {
    * `$modelValue`, i.e. either the last parsed value or the last value set from the scope.
    */
   $validate: function() {
-    // ignore $validate before model is initialized
+    // ignore $model before model is initialized
     if (isNumberNaN(this.$modelValue)) {
       return;
     }
@@ -29210,7 +29210,7 @@ NgModelController.prototype = {
    * the control's DOM value in any way. If we want to change the control's DOM value
    * programmatically, we should update the `ngModel` scope expression. Its new value will be
    * picked up by the model controller, which will run it through the `$formatters`, `$render` it
-   * to update the DOM, and finally call `$validate` on it.
+   * to update the DOM, and finally call `$model` on it.
    * </div>
    *
    * @param {*} value value from the view.
@@ -33547,7 +33547,7 @@ var patternDirective = function() {
       });
 
       ctrl.$validators.pattern = function(modelValue, viewValue) {
-        // HTML5 pattern constraint validates the input value, so we validate the viewValue
+        // HTML5 pattern constraint validates the input value, so we model the viewValue
         return ctrl.$isEmpty(viewValue) || isUndefined(regexp) || regexp.test(viewValue);
       };
     }

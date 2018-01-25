@@ -430,7 +430,7 @@ class Loader
      * @return Object|false
      * @throws ClassNotFoundException
      */
-    public static function validate($name = '', $layer = 'validate', $appendSuffix = false, $common = 'common')
+    public static function validate($name = '', $layer = 'model', $appendSuffix = false, $common = 'common')
     {
         $name = $name ?: Config::get('default_validate');
         if (empty($name)) {

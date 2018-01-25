@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <!--设置ie内核浏览器下的渲染模式-->
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+
+    <!--设置网页以webkit(极速模式)来渲染页面-->
+    <meta name="renderer" content="webkit">
+
+    <!--设置网页的宽度与访问设备一致,显示比例为1:1-->
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <!--
+    __STATIC__自动定位到static/下
+    __JS__自动定位到static/js/下
+    __CSS__同理/css/下
+    -->
+    <title>Title</title>
+
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!--引用主页样式-->
+    <link rel="stylesheet" href="__CSS__/main.css">
+    <!--引用bootstrap-->
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+
+    <style>
+        /* 小屏幕（桌面显示器，大于等于 768px） */
+        @media (min-width: 768px) and (max-width: 992px){
+
+        }
+        /* 中等屏幕（桌面显示器，大于等于 992px） */
+        @media (min-width: 992px) and (max-width: 1200px){
+
+        }
+        /* 大屏幕（大桌面显示器，大于等于 1200px） */
+        @media (min-width: 1200px){
+
+        }
+    </style>
+
+</head>
+
+<body data-spy="scroll" data-target="#navbar-example">
+<!--导航栏-->
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">LOGO</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">首页<span class="sr-only">(current)</span></a></li>
+                <li><a href="#">其他</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">更多<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">One more separated link</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">查询</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{:url('index/Index/login')}">登录</a></li>
+                <li><a href="#">注册</a></li>
+                <li style="display: none"><a href="#">用户 <span class="badge">{}</span></a></li>
+                <li style="display: none"><a href="#">退出</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<!---->
+</body>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!--引用vue-->
+<script src="__JS__/vue.js"></script>
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<!--引用jq文件-->
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/bootstrap.min.js"></script>
+<script>
+    function toUrl(){
+        location.href="{:url('index/Index/login')}";
+       // location.href="{:url('index/控制器名/方法名')}";
+    }
+
+    function login(){
+        location.href="{:url('index/Index/login')}";
+        // location.href="{:url('index/控制器名/方法名')}";
+    }
+
+</script>
+
