@@ -12,7 +12,7 @@
     <style>
         /*--通用-*/
         body{ background:#f3f3f3; }
-        .pro_lf{ padding:10px; width:50%; }
+        .pro_lf{ padding:10px; width:350px; }
         .hide { height:0;float:none }
         .setlist{position:relative;}
         .holder_tip{left:125px}
@@ -44,7 +44,7 @@
                 margin-top: 30px;
             }
         }
-            /*--md--*/
+        /*--md--*/
         @media (max-width:992px) {
             #contentRight{
                 float: left;
@@ -54,48 +54,45 @@
     </style>
 </head>
 <body>
-
 <div class="container" id="vueDiv">
-
-
     <!--<div class="row-fluid">-->
     <!--左边-->
     <div class="col-md-7 col-sm-12 col-xs-12 agreementlf f_l">
-        <form id="project_form" action="" method="post" enctype="multipart/form-data">
+        <form id="project_form" @submit.prevent="next">
             <div class="pro_msg">项目信息</div>
             <!--项目标题-->
             <div class="setlist">
                 <label class="setmid">项目标题</label>
-                <input type="text" class="pro_lf textbox" id="proTitle" name="proTitle" v-model="proTitle">
+                <input type="text" class="pro_lf textbox" v-model="formData.proTitle">
             </div>
             <!--众筹天数-->
             <div class="blank0"></div>
             <div class="setlist">
                 <label class="setmid">众筹天数</label>
-                <input name="daysNumber" id="daysNumber" v-model='daysNumber' @keyup="limitInt()" class="pro_lf textbox">
+                <input v-model='formData.daysNumber' @keyup="limitInt()" class="pro_lf textbox">
                 <span class="setmid">天</span>
             </div>
             <!--众筹金额-->
             <div class="setlist">
                 <label class="setmid">众筹金额</label>
-                <input name="tolamount" id="tolamount" v-model='tolamount'  @keyup="limitInt()" class="pro_lf textbox">
+                <input v-model='formData.tolamount'  @keyup="limitInt()" class="pro_lf textbox">&nbsp;
                 <span class="setmid">元</span>
             </div>
             <!--项目分类-->
             <div class="setlist">
                 <label class="setmid" style="margin-right:25px;">项目分类</label>
-                    <select id="proSort" name="proSort" class="btn_select f_l">
-                        {volist name='proSortList' id='val'}
-                            <option :value="{$val.sortid}">{$val.sortname}</option>
-                        {/volist}
-                    </select>
+                <select v-model="formData.proSort" class="btn_select f_l">
+                    {volist name='proSortList' id='val'}
+                    <option :value="{$val.sortid}" name="proSort">{$val.sortname}</option>
+                    {/volist}
+                </select>
             </div>
             <!--项目封面-->
             <div class="blank0"></div>
             <div class="setlist">
                 <label class="setmid">项目封面</label>
                 <label class="fileupload" style="width:97px;">
-                    <input type="file" @change="addImg($event)" class="filebox" id="imgFile" name="imgFile" accept="image/gif,image/jpeg,image/jpg,image/png"  style="cursor:pointer;padding: 0;height: 39px;width: 97px;filter: alpha(opacity=0);-moz-opacity: 0;-khtml-opacity: 0;opacity: 0;">
+                    <input type="file" @change="addImg($event)" class="filebox" id="imgFile" name="image_file" accept="image/gif,image/jpeg,image/jpg,image/png"  style="cursor:pointer;padding: 0;height: 39px;width: 97px;filter: alpha(opacity=0);-moz-opacity: 0;-khtml-opacity: 0;opacity: 0;">
                     <!--<input type="file" class="" name="img_file" accept="image/gif,image/jpeg,image/jpg,image/png"/>-->
                 </label>
                 <span class="prompt" style="margin-top:11px;" v-if="!isAddImg">支持jpg、jpeg、png、gif格式</span>
@@ -107,14 +104,14 @@
             <div class="blank0"></div>
             <div class="setlist">
                 <label class="setmid">项目视频</label>
-                <input type="text" name="video" class="pro_lf textbox" placeholder="请输入视频链接地址" >
+                <input type="text" class="pro_lf textbox" placeholder="请输入视频链接地址" >
             </div>
             <div class="blank0"></div>
             <!--项目简介-->
             <div class="blank0"></div>
             <div class="setlist">
                 <label class="setmid">项目简介</label>
-                <textarea name="probrief" id="probrief" class="textareabox textbox w350"></textarea>
+                <textarea v-model="formData.probrief" id="intro" class="textareabox textbox w350"></textarea>
             </div>
             <!--项目详情-->
             <div class="setlist">
@@ -122,14 +119,14 @@
             </div>
             <!--保存-->
             <div class="blank5"></div>
-            <button type="button" id="next"  class="btn-success next">下一步</button>
+            <button type="submit"  class="btn-success next">下一步</button>
             <!--<div class="saveone f_l" rel="gray" id="savenow"></div>-->
         </form>
     </div>
     <!--左边end-->
     <div class="col-md-2"></div>
     <!--右边-->
-    <div id="contentRight" class="col-md-4 col-sm-6 col-xs-9 agreementrt f_r">
+    <div id="contentRight" class="col-md-3 col-sm-12 col-xs-12 agreementrt f_r">
         <div class="deal_item_box agreementlist">
             <!--图片 名称-->
             <div class="deal_content_box">
@@ -137,8 +134,8 @@
                     <img id="imagePreview"  src="__STATIC__/img/home/publishPro/empty_thumb.gif" />
                 </a>
                 <div class="blank"></div>
-                <span class="deal_title" id="deal_title" v-if="proTitle==''">项目标题</span>
-                <span class="deal_title" id="" v-if="proTitle!=''">{{proTitle}}</span>
+                <span class="deal_title" id="deal_title" v-if="formData.proTitle==''">项目标题</span>
+                <span class="deal_title" id="" v-if="formData.proTitle!=''">{{formData.proTitle}}</span>
                 <!--<a href="#" class="deal_title" id="deal_title"></a>-->
                 <div class="blank"></div>
             </div>
@@ -147,17 +144,16 @@
                 <span class="caption-title">目标：
                     <em>
                         <span class="num">
-                            <font  v-if="daysNumber==''" id="dNumber">0</font>
-                            <font  v-if="daysNumber!=''" >{{daysNumber}}</font>
+                            <font  v-if="formData.daysNumber==''">0</font>
+                            <font  v-if="formData.daysNumber!=''">{{formData.daysNumber}}</font>
                             天
                         </span>
                     </em>
                     <em>
                         <i class="font-yen">¥</i>
                         <span class="num" >
-                            <font v-if="tolamount==''"  id='tolamount2'>0</font>
-                            <font v-if="tolamount!=''">{{tolamount}}</font>
-                            元
+                             <font v-if="formData.tolamount==''">0</font>
+                            <font v-if="formData.tolamount!=''">{{formData.tolamount}}</font>
                         </span>
                     </em>
                 </span>
@@ -176,10 +172,7 @@
                     <span class="til">已达</span>
                 </div>
                 <div class="div3">
-                    <span class="num">
-                        <font id="price">0</font>
-                        元
-                    </span>
+                    <span class="num"><font id="price">0</font>元</span>
                     <div class="blank10"></div>
                     <span class="til">已筹资</span>
                 </div>
@@ -193,7 +186,7 @@
             <div class="blank"></div>
         </div>
     </div>
-        <!--右边end-->
+    <!--右边end-->
     <!--</div>-->
 </div>
 </body>
@@ -204,28 +197,43 @@
         el : '#vueDiv',
         //数据
         data:{
-            proTitle:'',
-            daysNumber:'',
-            tolamount:'',
-            isAddImg:false//是否添加图片
+            isAddImg:false,//是否添加图片
+            formData:{    //表单数据
+                proTitle:'',
+                daysNumber:'',
+                tolamount:'',
+                proSort:'1',
+//                imageFile:'',
+//                vedio:"",
+//                probrief:""
+            }
         },
         //方法
         methods:{
             //限制众筹天数和金额只能输入正整数
             limitInt:function(){
-                this.daysNumber=this.daysNumber.replace(/[^1-9]/g,'');
-                this.tolamount=this.tolamount.replace(/[^1-9]/g,'');
+                this.formData.daysNumber=this.formData.daysNumber.replace(/[^1-9]/g,'');
+                this.formData.tolamount=this.formData.tolamount.replace(/[^1-9]/g,'');
             },
             //添加图片
             addImg:function($event){
                 this.isAddImg=true;
-            }
+                var file = $event.target.files;
+                console.log(file);
+                this.formData.imageFile=file;
+                console.log(typeof file);
+                //图片预览
+            },
+            //点击下一步，发送ajax
+            next:function(){
+                var formData = JSON.stringify(this.formData);
+                console.log(formData);
 
+            }
         },
 
         mounted:function(){
-
-
+            //发送ajax
         }
     });
 
@@ -240,43 +248,5 @@
             $("#imagePreview").prop('src',this.result);
         };
     });
-
-    //点击发布
-    $("#next").click(function(){
-        var formData = new FormData($("#project_form")[0]);
-        console.log(formData);
-        $.ajax({
-            url: "{:url('home/Publishpro/saveProMsg')}",
-            type: "POST",
-            data: formData,
-            dataType: "json",
-            async: false,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function(responseData) {
-                location.href="{:url('home/Publishpro/jumpToAddReturn')}";
-
-            },
-            error: function(responseData) {
-            }
-        });
-    });
-    //保留数据
-    $(function(){
-//       var proMsgList=$("#saveProMsgList").text();
-//        console.log(proMsgList);
-//        var proMsgArr=JSON.parse(proMsgList);
-//        console.log(proMsgArr);
-//        $("#proTitle").val(proMsgArr['proTitle']);
-//        $("#deal_title").text(proMsgArr['proTitle']);
-//        $("#daysNumber").val(proMsgArr['daysNumber']);
-//        $("#dNumber").text(proMsgArr['daysNumber']);
-//        $("#tolamount").val(proMsgArr['tolamount']);
-//        $("#tolamount2").text(proMsgArr['tolamount']);
-//        $("#proSort").val(proMsgArr['proSort']);
-//        $("#probrief").text(proMsgArr['probrief']);
-    });
-
 </script>
 </html>

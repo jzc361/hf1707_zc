@@ -226,7 +226,7 @@ class Index extends  Controller
                 return json($msgResp);
             }else{
                 $msgResp=[
-                    'code'=>20004,
+                    'code'=>20001,
                     'msg'=>config('msg')['oper']['delFail'],
                     'data'=>[]
                 ];
