@@ -1,0 +1,214 @@
+@media (min-width: 1320px){
+
+}
+
+/*@media (min-width: 992px){*/
+/*中等屏幕（桌面显示器，大等于992px）*/
+@media (min-width: 992px){
+    .nav{
+        height: 54px;
+        font-size: 16px;
+        color: #fff;
+        margin: 0 auto;
+    }
+    .nav a {
+        color: #fff;
+    }
+    .nav_ul1{
+        /*color: #fff;*/
+        float: left;
+        padding-top: 12px;
+    }
+    .nav_ul2{
+        float: left;
+        padding-top: 20px;
+    }
+    .nav_ul1>li{
+        /*width: 100px;*/
+        margin-left: 20px;
+        float: left;
+    }
+    .nav_ul1 span{
+        padding-right: 7px
+    }
+    .nav_ul2>li{
+        margin-left: 8px;
+        /*width: 70px;*/
+        float: left;
+    }
+    .nav>div{
+        height: 68px;
+    }
+    .nav_margin div{
+        margin-left: 18px;
+        cursor: pointer;
+    }
+    .nav_float{
+        float: right;
+    }
+
+}
+/* 媒体查询，屏幕大于768px时，背景色为red*/
+@media (min-width: 768px) and (max-width: 991px){
+    .nav{
+        font-size: 16px;
+        /*height: 68px;*/
+    }
+    .nav>li>a {
+        position: relative;
+        display: block;
+        padding: 10px 4px;
+    }
+    .nav_ul1{
+        float: left;
+        padding-top: 10px;
+        padding-left: 6px;
+    }
+    .nav_ul2{
+        float: left;
+        padding-top: 16px;
+        padding-left: 6px;
+    }
+    .nav_ul1>li{
+        /*width: 100px;*/
+        margin-left: 10px;
+        float: left;
+    }
+    .nav_ul2>li{
+        margin-left: 5px;
+        /*width: 70px;*/
+        float: left;
+    }
+    .nav>div{
+        height: 68px;
+    }
+    .nav_margin div{
+        margin-left: 18px;
+        cursor: pointer;
+    }
+    .nav_float{
+        float: right;
+    }
+
+}
+/* 屏幕小于768px时，背景色为red*/
+@media (max-width: 767px){
+    .nav{
+        font-size: 16px;
+        /*height: 68px;*/
+    }
+    .nav>li>a {
+        position: relative;
+        display: block;
+        padding: 10px 4px;
+    }
+    .nav_ul1{
+        float: left;
+        padding-top: 10px;
+        padding-left: 2px;
+    }
+    .nav_ul2{
+        float: left;
+        padding-top: 16px;
+        padding-left: 2px;
+    }
+    .nav_ul1>li{
+        /*width: 100px;*/
+        margin-left: 2px;
+        float: left;
+    }
+    .nav_ul2>li{
+        margin-left: 2px;
+        /*width: 70px;*/
+        float: left;
+    }
+    .nav>div{
+        height: 68px;
+    }
+    .nav_margin div{
+        margin-left: 18px;
+        cursor: pointer;
+    }
+    .nav_float{
+        float: left;
+    }
+
+}
+
+body {
+    margin: 0;
+    font-size: 14px;
+}
+.nav a {
+    color: #fff;
+}
+@media (min-width: 376px) and (max-width: 414px) {
+    html{font-size: 11px;}
+}
+@media (min-width: 415px) and (max-width: 639px) {
+    html{font-size: 13px;}
+}
+@media (min-width: 640px) and (max-width: 719px) {
+    html{font-size: 14px;}
+}
+@media (min-width: 720px) and (max-width: 749px) {
+    html{font-size: 15px;}
+}
+@media (min-width: 750px) and (max-width: 799px) {
+    html{font-size: 16px;}
+}
+@media (min-width: 800px) {
+    html{font-size: 20px;}
+}
+*{
+    list-style: none;
+}
+.footer{
+    height: 300px;
+    color: #84878a;
+    background-color: #494b4c;
+    margin-top: 30px;
+}
+
+.create_block{
+    width: 380px;
+    height: 210px;
+    display: inline-block;
+    border-radius: 8px;
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+    border: 2px solid transparent;
+    box-shadow: 0 0 10px rgba(51, 51, 51, 0.15);
+}
+.create_block:hover{
+    border: 2px solid rgba(48, 166, 245, 1);
+    -moz-box-shadow: 0 0 10px rgba(48, 166, 245, 1);
+    -webkit-box-shadow: 0 0 10px rgba(48, 166, 245, 1);
+    box-shadow: 0 0 10px rgba(48, 166, 245, 1);
+}
+.details{
+    float: left;
+    text-align: center;
+}
+.details_title{
+    padding-top: 40px;
+    font-size: 24px;
+}
+.details_info{
+    font-size: 16px;
+    margin-top: 8px;
+    color: #808080;
+    margin-bottom: 20px;
+}
+.block_width{
+    /*width: 1208px;*/
+}
+
+
+
+
+
+
+
+

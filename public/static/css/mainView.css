@@ -1,0 +1,443 @@
+
+/*@media (min-width: 992px){*/
+/*中等屏幕（桌面显示器，大等于992px）*/
+@media (min-width: 992px){
+    .nav{
+        font-size: 16px;
+        /*height: 68px;*/
+        background-color: #f8f8f8;
+        /*width: 100%;*/
+    }
+    .nav2{
+        top: 68px;
+    }
+    .nav_ul1{
+        float: left;
+        padding-top: 12px;
+    }
+    .nav_ul2{
+        float: left;
+        padding-top: 6px;
+    }
+    .nav_ul1>li{
+        /*width: 100px;*/
+        margin-left: 20px;
+        float: left;
+    }
+    .nav_ul2>li{
+        margin-left: 8px;
+        /*width: 70px;*/
+        float: left;
+    }
+    .nav>div{
+        height: 68px;
+    }
+    .nav_margin div{
+        margin-left: 18px;
+        cursor: pointer;
+    }
+    .nav_float{
+        float: right;
+    }
+    .banner{
+        margin-top: 50px;
+        /*height: 661px;*/
+        position: relative;
+        top: 0;
+        left:0;
+        /*background: url('../img/mainView/banner.jpg');*/
+    }
+    .banner_div{
+        width: 100%;
+        color: white;
+        height: 661px;
+        position: absolute;
+        top: 8rem;
+        text-align: center;
+    }
+    .banner_div>h1{
+        font-size: 2.5rem;
+    }
+    .banner_div>h3{
+        font-size: 1.1rem;
+    }
+    .banner_div>h3>span{
+        color: #ff9300;
+    }
+    .btn_radius{
+        border-radius: 50%;
+    }
+    .content_font{
+        padding-top:86px;
+        font-size: 16px;
+    }
+    .content_div ul{
+        float: left;
+        font-size: 16px;
+        padding-top:10px;
+    }
+    .content_div ul>li{
+        line-height: 36px;
+    }
+    .content_div i{
+        float: left;
+        background-image: url(../img/mainView/tick_gray.png);
+        width: 20px;
+        height: 20px;
+        line-height: inherit;
+        margin-right: 10px;
+        margin-top: 6px;
+    }
+    .content_ul>li{
+        font-size: 20px;
+        float: left;
+        width: 155px;
+        height: 75px;
+        line-height: 74px;
+        border-top: 1px solid #cccccc;
+        cursor: pointer;
+        /*display: inline-block;*/
+    }
+    .content_ul>li:hover{
+        margin-top: -3px;
+        border-top: 4px solid #1ea0fa;
+    }
+    .content_ul>li>i{
+        display: inline-block;
+        height: 28px;
+        margin-top: 5px;
+    }
+    .content_ul>li>span{
+        display: inline-block;
+        height: 68px;
+        line-height: 68px;
+    }
+    .footer{
+        height: 300px;
+        color: #84878a;
+        background-color: #494b4c;
+        margin-top: 30px;
+    }
+}
+/* 媒体查询，屏幕大于768px时，背景色为red*/
+@media (min-width: 768px) and (max-width: 991px){
+    .nav{
+        font-size: 16px;
+        background-color: #f8f8f8;
+        /*width: 100%;*/
+        /*height: 68px;*/
+    }
+    .nav2{
+        top: 113px;
+    }
+    .nav>li>a {
+        position: relative;
+        display: block;
+        padding: 10px 4px;
+    }
+    .nav_ul1{
+        float: left;
+        padding-top: 10px;
+        padding-left: 6px;
+    }
+    .nav_ul2{
+        float: left;
+        padding-top: 16px;
+        padding-left: 6px;
+    }
+    .nav_ul1>li{
+        /*width: 100px;*/
+        margin-left: 10px;
+        float: left;
+    }
+    .nav_ul2>li{
+        margin-left: 5px;
+        /*width: 70px;*/
+        float: left;
+    }
+    .nav>div{
+        height: 68px;
+    }
+    .nav_margin div{
+        margin-left: 18px;
+        cursor: pointer;
+    }
+    .nav_float{
+        float: right;
+    }
+    .banner{
+        margin-top:50px;
+        /*height: 661px;*/
+        position: relative;
+        /*background: url('../img/mainView/banner.jpg');*/
+    }
+    .banner_div{
+        width: 100%;
+        color: white;
+        /*height: 661px;*/
+        position: absolute;
+        top: 5rem;
+        text-align: center;
+    }
+    .banner_div>h1{
+        font-size: 2.5rem;
+    }
+    .banner_div>h3{
+        font-size: 1.1rem;
+    }
+    .banner_div>h3>span{
+        color: #ff9300;
+    }
+    .btn_radius{
+        border-radius: 50%;
+    }
+    .content_font{
+        padding-top:86px;
+        font-size: 16px;
+    }
+    .content_div ul{
+        float: left;
+        font-size: 16px;
+        padding-top:10px;
+    }
+    .content_div ul>li{
+        line-height: 36px;
+    }
+    .content_div i{
+        float: left;
+        background-image: url(../img/mainView/tick_gray.png);
+        width: 20px;
+        height: 20px;
+        line-height: inherit;
+        margin-right: 10px;
+        margin-top: 6px;
+    }
+    .content_ul>li{
+        font-size: 20px;
+        float: left;
+        width: 155px;
+        height: 75px;
+        line-height: 74px;
+        border-top: 1px solid #cccccc;
+        cursor: pointer;
+        /*display: inline-block;*/
+    }
+    .content_ul>li:hover{
+        margin-top: -3px;
+        border-top: 4px solid #1ea0fa;
+    }
+    .content_ul>li>i{
+        display: inline-block;
+        height: 28px;
+        margin-top: 5px;
+    }
+    .content_ul>li>span{
+        display: inline-block;
+        height: 68px;
+        line-height: 68px;
+    }
+    .footer{
+        height: 300px;
+        color: #84878a;
+        background-color: #494b4c;
+        margin-top: 30px;
+    }
+}
+/* 屏幕小于768px时，背景色为red*/
+@media (max-width: 767px){
+    .xs_img{
+        width: 250px;
+    }
+    .nav{
+        font-size: 16px;
+        background-color: #f8f8f8;
+        /*width: 100%;*/
+        /*height: 68px;*/
+    }
+
+    .nav2{
+        /*top: 113px;*/
+    }
+    .nav>li>a {
+        position: relative;
+        display: block;
+        padding: 10px 4px;
+    }
+    .nav_ul1{
+        float: left;
+        padding-top: 10px;
+        padding-left: 2px;
+    }
+    .nav_ul2{
+        float: left;
+        padding-top: 16px;
+        padding-left: 2px;
+    }
+    .nav_ul1>li{
+        /*width: 100px;*/
+        margin-left: 2px;
+        float: left;
+    }
+    .nav_ul2>li{
+        margin-left: 2px;
+        /*width: 70px;*/
+        float: left;
+    }
+    .nav>div{
+        height: 68px;
+    }
+    .nav_margin div{
+        margin-left: 18px;
+        cursor: pointer;
+    }
+    .nav_float{
+        float: left;
+    }
+    .banner{
+        margin-top: 50px;
+        /*height: 661px;*/
+        position: relative;
+        /*background: url('../img/mainView/banner.jpg');*/
+    }
+    .banner_div{
+        width: 100%;
+        color: white;
+        /*height: 661px;*/
+        position: absolute;
+        top: 3rem;
+        text-align: center;
+    }
+    .banner_div>h1{
+        font-size: 2.5rem;
+    }
+    .banner_div>h3{
+        font-size: 1.1rem;
+    }
+    .banner_div>h3>span{
+        color: #ff9300;
+    }
+    .btn_radius{
+        border-radius: 50%;
+    }
+    .content_font{
+        padding-top:86px;
+        font-size: 16px;
+    }
+    .content_div ul{
+        float: left;
+        font-size: 16px;
+        padding-top:10px;
+    }
+    .content_div ul>li{
+        line-height: 36px;
+    }
+    .content_div i{
+        float: left;
+        background-image: url(../img/mainView/tick_gray.png);
+        width: 20px;
+        height: 20px;
+        line-height: inherit;
+        margin-right: 10px;
+        margin-top: 6px;
+    }
+    .content_ul>li{
+        font-size: 20px;
+        float: left;
+        width: 155px;
+        height: 75px;
+        line-height: 74px;
+        border-top: 1px solid #cccccc;
+        cursor: pointer;
+        /*display: inline-block;*/
+    }
+    .content_ul>li:hover{
+        margin-top: -3px;
+        border-top: 4px solid #1ea0fa;
+    }
+    .content_ul>li>i{
+        display: inline-block;
+        height: 28px;
+        margin-top: 5px;
+    }
+    .content_ul>li>span{
+        display: inline-block;
+        height: 68px;
+        line-height: 68px;
+    }
+    .footer{
+        /*height: 300px;*/
+        color: #84878a;
+        background-color: #494b4c;
+        margin-top: 30px;
+    }
+}
+body {
+    margin: 0;
+    font-size: 16px;
+}
+html { font-size: 10px;}
+@media (min-width: 376px) and (max-width: 414px) {
+    html{font-size: 11px;}
+}
+@media (min-width: 415px) and (max-width: 639px) {
+    html{font-size: 13px;}
+}
+@media (min-width: 640px) and (max-width: 719px) {
+    html{font-size: 14px;}
+}
+@media (min-width: 720px) and (max-width: 749px) {
+    html{font-size: 15px;}
+}
+@media (min-width: 750px) and (max-width: 799px) {
+    html{font-size: 16px;}
+}
+@media (min-width: 800px) {
+    html{font-size: 20px;}
+}
+*{
+    list-style: none;
+}
+.vertical_head{
+    display: inline-block;
+    vertical-align: middle;
+    width: 1px;
+    height: 100%;
+}
+.vertical_body{
+    display: inline-block;
+    vertical-align: middle;
+}
+.center-vertical{
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.college_gray{
+    width: 32px;
+    background-image: url(../img/mainView/college_gray.png);
+}
+.internet_gray{
+    width: 28px;
+    background-image: url(../img/mainView/internet_gray.png);
+}
+.car_blue{
+    width: 34px;
+    background-image: url(../img/mainView/car_blue.png);
+}
+.retail_gray{
+    width: 32px;
+    background-image: url(../img/mainView/retail_gray.png);
+}
+.consult_gray{
+    width: 28px;
+    background-image: url(../img/mainView/consult_gray.png);
+}
+.science_gray{
+    width: 28px;
+    background-image: url(../img/mainView/science_gray.png);
+}
+.financial_gray{
+    width: 28px;
+    background-image: url(../img/mainView/financial_gray.png);
+}
