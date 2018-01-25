@@ -17,7 +17,8 @@ class Project extends Controller
     public function proindex(){
         $sort=db('sort')->select();
         $pronum=db('project')->count('projectid');
-        $pro=db('project')->select();
+        $pro=db('project')->paginate(4);//->select()
+        //var_dump($pro);
         $this->assign('sortList',$sort);
         $this->assign('pronum',$pronum);
         $this->assign('pro',$pro);

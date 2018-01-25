@@ -30,7 +30,7 @@
         .proList{
             /*width: 21%;*/
             background-color: #fff;
-            margin: 0 5px 10px;
+            margin: 0 5px 20px;
         }
         .proList>div{
             margin: 15px 0;
@@ -42,11 +42,23 @@
             transform: scale(1.1);
         }
         .intro{
+            margin: 0;
             font-size: 12px;
         }
-        @media (min-width: 997px) {
+        @media (min-width: 992px) {
             .proList{
                 width: 21%;
+            }
+            .space{
+                width: 1%;
+            }
+            .intro{
+                font-size: 12px;
+            }
+        }
+        @media (min-width: 768px) {
+            .proList{
+                width: 46%;
             }
             .space{
                 width: 1%;
@@ -108,7 +120,7 @@
                 </div>
                 <!--脚-->
                 <div class="intro">
-                    <div class="col-sm-3">
+                    <div class="col-xs-3">
                         <p>{$value.curamount/$value.tolamount*100}%</p>
                         <p>已达</p>
                     </div>
@@ -117,7 +129,7 @@
                         <p>已筹集</p>
                     </div>
                     <div class="col-sm-6">
-                        <p>{$value.endtime}</p>
+                        <p>{$value.endtime|substr=0,10}</p>
                         <p>结束时间</p>
                     </div>
                 </div>
@@ -126,6 +138,7 @@
             {/volist}
         </div>
     </div>
+    <div align="center">{$pro->render()}</div>
 </body>
 <script src="__JS__/jquery-2.1.4.js"></script>
 <script src="__JS__/bootstrap.min.js"></script>
