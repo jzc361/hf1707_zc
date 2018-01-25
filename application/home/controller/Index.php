@@ -1,8 +1,7 @@
 <?php
-namespace app\index\controller;
+namespace app\home\controller;
 //use \think\View;
 use \think\Controller;
-use app\index\model\User;
 use \think\Db;
 use \think\Request;
 use \think\Session;
