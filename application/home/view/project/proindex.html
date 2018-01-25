@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>产品项目</title>
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <style>
+        .center{
+            margin-top: 50px;
+        }
+        .sortList{
+            width: 100%;
+            overflow: hidden;
+            padding: 5px;
+            background-color: #fff;
+        }
+        .sortList a{
+            cursor: pointer;
+        }
+        .stateList{
+            width: 100%;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body style="background: #f9f9f9;">
+    <div class="center container">
+        <div class="sortList">
+            <ul class="nav nav-pills">
+                {volist name="sortList" id="sort"}
+                <li role="presentation"><a class="{$sort.sortid}">{$sort.sortname}</a></li>
+                {/volist}
+            </ul>
+        </div>
+        <div class="stateList">
+            <div class="col-sm-7"></div>
+            <ul class="nav nav-pills col-sm-4" style="font-size: 12px">
+                <li role="presentation" class="active"><a href="#">所有项目({$pronum})</a></li>
+                <li role="presentation"><a href="#">众筹中</a></li>
+                <li role="presentation"><a href="#">众筹成功</a></li>
+                <li role="presentation"><a href="#">众筹失败</a></li>
+            </ul>
+            <div class="col-sm-1">
+                <!--<select name="" id="">
+                    <option value="">升序</option>
+                    <option value="">降序</option>
+                </select>-->
+            </div>
+        </div>
+
+        <div class="showPro">
+            <div></div>
+        </div>
+    </div>
+</body>
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/bootstrap.min.js"></script>
+<script>
+
+    $('.sortList').find('li').click(function(){
+        $('.sortList').find('li').attr('class','');
+        $(this).attr('class','active');
+        var sortid=$(this).children().attr('class');
+        console.log(sortid);
+    });
+
+    $('.stateList').find('li').click(function(){
+        $('.stateList').find('li').attr('class','');
+        $(this).attr('class','active');
+        var state=$(this).children().text();
+        console.log(state);
+    });
+</script>
+</html>
