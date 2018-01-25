@@ -27,7 +27,7 @@ class Project extends Controller
     //项目详情
     public function prodetails(){
         //项目id
-        $proid=1;
+        $proid=input('?get.proid')?input('get.proid'):"";
         //获取项目信息
         $pro=db('project')->where('projectid',$proid)->find() ;
         //项目简介(图片)
