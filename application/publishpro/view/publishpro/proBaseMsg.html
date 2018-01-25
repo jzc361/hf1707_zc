@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>众筹发布页</title>
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <link rel="stylesheet" href="__CSS__/proBaseMsg.css">
+    <link rel="stylesheet" href="__CSS__/default.css">
+    <style>
+        /*--通用-*/
+        body{ background:#f3f3f3; }
+        .pro_lf{ padding:10px; width:350px; }
+        .hide { height:0;float:none }
+        .setlist{position:relative;}
+        .holder_tip{left:125px}
+        .faq_item1{position:relative;overflow:hidden;padding:4px;}
+        .faq_item1 .holder_tip{left:4px;top:4px;}
+        .next{
+            padding: 6px 12px;
+            float: right;
+            margin-right: 30px;
+        }
+        #contentRight{
+            height:600px;
+            margin: 0;
+            padding: 0;
+        }
+        /*--通用end-*/
+
+        /*--xs-*/
+        @media (max-width:768px) {
+            #contentRight{
+                float: left;
+                margin-top: 30px;
+            }
+        }
+        /*--sm-*/
+        @media (max-width:768px) {
+            #contentRight{
+                float: left;
+                margin-top: 30px;
+            }
+        }
+            /*--md--*/
+        @media (max-width:992px) {
+            #contentRight{
+                float: left;
+                margin-top: 30px;
+            }
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!--<div class="row-fluid">-->
+    <!--左边-->
+    <div class="col-md-7 col-sm-12 col-xs-12 agreementlf f_l">
+        <form id="project_form">
+            <div class="pro_msg">项目信息</div>
+            <!--项目标题-->
+            <div class="setlist">
+                <label class="setmid">项目标题</label>
+                <input type="text" class="pro_lf textbox" name="name">
+            </div>
+            <!--众筹金额-->
+            <div class="setlist">
+                <label class="setmid">众筹金额</label>
+                <input type="text" class="pro_lf textbox" name="limit_price">&nbsp;
+                <span class="setmid">元</span>
+            </div>
+            <!--项目分类-->
+            <div class="setlist">
+                <label class="setmid" style="margin-right:25px;">项目分类</label>
+                    <select name="" class="btn_select f_l" id=''>
+                        <option value="">aaa</option>
+                        <option value="">bbb</option>
+                        <option value="">ccc</option>
+                    </select>
+            </div>
+            <!--项目封面-->
+            <div class="blank0"></div>
+            <div class="setlist">
+                <label class="setmid">项目封面</label>
+                <label class="fileupload" style="width:97px;">
+                    <input type="file" class="filebox" name="image_file" id="image_file"  style="cursor:pointer;padding: 0;height: 39px;width: 97px;filter: alpha(opacity=0);-moz-opacity: 0;-khtml-opacity: 0;opacity: 0;">
+                </label>
+                <span class="prompt" style="margin-top:3px;">支持jpg、jpeg、png、gif格式，大小不超过3M。【推荐尺寸640px*500px】</span>
+            </div>
+            <!--项目视频-->
+            <div class="blank0"></div>
+            <div class="setlist">
+                <label class="setmid">项目视频</label>
+                <!--<label class="" style="width:97px;">-->
+                    <input type="file" class="" name="video_file" id="" >
+                <!--</label>-->
+            </div>
+            <div class="blank0"></div>
+            <!--项目简介-->
+            <div class="blank0"></div>
+            <div class="setlist">
+                <label class="setmid">项目简介</label>
+                <textarea name="brief" id="intro" class="textareabox textbox w350"></textarea>
+            </div>
+            <!--项目详情-->
+            <div class="setlist">
+                <label class="setmid">项目详情</label>
+            </div>
+            <!--保存-->
+            <div class="blank5"></div>
+            <button type="button"  class="btn-success next">下一步</button>
+            <!--<div class="saveone f_l" rel="gray" id="savenow"></div>-->
+        </form>
+    </div>
+    <!--左边end-->
+    <div class="col-md-2"></div>
+    <!--右边-->
+    <div id="contentRight" class="col-md-3 col-sm-12 col-xs-12 agreementrt f_r">
+        <div class="deal_item_box agreementlist">
+            <!--图片 名称-->
+            <div class="deal_content_box">
+                <a href="#" title="">
+                    <img id="image" src="__STATIC__/img/publishPro/empty_thumb.gif" />
+                </a>
+                <div class="blank"></div>
+                <a href="#" class="deal_title" id="deal_title">项目的名称</a>
+                <div class="blank"></div>
+            </div>
+            <!--基本信息-->
+            <div class="paiduan" style="height:30px;padding:10px 12px 0 12px ;line-height: 20px;color: #A4A4A4;">
+                <span class="caption-title">目标：
+                    <em>
+                        <span class="num"><font id="deal_days">0</font>天</span>
+                    </em>
+                    <em>
+                        <i class="font-yen">¥</i>
+                        <span class="num" ><font id="price">0</font></span>
+                    </em>
+                </span>
+                <span class="f_r ">
+                    <span class="common-sprite">筹资中</span>
+                </span>
+            </div>
+            <div class="deal_content_box" style="padding:15px 12px 0 12px; ">
+                <div class="ui-progress">
+                    <span class="theme_bgcolor" style="width:100%;"></span>
+                </div>
+                <div class="blank"></div>
+                <div class="div3" style="text-align:left;">
+                    <span class="num">100%</span>
+                    <div class="blank10"></div>
+                    <span class="til">已达</span>
+                </div>
+                <div class="div3">
+                    <span class="num"><font id="price">0</font>元</span>
+                    <div class="blank10"></div>
+                    <span class="til">已筹资</span>
+                </div>
+                <div class="div3" style="text-align:right;">
+                    <span class="num"><font id="deal_days">0</font>天</span>
+                    <div class="blank10"></div>
+                    <span class="til">剩余时间</span>
+                </div>
+                <div class="blank"></div>
+            </div>
+            <div class="blank"></div>
+        </div>
+    </div>
+        <!--右边end-->
+    <!--</div>-->
+</div>
+
+</body>
+
+</html>
