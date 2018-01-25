@@ -51,15 +51,10 @@
                 margin-top: 30px;
             }
         }
-
-
-
-
     </style>
 </head>
 <body>
-
-<div class="container">
+<div class="container" id="vueDiv">
     <!--<div class="row-fluid">-->
     <!--左边-->
     <div class="col-md-7 col-sm-12 col-xs-12 agreementlf f_l">
@@ -68,12 +63,19 @@
             <!--项目标题-->
             <div class="setlist">
                 <label class="setmid">项目标题</label>
-                <input type="text" class="pro_lf textbox" name="name">
+                <input type="text" class="pro_lf textbox" name="name" v-model="proTitle">
+            </div>
+            <!--众筹天数-->
+            <div class="blank0"></div>
+            <div class="setlist">
+                <label class="setmid">众筹天数</label>
+                <input v-model='daysNumber' @keyup="limitInt()" class="pro_lf textbox">
+                <span class="setmid">天</span>
             </div>
             <!--众筹金额-->
             <div class="setlist">
                 <label class="setmid">众筹金额</label>
-                <input type="text" class="pro_lf textbox" name="limit_price">&nbsp;
+                <input v-model='tolamount' @keyup="limitInt()" class="pro_lf textbox" name="limit_price">&nbsp;
                 <span class="setmid">元</span>
             </div>
             <!--项目分类-->
@@ -89,17 +91,19 @@
             <div class="blank0"></div>
             <div class="setlist">
                 <label class="setmid">项目封面</label>
-                <label class="fileupload" style="width:97px;">
-                    <input type="file" class="filebox" name="image_file" id="image_file"  style="cursor:pointer;padding: 0;height: 39px;width: 97px;filter: alpha(opacity=0);-moz-opacity: 0;-khtml-opacity: 0;opacity: 0;">
-                </label>
-                <span class="prompt" style="margin-top:3px;">支持jpg、jpeg、png、gif格式，大小不超过3M。【推荐尺寸640px*500px】</span>
+                <input type="file" class="" name="img_file" />
+                <!--<label class="fileupload" style="width:97px;">-->
+                    <!--<input type="file" class="filebox" name="image_file" id="image_file"  style="cursor:pointer;padding: 0;height: 39px;width: 97px;filter: alpha(opacity=0);-moz-opacity: 0;-khtml-opacity: 0;opacity: 0;">-->
+                <!--</label>-->
+                <!--<span class="prompt" style="margin-top:3px;">支持jpg、jpeg、png、gif格式，大小不超过3M。【推荐尺寸640px*500px】</span>-->
+          <!---->
             </div>
             <!--项目视频-->
             <div class="blank0"></div>
             <div class="setlist">
                 <label class="setmid">项目视频</label>
                 <!--<label class="" style="width:97px;">-->
-                    <input type="file" class="" name="video_file" id="" >
+                    <input type="file" class="" name="video_file" />
                 <!--</label>-->
             </div>
             <div class="blank0"></div>
@@ -130,18 +134,27 @@
                     <img id="image" src="__STATIC__/img/publishPro/empty_thumb.gif" />
                 </a>
                 <div class="blank"></div>
-                <a href="#" class="deal_title" id="deal_title">项目的名称</a>
+                <span class="deal_title" id="deal_title" v-if="proTitle==''">项目标题</span>
+                <span class="deal_title" id="" v-if="proTitle!=''">{{proTitle}}</span>
+                <!--<a href="#" class="deal_title" id="deal_title"></a>-->
                 <div class="blank"></div>
             </div>
             <!--基本信息-->
             <div class="paiduan" style="height:30px;padding:10px 12px 0 12px ;line-height: 20px;color: #A4A4A4;">
                 <span class="caption-title">目标：
                     <em>
-                        <span class="num"><font id="deal_days">0</font>天</span>
+                        <span class="num">
+                            <font id="" v-if="daysNumber==''">0</font>
+                            <font id="" v-if="daysNumber!=''">{{daysNumber}}</font>
+                            天
+                        </span>
                     </em>
                     <em>
                         <i class="font-yen">¥</i>
-                        <span class="num" ><font id="price">0</font></span>
+                        <span class="num" >
+                             <font v-if="tolamount==''">0</font>
+                            <font v-if="tolamount!=''">{{tolamount}}</font>
+                        </span>
                     </em>
                 </span>
                 <span class="f_r ">
@@ -176,7 +189,31 @@
         <!--右边end-->
     <!--</div>-->
 </div>
-
 </body>
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/vue.js"></script>
+<script>
+    new Vue({
+        el : '#vueDiv',
+        //数据
+        data:{
+            proTitle:'', //标题
+            daysNumber:'',//众筹天数
+            tolamount:'' //众筹金额
+        },
+        //方法
+        methods:{
+            limitInt:function(){
+                //限制众筹天数和金额只能输入正整数
+                this.daysNumber=this.daysNumber.replace(/[^1-9]/g,'');
+                this.tolamount=this.tolamount.replace(/[^1-9]/g,'');
+            }
+        },
 
+        mounted:function(){
+            //发送ajax
+        }
+    });
+
+</script>
 </html>
