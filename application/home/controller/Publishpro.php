@@ -1,5 +1,5 @@
 <?php
-namespace app\publishpro\controller;
+namespace app\home\controller;
 use think\Controller;
 use think\Db;
 class Publishpro extends Controller
@@ -9,8 +9,9 @@ class Publishpro extends Controller
     {
         //获取项目分类
         $proSort=Db::table('zc_sort')->select();
-        var_dump($proSort);
-        echo "22";
+        //var_dump($proSort);
+       // echo "22";
+        $this->assign('proSortList',$proSort);
         return $this->fetch('proBaseMsg');
     }
     //跳转到回报详情页

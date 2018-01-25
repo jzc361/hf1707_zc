@@ -178,7 +178,7 @@ if (!function_exists('validate')) {
      * @param bool      $appendSuffix 是否添加类名后缀
      * @return \think\Validate
      */
-    function validate($name = '', $layer = 'validate', $appendSuffix = false)
+    function validate($name = '', $layer = 'model', $appendSuffix = false)
     {
         return Loader::validate($name, $layer, $appendSuffix);
     }
