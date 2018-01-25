@@ -1,5 +1,5 @@
 <?php
-namespace app\index\controller;
+namespace app\admin\controller;
 
 //use \think\View;
 use \think\Controller;
@@ -9,7 +9,7 @@ class Index extends Controller
     //转入主页
     public function index()
     {
-        return $this->fetch('');
+        return $this->fetch('loginView');
     }
 
 }

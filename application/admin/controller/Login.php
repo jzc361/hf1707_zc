@@ -1,5 +1,5 @@
 <?php
-namespace app\index\controller;
+namespace app\admin\controller;
 //安全验证---------------------------待定
 use \think\Controller;
 use \think\Request;
@@ -54,7 +54,7 @@ class Login extends Controller
     //回到首页
     public function toMain(){
         //由tp自带跳转进入main主页(index/主页名称)
-        return $this->fetch('index/main');
+        $this->redirect('home/index/index');
     }
 
 
