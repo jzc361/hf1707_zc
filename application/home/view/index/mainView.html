@@ -7,11 +7,13 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"><!--设置网页宽度和访问设备宽度保持一致，且显示比例1:1，-->
     <title>首页</title>
     <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <link rel="stylesheet" href="__CSS__/home/goTop.css">
     <link rel="stylesheet" href="__CSS__/home/mainView.css">
     <!--<link href="http://cdn.staticfile.org/twitter-bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">-->
     <!--<link href="__CSS__/bootstrap-combined.min.css" rel="stylesheet">-->
     <script src="__JS__/jquery-2.1.4.js"></script>
     <script src="__JS__/bootstrap.min.js"></script>
+    <script src="__JS__/home/gotop.js"></script>
 </head>
 <body>
 <<<<<<< HEAD
@@ -80,10 +82,10 @@
                     </form>
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="{:url('/home/Index/index')}">登录</a>
+                            <a href="{:url('/home/Index/index')}"><span class="glyphicon glyphicon-log-in"></span> 登录</a>
                         </li>
                         <li>
-                            <a href="{:url('/home/Index/index')}">注册</a>
+                            <a href="{:url('/home/Index/index')}"><span class="glyphicon glyphicon-user"></span> 注册</a>
                         </li>
                         <!--<li class="dropdown">-->
                             <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>-->
@@ -139,83 +141,92 @@
         <div class="row clearfix my_content">
             <div class="col-sm-12 column">
                 <h3>最新上线</h3>
+                <!-- tab标签 -->
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#">音乐</a></li>
-                    <li><a href="#">游戏</a></li>
-                    <li><a href="#">设计</a></li>
-                    <li><a href="#">科技</a></li>
-                    <li><a href="#">影视</a></li>
-                    <li><a href="#">出版</a></li>
-                    <li><a href="#">活动</a></li>
+                    <li class="active"><a href="#pro1" data-toggle="tab">音乐</a></li>
+                    <li><a href="#pro2" data-toggle="tab">游戏</a></li>
+                    <li><a href="#pro3" data-toggle="tab">设计</a></li>
+                    <li><a href="#pro4" data-toggle="tab">科技</a></li>
+                    <li><a href="#pro5" data-toggle="tab">影视</a></li>
+                    <li><a href="#pro6" data-toggle="tab">出版</a></li>
+                    <li><a href="#pro7" data-toggle="tab">活动</a></li>
                 </ul>
-                <div class=""></div>
-                <div class="row">
-                    <div class="col-sm-8">
-                        <img src="__STATIC__/img/home/mainView/pro_1.jpg" class="img-responsive newProject" alt="">
-                    </div>
-                    <div class="col-sm-4" style="font-size: 16px">
-                        <div>
-                            <h3>
-                                短片电影
-                            </h3>
-                            <button type="button" class="btn btn-info btn-lg" style="width: 100%;margin: 20px 0">立即支持</button>
-                           <p>
-                               Yolanda智能体质管理方案，您的家庭健康管理第一站。她由市场价599元的Yo…
-                           </p>
-                            <p>
-                                目标：756天￥3000000
-                                <span class="label label-default">筹资失败</span>
-                            </p>
-                            <div class="progress my_progerss">
-                                <div class="progress-bar progress-success" style="width: 60%">
+                <!-- 每个tab页对应的内容 -->
+                <div  class="tab-content">
+                    <div id="pro1" class="row tab-pane fade in active">
+                        <div class="col-sm-8">
+                            <img src="__STATIC__/img/home/mainView/pro_1.jpg" class="img-responsive newProject" alt="">
+                        </div>
+                        <div class="col-sm-4" style="font-size: 16px">
+                            <div>
+                                <h3>
+                                    短片电影
+                                </h3>
+                                <button type="button" class="btn btn-info btn-lg" style="width: 100%;margin: 20px 0">立即支持</button>
+                                <p>
+                                    Yolanda智能体质管理方案，您的家庭健康管理第一站。她由市场价599元的Yo…
+                                </p>
+                                <p>
+                                    目标：756天￥3000000
+                                    <span class="label label-default">筹资失败</span>
+                                </p>
+                                <div class="progress my_progerss">
+                                    <div class="progress-bar progress-success" style="width: 60%">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    <p>9%</p>
-                                    <p>已达</p>
-                                </div>
-                                <div class="col-xs-4">
-                                    <p>299999元</p>
-                                    <p>已筹资</p>
-                                </div>
-                                <div class="col-xs-4">
-                                    <p>18/01/10</p>
-                                    <p>日期</p>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <p>9%</p>
+                                        <p>已达</p>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <p>299999元</p>
+                                        <p>已筹资</p>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <p>18/01/10</p>
+                                        <p>日期</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="pro2"><p>游戏</p></div>
+                    <div class="tab-pane fade" id="pro3"><p>设计</p></div>
+                    <div id="pro4" class="tab-pane fade"><p>科技</p></div>
+                    <div id="pro5" class="tab-pane fade"><p>影视</p></div>
+                    <div id="pro6" class="tab-pane fade"><p>出版</p></div>
+                    <div id="pro7" class="tab-pane fade"><p>活动</p></div>
                 </div>
                 <h3>热门众筹</h3>
                 <div class="row">
+                    {volist name='hotList' id='vo' key="k" }
                     <div class="col-sm-6">
                         <div class="thumbnail">
-                            <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
+                            <img alt="300x200" src="{$vo.imgs}" />
                             <div class="caption">
                                 <h3>
-                                    短片电影
+                                    {$vo.projectname}
                                 </h3>
                                 <p>
-                                    目标：756天￥3000000
-                                    <span class="label label-default">筹资失败</span>
+                                    目标：￥{$vo.tolamount} 剩余：{$vo.resttime}天
+                                    <span class="label label-default {$vo.statename=='众筹中' ? 'label-primary' : ''}">{$vo.statename}</span>
                                 </p>
                                 <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success">
-                                    </div>
+                                    <div class="progress-bar progress-success" style="width: {$vo.curamount/$vo.tolamount*100}%"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-4">
-                                        <p>9%</p>
+                                        <p>{$vo.curamount/$vo.tolamount*100}%</p>
                                         <p>已达</p>
                                     </div>
                                     <div class="col-xs-4">
-                                        <p>299999元</p>
+                                        <p>{$vo.curamount}元</p>
                                         <p>已筹资</p>
                                     </div>
                                     <div class="col-xs-4">
-                                        <p>18/01/10</p>
-                                        <p>日期</p>
+                                        <p>{$vo.endtime|substr=0,10}</p>
+                                        <p>结束日期</p>
                                     </div>
                                 </div>
 
@@ -225,144 +236,37 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="thumbnail">
-                            <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
-                            <div class="caption">
-                                <h3>
-                                    短片电影
-                                </h3>
-                                <p>
-                                    目标：756天￥3000000
-                                    <span class="label label-default">筹资失败</span>
-                                </p>
-                                <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <p>9%</p>
-                                        <p>已达</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>299999元</p>
-                                        <p>已筹资</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>18/01/10</p>
-                                        <p>日期</p>
-                                    </div>
-                                </div>
-
-                                <!--<p>-->
-                                <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
-                                <!--</p>-->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="thumbnail">
-                            <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
-                            <div class="caption">
-                                <h3>
-                                    短片电影
-                                </h3>
-                                <p>
-                                    目标：756天￥3000000
-                                    <span class="label label-default">筹资失败</span>
-                                </p>
-                                <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <p>9%</p>
-                                        <p>已达</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>299999元</p>
-                                        <p>已筹资</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>18/01/10</p>
-                                        <p>日期</p>
-                                    </div>
-                                </div>
-
-                                <!--<p>-->
-                                <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
-                                <!--</p>-->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="thumbnail">
-                            <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
-                            <div class="caption">
-                                <h3>
-                                    短片电影
-                                </h3>
-                                <p>
-                                    目标：756天￥3000000
-                                    <span class="label label-default">筹资失败</span>
-                                </p>
-                                <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <p>9%</p>
-                                        <p>已达</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>299999元</p>
-                                        <p>已筹资</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>18/01/10</p>
-                                        <p>日期</p>
-                                    </div>
-                                </div>
-
-                                <!--<p>-->
-                                <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
-                                <!--</p>-->
-                            </div>
-                        </div>
-                    </div>
+                    {/volist}
                 </div>
                 <h3>最新众筹</h3>
                 <div class="row">
+                    {volist name='newList' id='vo' key="k" }
                     <div class="col-md-4 col-sm-6">
                         <div class="thumbnail">
-                            <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
+                            <img alt="300x200" src="{$vo.imgs}" />
                             <div class="caption">
                                 <h3>
-                                    短片电影
+                                    {$vo.projectname}
                                 </h3>
                                 <p>
-                                    目标：756天￥3000000
-                                    <span class="label label-default">筹资失败</span>
+                                    目标：￥{$vo.tolamount} 剩余：{$vo.resttime}天
+                                    <span class="label label-default {$vo.statename=='众筹中' ? 'label-primary' : ''}">{$vo.statename}</span>
                                 </p>
                                 <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success">
-                                    </div>
+                                    <div class="progress-bar progress-success" style="width: {$vo.curamount/$vo.tolamount*100}%"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-4">
-                                        <p>9%</p>
+                                        <p>{$vo.curamount/$vo.tolamount*100}%</p>
                                         <p>已达</p>
                                     </div>
                                     <div class="col-xs-4">
-                                        <p>299999元</p>
+                                        <p>{$vo.curamount}元</p>
                                         <p>已筹资</p>
                                     </div>
                                     <div class="col-xs-4">
-                                        <p>18/01/10</p>
-                                        <p>日期</p>
+                                        <p>{$vo.endtime|substr=0,10}</p>
+                                        <p>结束日期</p>
                                     </div>
                                 </div>
 
@@ -372,108 +276,37 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="thumbnail">
-                            <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
-                            <div class="caption">
-                                <h3>
-                                    短片电影
-                                </h3>
-                                <p>
-                                    目标：756天￥3000000
-                                    <span class="label label-default">筹资失败</span>
-                                </p>
-                                <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <p>9%</p>
-                                        <p>已达</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>299999元</p>
-                                        <p>已筹资</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>18/01/10</p>
-                                        <p>日期</p>
-                                    </div>
-                                </div>
-
-                                <!--<p>-->
-                                <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
-                                <!--</p>-->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="thumbnail">
-                            <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
-                            <div class="caption">
-                                <h3>
-                                    短片电影
-                                </h3>
-                                <p>
-                                    目标：756天￥3000000
-                                    <span class="label label-default">筹资失败</span>
-                                </p>
-                                <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <p>9%</p>
-                                        <p>已达</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>299999元</p>
-                                        <p>已筹资</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>18/01/10</p>
-                                        <p>日期</p>
-                                    </div>
-                                </div>
-
-                                <!--<p>-->
-                                <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
-                                <!--</p>-->
-                            </div>
-                        </div>
-                    </div>
+                    {/volist}
                 </div>
                 <h3>即将下架</h3>
                 <div class="row">
+                    {volist name='oldList' id='vo' key="k" }
                     <div class="col-md-4 col-sm-6">
                         <div class="thumbnail">
-                            <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
+                            <img alt="300x200" src="{$vo.imgs}" />
                             <div class="caption">
                                 <h3>
-                                    短片电影
+                                    {$vo.projectname}
                                 </h3>
                                 <p>
-                                    目标：756天￥3000000
-                                    <span class="label label-default">筹资失败</span>
+                                    目标：￥{$vo.tolamount} 剩余：{$vo.resttime}天
+                                    <span class="label label-default {$vo.statename=='众筹中' ? 'label-primary' : ''}">{$vo.statename}</span>
                                 </p>
                                 <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success">
-                                    </div>
+                                    <div class="progress-bar progress-success" style="width: {$vo.curamount/$vo.tolamount*100}%"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-4">
-                                        <p>9%</p>
+                                        <p>{$vo.curamount/$vo.tolamount*100}%</p>
                                         <p>已达</p>
                                     </div>
                                     <div class="col-xs-4">
-                                        <p>299999元</p>
+                                        <p>{$vo.curamount}元</p>
                                         <p>已筹资</p>
                                     </div>
                                     <div class="col-xs-4">
-                                        <p>18/01/10</p>
-                                        <p>日期</p>
+                                        <p>{$vo.endtime|substr=0,10}</p>
+                                        <p>结束日期</p>
                                     </div>
                                 </div>
 
@@ -483,108 +316,37 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="thumbnail">
-                            <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
-                            <div class="caption">
-                                <h3>
-                                    短片电影
-                                </h3>
-                                <p>
-                                    目标：756天￥3000000
-                                    <span class="label label-default">筹资失败</span>
-                                </p>
-                                <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <p>9%</p>
-                                        <p>已达</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>299999元</p>
-                                        <p>已筹资</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>18/01/10</p>
-                                        <p>日期</p>
-                                    </div>
-                                </div>
-
-                                <!--<p>-->
-                                <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
-                                <!--</p>-->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="thumbnail">
-                            <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
-                            <div class="caption">
-                                <h3>
-                                    短片电影
-                                </h3>
-                                <p>
-                                    目标：756天￥3000000
-                                    <span class="label label-default">筹资失败</span>
-                                </p>
-                                <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <p>9%</p>
-                                        <p>已达</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>299999元</p>
-                                        <p>已筹资</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>18/01/10</p>
-                                        <p>日期</p>
-                                    </div>
-                                </div>
-
-                                <!--<p>-->
-                                <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
-                                <!--</p>-->
-                            </div>
-                        </div>
-                    </div>
+                    {/volist}
                 </div>
                 <h3>猜你喜欢</h3>
                 <div class="row">
+                    {volist name='hotList' id='vo' key="k" }
                     <div class="col-md-4 col-sm-6">
                         <div class="thumbnail">
-                            <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
+                            <img alt="300x200" src="{$vo.imgs}" />
                             <div class="caption">
                                 <h3>
-                                    短片电影
+                                    {$vo.projectname}
                                 </h3>
                                 <p>
-                                    目标：756天￥3000000
-                                    <span class="label label-default">筹资失败</span>
+                                    目标：￥{$vo.tolamount} 剩余：{$vo.resttime}天
+                                    <span class="label label-default {$vo.statename=='众筹中' ? 'label-primary' : ''}">{$vo.statename}</span>
                                 </p>
                                 <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success">
-                                    </div>
+                                    <div class="progress-bar progress-success" style="width: {$vo.curamount/$vo.tolamount*100}%"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-4">
-                                        <p>9%</p>
+                                        <p>{$vo.curamount/$vo.tolamount*100}%</p>
                                         <p>已达</p>
                                     </div>
                                     <div class="col-xs-4">
-                                        <p>299999元</p>
+                                        <p>{$vo.curamount}元</p>
                                         <p>已筹资</p>
                                     </div>
                                     <div class="col-xs-4">
-                                        <p>18/01/10</p>
-                                        <p>日期</p>
+                                        <p>{$vo.endtime|substr=0,10}</p>
+                                        <p>结束日期</p>
                                     </div>
                                 </div>
 
@@ -594,78 +356,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="thumbnail">
-                            <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
-                            <div class="caption">
-                                <h3>
-                                    短片电影
-                                </h3>
-                                <p>
-                                    目标：756天￥3000000
-                                    <span class="label label-default">筹资失败</span>
-                                </p>
-                                <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <p>9%</p>
-                                        <p>已达</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>299999元</p>
-                                        <p>已筹资</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>18/01/10</p>
-                                        <p>日期</p>
-                                    </div>
-                                </div>
-
-                                <!--<p>-->
-                                <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
-                                <!--</p>-->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6">
-                        <div class="thumbnail">
-                            <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
-                            <div class="caption">
-                                <h3>
-                                    短片电影
-                                </h3>
-                                <p>
-                                    目标：756天￥3000000
-                                    <span class="label label-default">筹资失败</span>
-                                </p>
-                                <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <p>9%</p>
-                                        <p>已达</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>299999元</p>
-                                        <p>已筹资</p>
-                                    </div>
-                                    <div class="col-xs-4">
-                                        <p>18/01/10</p>
-                                        <p>日期</p>
-                                    </div>
-                                </div>
-
-                                <!--<p>-->
-                                <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
-                                <!--</p>-->
-                            </div>
-                        </div>
-                    </div>
+                    {/volist}
                 </div>
             </div>
             <div class="support">
@@ -729,9 +420,19 @@
             </div>
         </div>
     </div>
-    <div id="gotop" style="display: block; z-index: 99;">
-        <a href="#top"></a>
+    <!-- GOTOP -->
+    <div>
+        <div id="code"></div>
+        <div id="code_img"></div>
+        <a id="gotop" href="javascript:void(0)"></a>
     </div>
+
+    <!-- GOTOP -->
+
+
+    <!--<div id="gotop" style="display: block; z-index: 99;">-->
+        <!--<a href="#top"></a>-->
+    <!--</div>-->
     <div class="footer">
         <div class="container">
             <div class="col-sm-6">

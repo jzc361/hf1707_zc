@@ -12,15 +12,28 @@ class Index extends  Controller
     //跳转首页
     public function index()
     {
+        //获取banner
         $adList=db('ad')->where('starttime','<=',date('Y-m-d H:i:s'))->where('endtime','>',date('Y-m-d H:i:s'))->select(); //获取有效期广告
+        //热门众筹
+        $hotList=db('project')->where('begintime','<=',date('Y-m-d H:i:s'))->where('endtime','>',date('Y-m-d H:i:s'))->order('focuscount desc')->limit(4)->field('*,datediff(endtime,NOW()) resttime')->select();
+        //最新众筹
+        $newList=db('project')->where('begintime','<=',date('Y-m-d H:i:s'))->where('endtime','>',date('Y-m-d H:i:s'))->order('createtime desc')->limit(3)->field('*,datediff(endtime,NOW()) resttime')->select();
+        //即将下架
+        $oldList=db('project')->where('begintime','<=',date('Y-m-d H:i:s'))->where('endtime','>',date('Y-m-d H:i:s'))->order('endtime')->limit(3)->field('*,datediff(endtime,NOW()) resttime')->select();
+
         $this->assign('adList',$adList);
+        $this->assign('hotList',$hotList);
+        $this->assign('newList',$newList);
+        $this->assign('oldList',$oldList);
+
+        $this->assign('today',time());
         return $this->fetch('mainView');
     }
     //热门众筹
     public function getHotPro()
     {
-        $adList=db('project')->where('endtime','>',date('Y-m-d H:i:s'))->limit(4)->select(); //获取广告
-        $this->assign('adList',$adList);
+        $hotHotList=db('project')->order('focuscount desc')->limit(4)->select();
+        $this->assign('hotHotList',$hotHotList);
         return $this->fetch('mainView');
     }
     //最新众筹
