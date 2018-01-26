@@ -154,7 +154,7 @@
             <div class="add_item_btn f_l" id="submit_deal_btn" style="margin-left:10px;">
                 <div class="ui-button theme_bgcolor" rel="green">
                     <div>
-                        <span>提交审核</span>
+                        <span  @click="sumbitPro">提交审核</span>
                     </div>
                 </div>
             </div>
@@ -226,9 +226,24 @@
                     error: function(responseData) {
                     }
                 });
+            },
+            //提交审核
+            sumbitPro:function(){
+                $.ajax({
+                     type: "post",
+                     url: "{:url('home/Publishpro/sumbitPro')}",
+                     dataType: "json",
+                     success: function (responseData){
+                         alert(responseData['msg']);
+                         location.href="{:url('home/Index/index')}";
+//                         location.reload(true);
+                     },
+                     error:function(){
+                         alert("error");
+                     }
+                });
             }
         },
-
         mounted:function(){
             //发送ajax
 

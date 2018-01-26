@@ -267,11 +267,9 @@ return [
             'select'=>'查询成功',  //20007
             'selectFail'=>'查询失败',  //20008
         ],
-
-        'order'=>[
-            'error'=>'下单失败，请从稍后再试',
-            'success'=>'下单成功',
-
+        'publishPro'=>[
+            'publish'=>'发布成功，等待审核',  //20009
+            'publishFail'=>'发布失败',  //20010
         ],
     ]
 
