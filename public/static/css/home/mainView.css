@@ -38,11 +38,75 @@
     right: 10px;
     bottom: 10px;
 }
+#gotop>a{
+    width: 41px;
+    height: 41px;
+    display: block;
+    background: url(../../img/home/mainView/top.png) no-repeat;
+}
+.mx_1 {
+    width: 95px;
+    height: 95px;
+    transition: all 0.5s ease-out;
+    background: url(../../img/home/mainView/mx_1.png) no-repeat center;
+}
+.mx_2 {
+    width: 95px;
+    height: 95px;
+    transition: all 0.5s ease-out;
+    background: url(../../img/home/mainView/mx_2.png) no-repeat center;
+}
+.mx_3 {
+    width: 95px;
+    height: 95px;
+    transition: all 0.5s ease-out;
+    background: url(../../img/home/mainView/mx_3.png) no-repeat center;
+}
+.mx_4 {
+    width: 95px;
+    height: 95px;
+    transition: all 0.5s ease-out;
+    background: url(../../img/home/mainView/mx_4.png) no-repeat center;
+}
+.mxr_1 {
+    width: 57px;
+    height: 60px;
+    display: block;
+    float: left;
+    margin-top: 1px;
+    margin-right: 3px;
+    transition: all 0.2s ease-out;
+    background: url(../../img/home/mainView/mxr_1.png) no-repeat;
+}
+.mxr_2 {
+    width: 57px;
+    height: 60px;
+    display: block;
+    float: left;
+    margin-top: 1px;
+    margin-right: 3px;
+    transition: all 0.2s ease-out;
+    background: url(../../img/home/mainView/mxr_2.png) no-repeat;
+}
+.mxr_3 {
+    width: 57px;
+    height: 60px;
+    display: block;
+    float: left;
+    margin-top: 1px;
+    margin-right: 3px;
+    transition: all 0.2s ease-out;
+    background: url(../../img/home/mainView/mxr_3.png) no-repeat;
+}
+
+
+
+
 /*#gotop>a{*/
     /*width: 41px;*/
     /*height: 41px;*/
     /*display: block;*/
-    /*background: url("__STATIC__/img/home/mainView/top.png") no-repeat;*/
+    /*background: url("../../img/home/mainView/top.png") no-repeat;*/
 /*}*/
 
 /*

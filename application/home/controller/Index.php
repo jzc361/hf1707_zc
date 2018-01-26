@@ -9,11 +9,19 @@ use \think\Cache;
 
 class Index extends  Controller
 {
+    //跳转首页
     public function index()
     {
         return $this->fetch('mainView');
 
     }
+//    //跳转更多众筹
+//    public function proindexView()
+//    {
+//        return $this->redirect('home/Project/index');
+//    }
+
+    /*
     public function showLogin()
     {
         return $this->fetch('loginView');
@@ -301,6 +309,7 @@ class Index extends  Controller
             file_put_contents('secondKill.txt','秒杀成功一次',FILE_APPEND);
         }
     }
+    */
 }
 
 
