@@ -42,8 +42,8 @@ class Publishpro extends Controller
     //点击下一步，保存项目信息
     public function saveProMsg(){
         $imgFile=$_FILES['imgFile'];
-        //var_dump($imgFile);
-        //var_dump($_POST);
+        var_dump($imgFile);
+        var_dump($_POST);
         Session::set('proMsg',$_POST);
         Session::set('proImg',$imgFile);
         $msgResp=[
