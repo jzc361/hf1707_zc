@@ -237,7 +237,7 @@
                 this.tolamount=this.tolamount.replace(/[^1-9]/g,'');
             },
             //添加图片
-            addImg:function($event){
+            addImg:function(){
                 this.isAddImg=true;
             }
 
@@ -275,8 +275,7 @@
             contentType: false,
             processData: false,
             success: function(responseData) {
-               // location.href="{:url('home/Publishpro/jumpToAddReturn')}";
-
+                location.href="{:url('home/Publishpro/jumpToAddReturn')}";
             },
             error: function(responseData) {
             }
