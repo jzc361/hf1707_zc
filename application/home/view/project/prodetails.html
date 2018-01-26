@@ -33,21 +33,6 @@
             line-height: 42px;
             overflow: hidden;
         }
-        .pro-have{
-            font-size: 16px;
-            height: 24px;
-            line-height: 24px;
-            overflow: hidden;
-        }
-        .pro-amount{
-            font-size: 48px;
-            height: 60px;
-            line-height: 60px;
-            overflow: hidden;
-        }
-        .showdetails{
-            /*width: 1200px;*/
-        }
         .details-left{
             float: left;
             width: 70%;
@@ -64,9 +49,9 @@
             width: 100%;
             margin: 0 20px;
         }
-        .d-ls{
+        /*.d-ls{
             font-size: 18px;
-        }
+        }*/
         .d-ls>a{
             text-align: center;
         }
@@ -146,6 +131,55 @@
             height: 40px;
             border-radius: 4px;
         }
+        @media (min-width: 768px) {
+            .pro-title{
+                font-size: 24px;
+                height: 42px;
+                line-height: 42px;
+                overflow: hidden;
+            }
+            .pro-have{
+                font-size: 16px;
+                height: 24px;
+                line-height: 24px;
+                overflow: hidden;
+            }
+            .pro-amount{
+                font-size: 48px;
+                height: 60px;
+                line-height: 60px;
+                overflow: hidden;
+            }
+            .d-ls{
+                font-size: 18px;
+            }
+        }
+        @media (max-width: 767px) {
+            .pro_introduce>p{
+                margin: 0;
+            }
+            .pro-title{
+                font-size: 18px;
+                height: 28px;
+                line-height: 28px;
+                overflow: hidden;
+            }
+            .pro-have{
+                font-size: 12px;
+                height: 16px;
+                line-height: 16px;
+                overflow: hidden;
+            }
+            .pro-amount{
+                font-size: 30px;
+                height: 30px;
+                line-height: 30px;
+                overflow: hidden;
+            }
+            .d-ls{
+                font-size: 14px;
+            }
+        }
 
     </style>
 </head>
@@ -165,7 +199,7 @@
                 </div>
                 <p>当前进度：{$pro.curamount/$pro.tolamount*100}%</p>
                 <p>目标：￥{$pro.tolamount}</p>
-                <p>项目截止时间：</p>
+                <p>项目截止时间：{$pro.endtime|substr=0,10}</p>
                 <button id="focus" class="btn btn-info">关注{$pro.focuscount}</button>
             </div>
         </div>
@@ -193,16 +227,8 @@
                 <div class="tab-content details-con">
                     <div role="tabpanel" class="tab-pane active" id="intro">
                         <p>{$pro.intro}</p>
-                        {if $pro.video}
-                        <div>
-                            <video preload="auto" conrtols="true" src="{$pro.video}" style="width: 80%; height: 100%; background-color: rgb(0, 0, 0);"></video>
-                        </div>
-                        {/if}
-                        {volist name="proimg" id="vimg"}
-                        <div>
-                            <img src="__STATIC__/img/home/project/{$vimg.projectimg}" alt="" style="width: 80%">
-                        </div>
-                        {/volist}
+
+
                     </div>
                     <div role="tabpanel" class="tab-pane" id="progress">进展</div>
                     <div role="tabpanel" class="tab-pane" id="comment">
@@ -217,7 +243,7 @@
                     <div class="title">项目发起人</div>
                     <div class="initiator-con">
                         <div style="width: 35%"><img src="__STATIC__/img/head.png" alt="" style="width: 65%"></div>
-                        <div class="initiator-peo"><p>{$username}</p></div>
+                        <div class="initiator-peo"><p>发起人</p></div>
                     </div>
                 </div>
                 <!--分额度众筹-->

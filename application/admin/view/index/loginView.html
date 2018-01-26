@@ -87,7 +87,7 @@
                 <input type="text" class="form-control" id="vali" placeholder="Validate">
             </div>
             <!--验证码-->
-            <div class="col-sm-4"><img id="code" src="{:captcha_src()}" alt="load error" onclick="validate(this)"></div>
+            <div class="col-sm-4"><img id="code" src="" alt="load error" onclick="validate(this)"></div>
             <span class="col-sm-3"></span>
         </div>
         <div class="form-group">
@@ -104,7 +104,7 @@
                     <!--回到首页功能
                     url地址为login控制器,进入toMain方法
                     -->
-                    <a href="{:url('index/login/toMain')}"><button style="width: 100%" onclick="toMain()" type="button" class="btn btn-default">返回众筹首页</button></a>
+                    <a href="{:url('admin/login/toMain')}"><button style="width: 100%" onclick="toMain()" type="button" class="btn btn-default">返回众筹首页</button></a>
                 </div>
                 <span class="col-sm-2"></span>
             </div>
@@ -128,9 +128,7 @@
 
 
     //验证码点击切换
-    function validate(obj){
-        $(obj).attr('src','{:captcha_src()}?'+Math.random());
-    }
+//
 
     //登录方法
     $("#login").click(function(){
@@ -157,10 +155,6 @@
         })
     });
 
-    //返回主页
-    function toMain(){
-
-    }
 
     //失焦验证
     //账号

@@ -13,13 +13,12 @@
         .setmid_new {
             margin-top: 12px;
         }
-        #add_item_form{ display:none }
         .control-group{position:relative;}
         .holder_tip{left:105px}
     </style>
 </head>
 <body>
-<div class="container">
+<div class="container" id="vueDiv">
     <div class="col-md-1"></div>
     <div class="xqmain xqmain1000 col-md-10 col-sm-12 col-xs-12" style="margin-top:10px;">
         <div class="xqmain_main">
@@ -42,10 +41,113 @@
             <div class="link_dash"></div>
         </div>
         <div class="blank20"></div>
+        <!--回报表格显示-->
+        <div class="full" v-if="showtable">
+            <table class="data-table">
+                <tr>
+                    <th width="100">价格</th>
+                    <th width="400">限额</th>
+                    <th width="100">描述</th>
+                    <th width="">操作</th>
+
+                </tr>
+                <tr v-for="x in returnArr">
+                   <td>{{x.price}}</td>
+                   <td>{{x.limitpart}}</td>
+                   <td>{{x.returnDetails}}</td>
+                   <td>编辑/删除</td>
+                </tr>
+            </table>
+        </div>
+        <!--回报表单填写-->
+        <div v-if="showDetails" id="add_item_form" >
+            <form class="ajax_form" id="item_form" action="" method="post">
+                <!--left-->
+                <div class="col-md-7 public_left">
+                    <!--支持金额-->
+                    <div class="form_row control-group">
+                        <label class="form_lable">支持金额:</label>
+                        <input type="text" value="" class="textbox" v-model="price" name="price" @keyup="limitInt()" />
+                        <label>元</label>
+                    </div>
+                    <div class="blank0"></div>
+                    <!--限额-->
+                    <div class="form_row control-group">
+                        <!--<label class="form_lable">限购份数:</label>-->
+                        <label class="form_lable">限额:</label>
+                        <input type="text" value="" class="textbox" v-model="limitpart" name="limitpart" @keyup="limitInt()" />
+                        <label>份</label>
+                    </div>
+                    <div class="blank0"></div>
+                    <!--回报内容-->
+                    <div class="form_row control-group">
+                        <label class="form_lable">回报内容:</label>
+                        <textarea v-model="returnDetails" name="returnDetails" class="textareabox textbox"></textarea>
+                    </div>
+                    <div class="blank0"></div>
+                    <!--图片-->
+                    <div class="form_row control-group">
+                        <label class="form_lable">图片:</label>
+                        <label class="fileupload" style="width:97px;">
+                            <input type="file" class="filebox" onchange="imgView()" id="imgFile" @change="getImgMsg($event)" name="imgFile" accept="image/gif,image/jpeg,image/jpg,image/png"  style="cursor:pointer;padding: 0;height: 39px;width: 97px;filter: alpha(opacity=0);-moz-opacity: 0;-khtml-opacity: 0;opacity: 0; "/>
+                        </label>
+                    </div>
+                    <div class="blank0"></div>
+                </div>
+                <!--end left-->
+                <!--right-->
+                <div class="col-md-4 public_right" style="">
+                    <div class="deal_preview_title">编辑预览</div>
+                    <div class="blank10"></div>
+                    <div class="item_preview">
+                        <div id="support_price_box">
+                            支持￥
+                            <span id="support_price" v-if="price==''">0</span>
+                            <span  v-if="price!=''">{{price}}</span>
+                            元
+                            <div class="blank"></div>
+                        </div>
+                        <div class="f14">
+                            0位支持者&nbsp;&nbsp;
+                            <span id="limit_user_box">限额
+                                <span id="limit_user" v-if="limitpart==''">0</span>
+                                <span v-if="limitpart!=''">{{limitpart}}</span>
+                                份</span>
+                            <div class="blank"></div>
+                        </div>
+                        <div id="repaid_content" class="f14" v-if="returnDetails==''">回报内容</div>
+                        <div id="" class="f14" v-if="returnDetails!=''">{{returnDetails}}</div>
+                        <img src="" id="imagePreview" style="width: 100%" /><!--图片预览-->
+                        <div class="blank10"></div>
+                        <div class="ui-button_green">
+                            <div>
+                                <span>支持￥
+                                    <font id="support_price_btn"  v-if="price==''">0</font>
+                                    <font id=""  v-if="price!=''">{{price}}</font>
+                                    元</span>
+                            </div>
+                        </div>
+                        <div class="blank1"></div>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+                <!--end right-->
+                <div class="blank10"></div>
+                <div class="add_item_btn" style="padding-left:120px;">
+                    <div class="ui-button theme_bgcolor" rel="green">
+                        <div>
+                            <span @click="saveReturnMsg">保存新的回报项目</span>
+                        </div>
+                    </div>
+                    <!--<a href="javascript:void(0);" id="cancel_add">取消添加</a>-->
+                </div>
+                <div class="blank"></div>
+            </form>
+        </div>
         <!--添加回报 提交审核-->
-        <div id="add_item_row">
+        <div v-if="showBtn" id="add_item_row">
             <div class="add_item_btn f_l" id="add_item_btn">
-                <div class="ui-button theme_bgcolor" rel="gray">
+                <div class="ui-button theme_bgcolor" rel="gray"  @click="showDetailsFun">
                     添加新的回报项目
                 </div>
             </div>
@@ -60,135 +162,89 @@
         <div class="blank40"></div>
     </div>
     <div class="col-md-1"></div>
-
-
-
-    <!--点击添加回报-->
-    <div id="add_item_form">
-        <form class="ajax_form" id="item_form" action="" method="post">
-            <!--left-->
-            <div class="public_left">
-                <div class="form_row control-group">
-                    <label class="form_lable">支持金额:</label>
-                    <input type="text" value="" class="textbox" name="price" />
-                    <label>元</label>
-                    <span class="holder_tip">请输入支持金额</span>
-                </div>
-                <div class="blank0"></div>
-                <div class="form_row control-group">
-                    <label class="form_lable">回报内容:</label>
-                    <textarea name="description" class="textareabox textbox"></textarea>
-                    <span class="holder_tip">请输入回报内容</span>
-                </div>
-                <div class="blank0"></div>
-                <div class="form_row control-group">
-                    <label class="form_lable">说明图片:</label>
-                    <label class="fileupload" onclick="upd_file(this,'image_file');" style="cursor:pointer;">
-                        <input type="file" class="filebox" name="image_file" id="image_file" style="cursor:pointer;padding:0;height:39px;width:97px;filter:alpha(opacity=0);-moz-opacity:0;-khtml-opacity:0;opacity:0"/>
-                    </label>
-                    <label class="fileuploading hide" ></label>
-                </div>
-                <div class="blank0"></div>
-                <div class="form_row control-group">
-                    <label class="form_lable">是否配送:</label>
-                    <a class="btn_select w100 f_l mr10" id="is_delivery_select">
-                        <span class="cur_select" id="is_delivery_cur"></span>
-                        <div class="select_arrow"></div>
-                        <select name="is_delivery" class="select-h" id="is_delivery">
-                            <option value="0">否</option>
-                            <option value="1">是</option>
-                        </select>
-                    </a>
-                </div>
-                <div class="blank0"></div>
-                <div class="form_row control-group" style="display:none;">
-                    <label class="form_lable">运费:</label>
-                    <input type="text" value="" class="textbox w100" name="delivery_fee" />
-                    <label class="tip_box" >元</label>
-                </div>
-                <div class="blank0"></div>
-                <div class="form_row control-group">
-                    <label class="form_lable">是否限购:</label>
-                    <a class="btn_select w100 f_l mr10" id="is_limit_user_select">
-                        <span class="cur_select" id="is_limit_user_cur"></span>
-                        <div class="select_arrow"></div>
-                        <select name="is_limit_user" class="select-h" id="is_limit_user">
-                            <option value="0">否</option>
-                            <option value="1">是</option>
-                        </select>
-                    </a>
-                </div>
-                <div class="blank0"></div>
-                <div class="form_row control-group" style="display:none; ">
-                    <label class="form_lable">限购人数:</label>
-                    <input type="text" value="" class="textbox w100" name="limit_user" />
-                    <label class="tip_box">人</label>
-                </div>
-                <div class="blank0"></div>
-                <div class="form_row control-group">
-                    <label class="form_lable">回报时间:</label>
-                    <label class="tip_box"></label>
-                    <span class="f_l" style="line-height:41px;color:#666; font-size:16px;margin-right:15px;">项目成功后</span>
-                    <input type="text" value="" class="textbox" name="repaid_day" style="width:100px;" />
-                    <label class="tip_box">天</label>
-                </div>
-            </div>
-            <!--end left-->
-            <!--right-->
-            <div class="public_right" style="width:350px">
-                <div class="deal_preview_title">编辑预览</div>
-                <div class="blank10"></div>
-                <div class="item_preview">
-                    <div id="support_price_box">
-                        支持￥<span id="support_price">0</span>元
-                        <div class="blank"></div>
-                    </div>
-                    <div class="f14">
-                        0位支持者&nbsp;&nbsp;&nbsp;&nbsp;<span id="limit_user_box" style="display:none;">限额<span id="limit_user">0</span>位,剩余<span id="remain_user">0</span>位</span>
-                        <div class="blank"></div>
-                    </div>
-                    <div id="repaid_content" class="f14">回报内容</div>
-                    <div id="image_box_outer" style="display:none;">
-                        <div class="blank"></div>
-                        <div id="image_box"></div>
-                        <div class="blank1"></div>
-                    </div>
-                    <div id="repaid_day_box"  class="f14">
-                        <div class="blank"></div>
-                        预计回报发放时间：项目成功结束后<span id="repaid_day">0</span>天内
-                    </div>
-                    <div id="delivery_box" class="f14">
-                        <div class="blank"></div>
-                        运费 ￥<span id="delivery_fee_box">0</span>
-                    </div>
-                    <div class="blank10"></div>
-                    <div class="ui-button_green">
-                        <div>
-                            <span>支持￥<font id="support_price_btn">0</font>元</span>
-                        </div>
-                    </div>
-                    <div class="blank1"></div>
-                </div>
-            </div>
-            <!--end right-->
-            <div class="blank10"></div>
-            <div class="add_item_btn" style="padding-left:120px;width:250px;">
-                <div class="ui-button theme_bgcolor" rel="green">
-                    <div>
-                        <span>保存新的回报项目</span>
-                    </div>
-                </div>
-                <!--<a href="javascript:void(0);" id="cancel_add">取消添加</a>-->
-            </div>
-            <div class="blank"></div>
-        </form>
-    </div>
 </div>
-
-
-
-
-
-
 </body>
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/vue.js"></script>
+<script>
+    new Vue({
+        el : '#vueDiv',
+        //数据
+        data:{
+            showDetails:false,
+            showBtn:true,
+            showtable:false,
+            price:'', //支持金额
+            limitpart:'', //限制份数
+            returnDetails:'', //回报内容,
+            imgFile:'', //图片信息
+            returnArr:[]//回报数组
+        },
+        //方法
+        methods:{
+            //点击添加新的回报   显示与隐藏，清空数据
+            showDetailsFun:function(){
+                this.showDetails=true;
+                this.showBtn=false;
+            },
+            //限制只能输入正整数
+            limitInt:function(){
+                this.price=this.price.replace(/[^1-9]/g,'');
+                this.limitpart=this.limitpart.replace(/[^1-9]/g,'');
+            },
+            //获取图片信息
+            getImgMsg:function($event){
+                //var file = $event.target.files;
+                //console.log(file);
+            },
+            //保存回报
+            saveReturnMsg:function(){
+                //保存回报
+                var formData = new FormData($("#item_form")[0]);
+                var _this=this;
+                $.ajax({
+                    url: "{:url('home/Publishpro/saveReturnMsg')}",
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(responseData) {
+                        //保存好后的显示
+                        var $arr={price:_this.price,limitpart:_this.limitpart,returnDetails:_this.returnDetails};
+                        _this.returnArr.push($arr);
+                        //显示隐藏
+                        _this.showtable=true;
+                        _this.showDetails=false;
+                        _this.showBtn=true;
+                        _this.price='';
+                        _this.limitpart='';
+                        _this.returnDetails='';
+                    },
+                    error: function(responseData) {
+                    }
+                });
+            }
+        },
+
+        mounted:function(){
+            //发送ajax
+
+        }
+    });
+
+    /*---图片预览-*/
+    function imgView(){
+        var file = document.getElementById("imgFile").files;
+        var result=document.getElementById("imagePreview");
+        $(result).empty();
+        var reader    = new FileReader();
+        reader.readAsDataURL(file[0]);
+        reader.onload=function(e){
+            $(result).attr("src",this.result);
+        };
+    }
+</script>
 </html>
