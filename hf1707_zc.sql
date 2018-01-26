@@ -168,12 +168,15 @@ CREATE TABLE zc_ad(
 	adimg VARCHAR (80) not null,
 	addetails	text,
 	adhref VARCHAR (80),
+	starttime datetime,
+	endtime datetime,
 	projectid int(10) not null,
 	FOREIGN KEY (projectid) REFERENCES zc_project(projectid) ON DELETE CASCADE ON UPDATE CASCADE
 );
 INSERT zc_ad VALUES
-(DEFAULT,'__STATIC__/img/home/mainView/pro_1.jpg','广告一详情描述','#',1);
-
+(DEFAULT,'__STATIC__/img/home/mainView/banner1.jpg','广告一详情描述','#','2018-1-1 00:00:00','2018-5-1 00:00:00',9),
+(DEFAULT,'__STATIC__/img/home/mainView/banner2.jpg','广告二详情描述','#','2018-1-1 00:00:00','2018-5-1 00:00:00',10),
+(DEFAULT,'__STATIC__/img/home/mainView/banner1.jpg','广告三详情描述','#','2018-1-1 00:00:00','2018-5-1 00:00:00',9)
 
 
 
