@@ -129,7 +129,7 @@ INSERT into zc_limit(roleid,menuid) VALUES
 drop table if exists zc_user;
 create table zc_user
 (
-    userid  INT(10) primary key,
+    userid  INT(10) primary key auto_increment,
 		username       VARCHAR(10),
 		userpsw  VARCHAR(32) NOT NULL DEFAULT '202cb962ac59075b964b07152d234b70', -- 123
 		sex				enum('0','1','2'),
@@ -147,14 +147,19 @@ create table zc_user
 		usestate	enum('锁定','使用') DEFAULT '使用', -- 使用状态
 		 FOREIGN KEY (province) REFERENCES zc_region (id) ON DELETE CASCADE ON UPDATE CASCADE,
 		 FOREIGN KEY (city) REFERENCES zc_region (id) ON DELETE CASCADE ON UPDATE CASCADE,
-		 FOREIGN KEY (county) REFERENCES zc_region (id) ON DELETE CASCADE ON UPDATE CASCADE
+		 FOREIGN KEY (county) REFERENCES zc_region (id) ON DELETE CASCADE ON UPDATE CASCADE,
 -- 		ALTER TABLE zc_user ADD PRIMARY KEY ('username','userpsw')
 -- 			ADD PRIMARY KEY ('username','userpsw'),
 -- 			ADD PRIMARY KEY ('province','city','county')
 -- 		KEYS('username','userpsw'), -- 用户名，密码建立关联索引
 -- 		KEYS('province','city','county') -- 省市区建立关联索引
+		key login(`username`,`userpsw`),
+		key address(`province`,`city`,`county`)
 
 );
+ALTER TABLE zc_user AUTO_INCREMENT=10001;
+-- ALTER  TABLE  `zc_user`  ADD  INDEX login(`username`,`userpsw`);
+-- ALTER  TABLE  `zc_user`  ADD  INDEX address(`province`,`city`,`county`);
 
 #广告位置表banner
 DROP TABLE IF EXISTS zc_ad;
@@ -166,6 +171,12 @@ CREATE TABLE zc_ad(
 	projectid int(10) not null,
 	FOREIGN KEY (projectid) REFERENCES zc_project(projectid) ON DELETE CASCADE ON UPDATE CASCADE
 );
+INSERT zc_ad VALUES
+(DEFAULT,'__STATIC__/img/home/mainView/pro_1.jpg','广告一详情描述','#',1);
+
+
+
+
 
 -- 聊天记录：记录id（自动增长—）、发送者、接收者、类型、内容、记录时间等
 DROP TABLE IF EXISTS zc_chats;
@@ -216,13 +227,14 @@ create table if not exists zc_activity
 drop table if exists zc_focuspro;
 create table zc_focuspro(
 
-focusid INT(10) primary key auto_increment,
-projectid int(10),
-userid int(10),
-FOREIGN KEY (userid) REFERENCES zc_user (userid),
-FOREIGN KEY (projectid) REFERENCES zc_project (projectid),
-KEY `projectid`(`projectid`), -- 用户id，项目id关联索引
-KEY `userid`(`userid`)
+		focusid INT(10) primary key auto_increment,
+		projectid int(10),
+		userid int(10),
+		FOREIGN KEY (userid) REFERENCES zc_user (userid),
+		FOREIGN KEY (projectid) REFERENCES zc_project (projectid),
+-- 		KEY `projectid`(`projectid`), -- 用户id，项目id关联索引
+-- 		KEY `userid`(`userid`),
+		key focu(`projectid`,`userid`)
 --  KEYs (`projectid`,`userid`) -- 用户id，项目id关联索引
 );
 
@@ -308,22 +320,22 @@ create table zc_project
 	tolamount float(10,2) not NULL,	-- 众筹目标金额
 	curamount float(10,2) not NULL DEFAULT 00000000.00,	-- 当前筹集金额
 	focuscount int(10),									-- 关注人数
--- 	stateid enum('众筹中','众筹成功','众筹失败'),	-- 项目状态(众筹中，众筹成功，众筹失败) 对应专门状态表
+  statename enum('审核中','众筹中','众筹中','众筹成功','众筹失败') not null,	-- 项目状态(众筹中，众筹成功，众筹失败) 对应专门状态表
 	sortid SMALLINT(2),											-- 项目类型
 	userid int(10),											-- 发起人id
 -- 	foreign key(stateid) references zc_state(stateid),
-	foreign key(sortid) references zc_sort(sortid)
+	foreign key(sortid) references zc_sort(sortid) ON DELETE CASCADE ON UPDATE CASCADE
 
 );
 
--- 众筹状态表
-create table zc_projectstate
-(
-	stateid int primary key auto_increment,
-	statename enum('审核中','众筹中','众筹中','众筹成功','众筹失败') not null,
-	projectid int(10) NOT null,
-	foreign key(projectid) references zc_project(projectid) ON DELETE CASCADE ON UPDATE CASCADE
-);
+-- -- 众筹状态表
+-- create table zc_projectstate
+-- (
+-- 	stateid int primary key auto_increment,
+-- 	statename enum('审核中','众筹中','众筹中','众筹成功','众筹失败') not null,
+-- 	projectid int(10) NOT null,
+-- 	foreign key(projectid) references zc_project(projectid) ON DELETE CASCADE ON UPDATE CASCADE
+-- );
 
 -- 14众筹详情表
 create table zc_prodetails
@@ -352,7 +364,8 @@ projectid int(10),
 commentto int (10) DEFAULT 0 ,-- 评论对象 ,0时为对产品评论
 
 FOREIGN KEY(userid) REFERENCES zc_user(userid) on DELETE set null on UPDATE CASCADE,
-FOREIGN KEY(projectid) REFERENCES zc_project(projectid) on DELETE set null on UPDATE CASCADE
+FOREIGN KEY(projectid) REFERENCES zc_project(projectid) on DELETE set null on UPDATE CASCADE,
+KEY comid(`projectid`,`userid`)
 -- KEY(userid),
 -- KEY(projectid)
 );

@@ -44,7 +44,17 @@
     display: block;
     background: url(../../img/home/mainView/top.png) no-repeat;
 }
-.mx_1 {
+.thumbnail>img{
+    transition: all 0.5s;
+}
+.thumbnail>img:hover{
+    transform: scale(1.03);
+}
+.newProject{
+    height: 320px;
+    width: 800px;
+}
+.mx_1{
     width: 95px;
     height: 95px;
     transition: all 0.5s ease-out;
@@ -68,6 +78,22 @@
     transition: all 0.5s ease-out;
     background: url(../../img/home/mainView/mx_4.png) no-repeat center;
 }
+.mx_1:hover{
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+}
+.mx_2:hover{
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+}
+.mx_3:hover{
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+}
+.mx_4:hover{
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+}
 .mxr_1 {
     width: 57px;
     height: 60px;
@@ -75,8 +101,11 @@
     float: left;
     margin-top: 1px;
     margin-right: 3px;
-    transition: all 0.2s ease-out;
+    transition: all 0.2s cubic-bezier(0.39, 0.58, 0.57, 1);
     background: url(../../img/home/mainView/mxr_1.png) no-repeat;
+}
+.mxr_1:hover{
+    background-position: 0 -61px;
 }
 .mxr_2 {
     width: 57px;
@@ -85,8 +114,11 @@
     float: left;
     margin-top: 1px;
     margin-right: 3px;
-    transition: all 0.2s ease-out;
+    transition: all 0.2s cubic-bezier(0.39, 0.58, 0.57, 1);
     background: url(../../img/home/mainView/mxr_2.png) no-repeat;
+}
+.mxr_2:hover{
+    background-position: 0 -61px;
 }
 .mxr_3 {
     width: 57px;
@@ -95,80 +127,12 @@
     float: left;
     margin-top: 1px;
     margin-right: 3px;
-    transition: all 0.2s ease-out;
+    transition: all 0.2s cubic-bezier(0.39, 0.58, 0.57, 1);
     background: url(../../img/home/mainView/mxr_3.png) no-repeat;
 }
-
-
-
-
-/*#gotop>a{*/
-    /*width: 41px;*/
-    /*height: 41px;*/
-    /*display: block;*/
-    /*background: url("../../img/home/mainView/top.png") no-repeat;*/
-/*}*/
-
-/*
-.blank {
-    clear: both;
-    visibility: hidden;
-    font-size: 0;
-    height: 0;
-    line-height: 0;
+.mxr_3:hover{
+    background-position: 0 -61px;
 }
-.wrap {
-    width: 1200px;
-    height: auto;
-}
-.ckgd {
-    width: 250px;
-    margin: 0 auto;
-    text-align: center;
-    font-size: 19px;
-    display: block;
-    padding: 18px 0;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    z-index: 1;
-    transition: background 0.2s ease-in,color 0.1s ease-out;
-}
-.mod-title {
-    padding-bottom: 15px;
-}
-.support-con {
-    margin-top: 20px;
-    background-repeat: no-repeat;
-}
-.support-con ul {
-    float: left;
-}
-.support-con ul li {
-    float: left;
-    line-height: 26px;
-}
-.support-big .icon-sup {
-    width: 95px;
-    height: 95px;
-    display: inline-block;
-    transition: all 0.5s ease-out;
-}
-.support-sm .icon-sup {
-    width: 57px;
-    height: 61px;
-    display: block;
-    float: left;
-    margin-top: 1px;
-    margin-right: 3px;
-    transition: all 0.2s ease-out;
-}
-*/
-
-/*.mx_1 {*/
-    /*background: url(http://localhost/zc4/app/Tpl/fanwe_1/images/images/mx_1.png) no-repeat center;*/
-/*}*/
-
 .footer {
     width: 100%;
     background: #5a5a5a;

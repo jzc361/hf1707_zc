@@ -12,14 +12,19 @@ class Index extends  Controller
     //跳转首页
     public function index()
     {
+        $adList=db('ad')->where('starttime','<=',date('Y-m-d H:i:s'))->where('endtime','>',date('Y-m-d H:i:s'))->select(); //获取有效期广告
+        $this->assign('adList',$adList);
         return $this->fetch('mainView');
-
     }
-//    //跳转更多众筹
-//    public function proindexView()
-//    {
-//        return $this->redirect('home/Project/index');
-//    }
+    //热门众筹
+    public function getHotPro()
+    {
+        $adList=db('project')->where('endtime','>',date('Y-m-d H:i:s'))->limit(4)->select(); //获取广告
+        $this->assign('adList',$adList);
+        return $this->fetch('mainView');
+    }
+    //最新众筹
+
 
     /*
     public function showLogin()
