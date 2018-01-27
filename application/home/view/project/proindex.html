@@ -88,14 +88,13 @@
                 <div class="col-xs-6"></div>
                 <div class="col-xs-2">
                     <span>排序</span>
-
-                        <select name="select" id="">
-                            <option value="0">请选择</option>
-                            <option value="1">热度</option>
-                            <option value="2">最新上线</option>
-                            <option value="3">即将上线</option>
-                        </select>
-
+                    <select name="order" onchange="window.location=this.value">
+                        <option value="proindex?sortid={$sortid}" {if !cookie('order')}echo selected{/if}>请选择</option>
+                        <option value="proindex?order=1&sortid={$sortid}" {if cookie('order')==1}echo selected{/if}>热度</option>
+                        <option value="proindex?order=2&sortid={$sortid}" {if cookie('order')==2}echo selected{/if}>最新上线</option>
+                        <option value="proindex?order=3&sortid={$sortid}" {if cookie('order')==3}echo selected{/if}>金额最多</option>
+                        <!--<option value="proindex?order=4&sortid={$sortid}" {if cookie('order')==4}echo selected{/if}>支持最多</option>-->
+                    </select>
                 </div>
             </div>
         </div>
@@ -105,7 +104,7 @@
                 <!--项目图片-->
                 <div class="proimg">
                     <a href="prodetails?proid={$value.projectid}">
-                        <img src="__STATIC__/img/home/project/{$value.imgs}" alt="" class="img-responsive">
+                        <img src="__STATIC__/img/home/project/{$value.imgs}" alt="" class="img-responsive" style="margin: auto">
                     </a>
                 </div>
                 <!--项目名-->
@@ -116,7 +115,7 @@
                 <div>
                     <span>目标：天</span>
                     <span>￥{$value.tolamount}</span>
-                    <div style="float: right"></div>
+                    <div style="float: right">{$value.statename}</div>
                 </div>
                 <div class="progress progress-striped active" style="width: 85%">
                     <div class="progress-bar progress-bar-success" role="progressbar"aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:{$value.curamount/$value.tolamount*100}%;">
@@ -161,5 +160,18 @@
         $('.stateList').find('li').attr('class','');
         $(this).attr('class','active');
     });
+
+/*    function order(){
+        var order=$('#order option:selected').val();
+        console.log(order);
+        $('#order').href=order;
+        /!*$.ajax({
+            url:'proindex',
+            data:{order:order},
+            success:function(res){
+                //location.href="proindex?order="+order;
+            }
+        });*!/
+    }*/
 </script>
 </html>
