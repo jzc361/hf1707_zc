@@ -19,7 +19,7 @@ return [
     // 应用调试模式
     'app_debug'              => true,
     // 应用Trace
-    'app_trace'              => true,
+    'app_trace'              => false,
     // 应用模式状态
     'app_status'             => '',
     // 是否支持多模块
@@ -207,7 +207,7 @@ return [
         // SESSION_ID的提交变量,解决flash上传跨域
         'var_session_id' => '',
         // SESSION 前缀
-        'prefix'         => 'think',
+        'prefix'         => 'admin',
         // 驱动方式 支持redis memcache memcached
         'type'           => '',
         // 是否自动开启 SESSION
@@ -241,13 +241,10 @@ return [
         'list_rows' => 15,
     ],
     //验证码配置
-    'captcha'               =>  [
-        // 验证码字体大小
-        'fontSize'    =>    20,
-        // 验证码位数
-        'length'      =>    5,
-        // 关闭验证码杂点
-//        'useNoise'    =>    false,
+    'captcha'=>[
+        'length'=>4,
+        'imageH'=>40,
+        'fontSize'=>20,
     ],
     //提示信息
     'msg'=>[
@@ -274,6 +271,4 @@ return [
 
         ],
     ]
-
-
 ];
