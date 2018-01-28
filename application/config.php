@@ -43,7 +43,7 @@ return [
     // 是否开启多语言
     'lang_switch_on'         => false,
     // 默认全局过滤方法 用逗号分隔多个
-    'default_filter'         => '',//strip_tags,stripslashes,addslashes
+    'default_filter'         => 'strip_tags,stripslashes,addslashes',
     // 默认语言
     'default_lang'           => 'zh-cn',
     // 应用类库后缀
@@ -241,13 +241,30 @@ return [
         'list_rows' => 15,
     ],
     //验证码配置
-    'captcha'               =>  [
+/*    'captcha'               =>  [
         // 验证码字体大小
         'fontSize'    =>    20,
         // 验证码位数
         'length'      =>    5,
         // 关闭验证码杂点
 //        'useNoise'    =>    false,
+    ],*/
+    //验证码
+    'captcha'  => [
+        // 验证码字符集合
+        //'codeSet'  => '2345678abcdefhijkmnpqrstuvwxyzABCDEFGHJKLMNPQRTUVWXY',
+        // 验证码字体大小(px)，根据所需进行设置验证码字体大小
+        'fontSize' => 18,
+        // 是否画混淆曲线
+        'useCurve' => true,
+        // 验证码图片高度，根据所需进行设置高度
+        'imageH'   => 50,
+        // 验证码图片宽度，根据所需进行设置宽度
+        'imageW'   => 200,
+        // 验证码位数，根据所需设置验证码位数
+        'length'   => 4,
+        // 验证成功后是否重置
+        'reset'    => true,
     ],
     //提示信息
     'msg'=>[
@@ -256,6 +273,12 @@ return [
             'success'=>'恭喜您，登录成功',  //10001
             'codeFail'=>'验证码错误，请重新输入',  //10002
             'fail'=>'账号或密码错误，请重新输入',  //10004
+        ],
+        'register'=>[
+            'error'=>'注册失败，请从稍后再试',//10010
+            'success'=>'恭喜您，注册成功',//10011
+            'codeFail'=>'验证码错误，请重新输入',  //10002
+            'fail'=>'账号已存在，请重新输入',  //10014
         ],
         'oper'=>[
             'add'=>'添加成功',  //20001
