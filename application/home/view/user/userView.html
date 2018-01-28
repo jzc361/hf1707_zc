@@ -36,7 +36,8 @@
                             <a href="{:url('/home/Project/proindex')}">更多众筹</a>
                         </li>
                         <li>
-                            <a href="#">联系我们</a>
+                            <a href="{:url('/home/Publishpro/jumpToProBaseMsg')}">发起项目</a>
+                            <!--<a href="#">联系我们</a>-->
                         </li>
                         <!--<li class="dropdown">-->
                         <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>-->
@@ -130,32 +131,32 @@
             <div class="menutitle">项目管理</div>
             <ul class="homemenulist">
                 <li >
-                    <a href="/zc4/index.php?ctl=account" class="a1">
+                    <a href="javascript:void(0)" mySrc="{:url('/home/User/support')}" >
                         <i></i>支持的项目
                     </a>
                 </li>
+                <!--<li >-->
+                    <!--<a href="/zc4/index.php?ctl=account&act=mine_investor_status" class="a1">-->
+                        <!--<i></i>投资的项目-->
+                    <!--</a>-->
+                <!--</li>-->
                 <li >
-                    <a href="/zc4/index.php?ctl=account&act=mine_investor_status" class="a1">
-                        <i></i>投资的项目
-                    </a>
-                </li>
-                <li >
-                    <a href="/zc4/index.php?ctl=account&act=project" class="a2">
+                    <a href="javascript:void(0)" mySrc="{:url('/home/User/myProject')}" class="a2">
                         <i></i>我的项目
                     </a>
                 </li>
                 <li >
-                    <a href="/zc4/index.php?ctl=account&act=focus" class="a3">
+                    <a href="javascript:void(0)" mySrc="{:url('/home/User/focus')}"  class="a3">
                         <i></i>关注的项目
                     </a>
                 </li>
+                <!--<li >-->
+                    <!--<a href="/zc4/index.php?ctl=account&act=recommend" class="a3">-->
+                        <!--<i></i>推荐的项目-->
+                    <!--</a>-->
+                <!--</li>-->
                 <li >
-                    <a href="/zc4/index.php?ctl=account&act=recommend" class="a3">
-                        <i></i>推荐的项目
-                    </a>
-                </li>
-                <li >
-                    <a href="/zc4/index.php?ctl=account&act=money_index">
+                    <a href="javascript:void(0)" mySrc="{:url('/home/User/money')}">
                         <i></i>资金管理
                     </a>
                 </li>
@@ -163,7 +164,7 @@
             <div class="menutitle">个人设置</div>
             <ul class="homemenulist">
                 <li class="select">
-                    <a href="/zc4/index.php?ctl=settings" class="a5">
+                    <a href="javascript:void(0)" mySrc="{:url('/home/User/settings')}" class="a5">
                         <i></i>资料修改
                     </a>
                 </li>
@@ -173,7 +174,7 @@
                     </a>
                 </li>
                 <li >
-                    <a href="/zc4/index.php?ctl=settings&act=consignee" class="a8">
+                    <a href="javascript:void(0)" mySrc="{:url('/home/User/address')}" class="a8">
                         <i></i>收件地址管理
                     </a>
                 </li>
@@ -234,9 +235,12 @@
 <!-- 底部结束 -->
 </body>
 <script>
+    $homemenulist=$(".homemenulist");
     $(function(){
-        $menu.find('li').css({'cursor':'pointer'}).click(function(){
-            $show_iframe.prop('src',$(this).attr('mySrc'));
+        $homemenulist.find('a').click(function(){
+            $homemenulist.find('li').removeClass('select');
+            $(this).parent('li').addClass('select');
+            $("#my_iframe").prop('src',$(this).attr('mySrc'));
         });
     });
     $("#my_iframe").load(function () {
