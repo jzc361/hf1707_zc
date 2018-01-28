@@ -29,15 +29,6 @@ class Index extends  Controller
         $this->assign('today',time());
         return $this->fetch('mainView');
     }
-    //热门众筹
-    public function getHotPro()
-    {
-        $hotHotList=db('project')->order('focuscount desc')->limit(4)->select();
-        $this->assign('hotHotList',$hotHotList);
-        return $this->fetch('mainView');
-    }
-    //最新众筹
-
 
     /*
     public function showLogin()
