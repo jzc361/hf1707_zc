@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="IE=edge"><!--设置ie内核浏览器下的渲染模式-->
     <meta name="renderer" content="webkit"><!--设置成网页以webkit(极速模式)来渲染页面-->
     <meta name="viewport" content="width=device-width,initial-scale=1"><!--设置网页宽度和访问设备宽度保持一致，且显示比例1:1，-->
-    <title>收货地址管理</title>
+    <title>支持的项目</title>
     <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
     <link rel="stylesheet" href="__CSS__/bootstrapValidator.min.css">
     <link rel="stylesheet" href="__CSS__/home/userView.css">
@@ -28,6 +28,7 @@
     }
 </style>
 <body>
+
 <div class="container" style="min-height: 880px">
     <div class="page_title">支持的项目</div>
     <table class="table table-hover table-responsive" id="my_table" >
@@ -41,56 +42,28 @@
         </tr>
         </thead>
         <tbody>
+        {volist name='supportList' id='vo'}
         <tr>
             <td>
                 <div class="media">
                     <a href="#" class="pull-left">
-                        <img class="media-object"  height="45px" width="70px" src="__STATIC__/img/home/mainView/pro_1.jpg" alt='' />
+                        <img class="media-object"  height="45px" width="70px" src="{$vo.projectimg}" alt='' />
                     </a>
                     <div class="media-body">
-                        短片电影《Blind Love》
+                        {$vo.projectname}
                     </div>
                 </div>
             </td>
-            <td>￥100.00</td>
+            <td>￥{$vo.ordersprice}</td>
             <td>-</td>
-            <td>未成功 等待退款</td>
+            <td>{$vo.orderstate}</td>
             <td><a href="#">查看详情</a></td>
         </tr>
-        <tr>
-            <td>
-                <div class="media">
-                    <a href="#" class="pull-left">
-                        <img class="media-object"  height="45px" width="70px" src="__STATIC__/img/home/mainView/pro_1.jpg" alt='' />
-                    </a>
-                    <div class="media-body">
-                        短片电影《Blind Love》
-                    </div>
-                </div>
-            </td>
-            <td>￥100.00</td>
-            <td>-</td>
-            <td>未成功 等待退款</td>
-            <td><a href="#">查看详情</a></td>
-        </tr>
-        <tr>
-            <td>
-                <div class="media">
-                    <a href="#" class="pull-left">
-                        <img class="media-object"  height="45px" width="70px" src="__STATIC__/img/home/mainView/pro_1.jpg" alt='' />
-                    </a>
-                    <div class="media-body">
-                        短片电影《Blind Love》
-                    </div>
-                </div>
-            </td>
-            <td>￥100.00</td>
-            <td>-</td>
-            <td>未成功 等待退款</td>
-            <td><a href="#">查看详情</a></td>
-        </tr>
+        {/volist}
         </tbody>
     </table>
+    <div style="text-align: center">{$supportList->render()}</div>
+
 </div>
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

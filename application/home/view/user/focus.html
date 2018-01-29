@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge"><!--设置ie内核浏览器下的渲染模式-->
+    <meta name="renderer" content="webkit"><!--设置成网页以webkit(极速模式)来渲染页面-->
+    <meta name="viewport" content="width=device-width,initial-scale=1"><!--设置网页宽度和访问设备宽度保持一致，且显示比例1:1，-->
+    <title>关注的项目</title>
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <link rel="stylesheet" href="__CSS__/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="__CSS__/home/userView.css">
+    <script src="__JS__/jquery-2.1.4.js"></script>
+    <script src="__JS__/bootstrap.min.js"></script>
+    <script src="__JS__/bootstrapValidator.min.js"></script>
+</head>
+<style>
+    @media (min-width: 768px) {
+
+    }
+    @media (max-width: 767px) {
+
+    }
+    #my_table{
+        text-align: center
+    }
+    #my_table th{
+        text-align: center
+    }
+</style>
+<body>
+
+<div class="container" style="min-height: 880px">
+    <div class="page_title">关注的项目</div>
+    <table class="table table-hover table-responsive" id="my_table" >
+        <thead style="text-align: center" >
+        <tr>
+            <th>项目名称</th>
+            <th width="100" style="text-align: center">获得支持</th>
+            <th width="80">支持人数</th>
+            <th width="150">达成目标</th>
+            <th width="150">剩余时间</th>
+            <th width="100">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name='focusList' id='vo'}
+        <tr>
+            <td>
+                <div class="media">
+                    <a href="#" class="pull-left">
+                        <img class="media-object"  height="45px" width="70px" src="{$vo.projectimg}" alt='' />
+                    </a>
+                    <div class="media-body">
+                        {$vo.projectname}
+                    </div>
+                </div>
+            </td>
+            <td>￥{$vo.curamount}</td>
+            <td>{vo.sumsuport}</td>
+            <td>{vo.orderstate}</td>
+            <td><a href="#">取消关注</a></td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    <div style="text-align: center">{$focusList->render()}</div>
+
+</div>
+<div class="blank"></div>
+</body>
+<script>
+    $(function(){
+        $("#addBtn").click(function(){
+            $('#myModal').modal('show')
+        });
+        //正则校验
+        $('#defaultForm').bootstrapValidator({
+//        live: 'disabled',
+            message: '该值不能为空',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                reverName: {
+                    validators: {
+                        notEmpty: {
+                            message: '收货人不能为空'
+                        }
+                    }
+                },
+                province: {
+                    validators: {
+                        notEmpty: {
+                            message: '省份不能为空'
+                        }
+                    }
+                },
+                city: {
+                    validators: {
+                        notEmpty: {
+                            message: '城市不能为空'
+                        }
+                    }
+                },
+                detailAddr: {
+                    validators: {
+                        notEmpty: {
+                            message: '详细地址不能为空'
+                        }
+                    }
+                },
+                Postcode: {
+                    validators: {
+                        notEmpty: {
+                            message: '邮编地址不能为空'
+                        }
+                    }
+                },
+                telephone: {
+                    validators: {
+                        notEmpty: {
+                            message: '电话号码不能为空'
+                        }
+                    }
+                }
+            }
+        });
+        $('#resetBtn').click(function() {
+            $('#defaultForm').data('bootstrapValidator').resetForm(true);
+        });
+        $('#submitBtn').click(function() {
+            $('#defaultForm').submit();
+        });
+
+    });
+
+</script>
+
+</html>

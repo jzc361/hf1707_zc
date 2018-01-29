@@ -17,6 +17,20 @@ class User extends  Controller
     //支持的项目页面
     public function support()
     {
+        //判断非法闯入
+//        $zc_user=Session::get('zc_user');
+//        if(empty($userInfo)){
+//            $this->error('非法闯入，跳转到首页。。。','index/Index/index','',3);
+//        }
+        //获取分页项目
+        $zc_user=[];
+        $zc_user['userid']=10001;//(测试用)
+        $supportList=db('orders a,zc_project b')
+            ->where('a.projectid=b.projectid')
+            ->where('a.userid',$zc_user['userid'])
+            ->order('a.orderstime desc')
+            ->paginate(5);
+        $this->assign('supportList',$supportList);
         return $this->fetch('support');
     }
     //我的项目页面
@@ -27,6 +41,21 @@ class User extends  Controller
     //关注的项目页面
     public function focus()
     {
+        //判断非法闯入
+//        $zc_user=Session::get('zc_user');
+//        if(empty($userInfo)){
+//            $this->error('非法闯入，跳转到首页。。。','index/Index/index','',3);
+//        }
+        //获取分页项目
+        $zc_user=[];
+        $zc_user['userid']=10001;//(测试用)
+        $focusList=db('focuspro a')
+            ->join('zc_project b','a.projectid=b.projectid')
+            ->join('zc_prodetails c','a.projectid=c.projectid')
+            ->group('a.projectid')
+            ->order('a.focustime desc')
+            ->paginate(5);
+        $this->assign('focusList',$focusList);
         return $this->fetch('focus');
     }
     //资金管理页面

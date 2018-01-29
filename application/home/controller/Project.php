@@ -104,4 +104,6 @@ class Project extends Controller
     public function prodetails_comment(){
         return $this->fetch();
     }
+
+
 }
