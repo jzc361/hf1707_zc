@@ -2,9 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>评论</title>
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <style>
+        .comment{
+            border-bottom: 1px solid gainsboro;
+            padding-bottom: 45px;
+        }
+        .comText{
+            border-bottom: 1px solid gainsboro;
+            padding: 10px 0 10px 0;
+
+        }
+    </style>
 </head>
 <body>
-    评论11
+    <div class="container">
+        <div class="comment">
+            <h4>有什么想和大家交流的?</h4>
+            <textarea name="" id="comToPro" cols="30" rows="8" placeholder="输入您想要跟大家交流的内容~" style="width: 100%"></textarea>
+            <div style="float: right;">
+                {if !session('?zc_user')}<div><p>请登录后提问，立即 <a href="">登录</a>或 <a href="">注册</a></p></div>{/if}
+                {if session('?zc_user')}<div><button type="button" class="btn btn-info" onclick="comToPro()">发布评论</button></div>{/if}
+            </div>
+        </div>
+
+        {voList name="comments" id="value"}
+        <div class="comText">
+            <div style="float: left">头像</div>
+            <div style="">
+                <p><span>username：</span><span>comment</span></p>
+                <p><span>评论时间</span><span>回复</span></p>
+            </div>
+        </div>
+        {/voList}
+    </div>
 </body>
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/bootstrap.min.js"></script>
+<script>
+    function comToPro(){
+        var comToPro=$('#comToPro').val();
+        console.log(comToPro);
+    }
+</script>
 </html>

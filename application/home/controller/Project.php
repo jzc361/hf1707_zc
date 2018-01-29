@@ -10,7 +10,9 @@ namespace app\home\controller;
 
 //引用基类
 use \think\Controller;
+use \think\Db;
 use \think\Cookie;
+use \think\Session;
 
 class Project extends Controller
 {
@@ -24,6 +26,11 @@ class Project extends Controller
         //$stateid=input('?get.stateid')?input('get.stateid'):"";
         $statename=input('?get.staname')?input('get.staname'):"";//状态
         $order=input('?get.order')?input('get.order'):"";
+        //$search=input('?get.search')?input('get.search'):"";//搜索
+        /*if($search!=""){
+            cookie('search',$search,3600);
+        }*/
+        //echo cookie('search');
         $pageParam= ['query' =>[]];//分页条件
         $pageParam['query']['order'] = $order;
         //获取分类
@@ -40,6 +47,11 @@ class Project extends Controller
             $condition["statename"]=$statename;
             $pageParam['query']['statename'] = $statename;
         }
+        //条件搜索
+        /*if(cookie('search')!=""){
+            $condition["projectname"]=['like','%'.cookie('search').'%'];
+            $pageParam['query']['projectname'] = ['like','%'.cookie('search').'%'];
+        }*/
         //排序
         switch ($order){
             case "":
@@ -69,8 +81,8 @@ class Project extends Controller
         }
 
         //获取项目（不包括审核中的项目）
-        $pro=db('project')->where($condition)->order($ord,$ordertype)->paginate(4, false, $pageParam);//->where('statename','not in','审核中')
-        $pronum=db('project')->where($condition)->count('projectid');//->where('statename','not in','审核中')
+        $pro=db('project')->where($condition)->order($ord,$ordertype)->paginate(4, false, $pageParam);//->whereOr('intro','like','%'.$search.'%')->where('statename','not in','审核中')
+        $pronum=db('project')->where($condition)->count('projectid');//->whereOr('intro','like','%'.$search.'%')->where('statename','not in','审核中')
         $this->assign('sortid',cookie('pro_sortid'));//给前端返回搜索的分类id
         $this->assign('sortList',$sort);
         $this->assign('pronum',$pronum);
@@ -102,8 +114,16 @@ class Project extends Controller
 
     //项目评论
     public function prodetails_comment(){
+        $proid=input('?get.proid')?input('get.proid'):"";
+        //$data=db('comments')->where('projectid',$proid)->select();
+        //多表查询
+        $re=Db::table('zc_comments')
+            ->alias('a')
+            ->join('zc_user b','a.userid = b.userid')
+            ->select();
+        var_dump($re);
+        $this->assign('comments',$re);
         return $this->fetch();
     }
-
 
 }
