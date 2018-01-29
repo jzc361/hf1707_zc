@@ -16,9 +16,20 @@ class Promanage extends Controller
     //显示全部项目
     public function index()
     {
-        $allProList = Db::name('project')->order('createtime', 'desc')->paginate(3);
-//        $allProList=Db::table('zc_project')->select();
+        //获取所有项目
+        if(isset($_GET['sortid'])){
+            echo "1111";
+            //echo input('get.sortid');
+            exit();
+        }
+        $allProList=Db::table('zc_project')
+            ->alias('a')
+            ->join('zc_sort b','a.sortid=b.sortid')
+            ->order('createtime', 'desc')->paginate(3);
+        //获取项目分类
+        $proSort=Db::table('zc_sort')->select();
         $this->assign('allProList',$allProList);
+        $this->assign('proSort',$proSort);
 //        var_dump($allProList);exit();
         return $this->fetch('allProView');
     }
