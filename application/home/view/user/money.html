@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge"><!--设置ie内核浏览器下的渲染模式-->
+    <meta name="renderer" content="webkit"><!--设置成网页以webkit(极速模式)来渲染页面-->
+    <meta name="viewport" content="width=device-width,initial-scale=1"><!--设置网页宽度和访问设备宽度保持一致，且显示比例1:1，-->
+    <title>资金管理</title>
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <link rel="stylesheet" href="__CSS__/home/userView.css">
+    <script src="__JS__/jquery-2.1.4.js"></script>
+    <script src="__JS__/bootstrap.min.js"></script>
+</head>
+<style>
+    .money_box {
+        border: #d8d8d8 solid 1px;
+        margin: 10px;
+        padding: 20px;
+        background: #fafafa;
+    }
+    .credit_box {
+        font-size: 20px;
+        font-family: "微软雅黑";
+    }
+    @media (min-width: 768px) {
+        .money_tabs>li>a {
+            padding: 10px 15px;
+        }
+    }
+    @media (max-width: 767px) {
+        .money_tabs>li>a {
+            padding: 10px 6px;
+        }
+    }
+
+</style>
+<body>
+<div class="container">
+    <!-- tab标签 -->
+    <ul class="nav nav-tabs money_tabs">
+        <li class="active"><a href="#pro1" data-toggle="tab">账户主页</a></li>
+        <li><a href="#pro2" data-toggle="tab">会员充值</a></li>
+        <li><a href="#pro3" data-toggle="tab">充值日志</a></li>
+        <li><a href="#pro4" data-toggle="tab">会员提现</a></li>
+        <li><a href="#pro5" data-toggle="tab">提现日志</a></li>
+        <li><a href="#pro6" data-toggle="tab">收支明细</a></li>
+    </ul>
+    <!-- 每个tab页对应的内容 -->
+    <div  class="tab-content">
+        <div id="pro1" class="tab-pane fade in active">
+            <div class="money_box">
+                <div class="credit_box">
+                    <p><span>账户余额：</span><span style="color: #71b900;">￥9999.00</span><span>元</span></p>
+                    <p><span>诚意金：</span><span style="color: #71b900;">￥0.00</span><span>元</span></p>
+                </div>
+                <button class="btn btn-info">立即充值</button>
+                <button class="btn btn-warning">我要提现</button>
+            </div>
+        </div>
+        <div id="pro2" class="tab-pane fade">
+            <form class="form-horizontal" role="form" style="margin-top: 20px">
+                <div class="form-group">
+                    <label for="charge" class="col-xs-2 control-label" style="font-size: 16px;margin-top: 10px">充值金额：</label>
+                    <div class="col-xs-8 input-group  input-group-lg">
+                        <input type="text" class="form-control" id="charge" placeholder="请输入充值金额">
+                        <span class="input-group-addon">人民币（元）</span>
+                    </div>
+
+                </div>
+                <button class="btn btn-primary btn-lg">确定，去付款</button>
+            </form>
+        </div>
+        <div id="pro3" class="tab-pane fade">
+            <table class="table table-hover table-responsive">
+                <caption>充值记录</caption>
+                <thead>
+                <tr>
+                    <th>项目名称</th>
+                    <th>支付时间</th>
+                    <th>金额</th>
+                    <th>是否支付</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>在线支付</td>
+                    <td>无</td>
+                    <td>100.00</td>
+                    <td><button class="btn btn-warning">继续支付</button></td>
+                </tr>
+                <tr>
+                    <td>在线支付</td>
+                    <td>无</td>
+                    <td>100.00</td>
+                    <td><button class="btn btn-warning">继续支付</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="pro4" class="tab-pane fade"><p>会员提现</p></div>
+        <div id="pro5" class="tab-pane fade">
+            <table class="table table-hover table-responsive">
+                <caption>提现记录</caption>
+                <thead>
+                <tr>
+                    <th>项目名称</th>
+                    <th>支付时间</th>
+                    <th>金额</th>
+                    <th>是否支付</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>在线支付</td>
+                    <td>无</td>
+                    <td>100.00</td>
+                    <td><button class="btn btn-warning">继续支付</button></td>
+                </tr>
+                <tr>
+                    <td>在线支付</td>
+                    <td>无</td>
+                    <td>100.00</td>
+                    <td><button class="btn btn-warning">继续支付</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="pro6" class="tab-pane fade"><p>收支明细</p></div>
+    </div>
+</div>
+
+</body>
+
+</html>

@@ -9,7 +9,6 @@ class Index extends Controller
     //转入主页
     public function index()
     {
-        return $this->fetch('loginView');
+        return $this->fetch('login');
     }
-
 }

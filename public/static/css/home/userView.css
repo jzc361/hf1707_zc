@@ -187,5 +187,9 @@ iframe {
     overflow: hidden;
 }
 
-
+.page_title {
+    padding: 10px 20px;
+    font-size: 25px;
+    line-height: 45px;
+}
 

@@ -233,8 +233,8 @@
         methods:{
             //限制众筹天数和金额只能输入正整数
             limitInt:function(){
-                this.daysNumber=this.daysNumber.replace(/[^1-9]/g,'');
-                this.tolamount=this.tolamount.replace(/[^1-9]/g,'');
+                this.daysNumber=this.daysNumber.replace(/[^0-9]/g,'');
+                this.tolamount=this.tolamount.replace(/[^0-9]/g,'');
             },
             //添加图片
             addImg:function(){
