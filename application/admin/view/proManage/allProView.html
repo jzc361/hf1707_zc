@@ -28,21 +28,18 @@
     <div class="layui-row">
         <form class="x-so">
             <span style="font-size: 17px;">项目类型：</span>
-            <select name="" style="width: 160px;height: 38px;" id="selectProSort" >
+            <select name="1"  style="width: 160px;height: 38px;" id="selectProSort" >
                 <option value="all">全部</option>
                 {volist name="proSort" id="val"}
                 <option value="{$val.sortid}">{$val.sortname}</option>
                 {/volist}
             </select>
             <span style="font-size: 17px;margin-left:10px;">项目状态：</span>
-            <select name="" style="width: 160px;height: 38px;">
-                <option value="">全部</option>
-                <option value="">待审核</option>
-                <option value="">审核成功</option>
-                <option value="">审核失败</option>
-                <option value="">众筹中</option>
-                <option value="">众筹成功</option>
-                <option value="">众筹失败</option>
+            <select name="" style="width: 160px;height: 38px;" id="searchState">
+                <option value="all">全部</option>
+                {volist name="stateList" id="val"}
+                <option value="{$val}">{$val}</option>
+                {/volist}
             </select>
             <input type="text" name="username"  placeholder="请输入项目名称" autocomplete="off" class="layui-input">
             <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
@@ -117,11 +114,39 @@
             //发送ajax
         }
     });
+    $(function(){
 
+    });
+    //选择项目分类
     $("#selectProSort").change(function(){
         console.log($(this).val());
         var selectsortid=$(this).val();
-        location.href="{:url('admin/Promanage/index')}?sortid="+selectsortid;
+        if(selectsortid!='all'){
+            location.href="{:url('admin/Promanage/index')}?sortid="+selectsortid;
+        }
+        else {
+            location.href="{:url('admin/Promanage/index')}";
+
+        }
+    });
+    //选择项目状态
+    $("#searchState").change(function(){
+        var selectState=$(this).val();
+        var selectsortid=$("#selectProSort").val();
+        console.log(selectState);
+        //两个都不为全部时
+        if(selectState!='all' && selectsortid!='all'){
+            location.href="{:url('admin/Promanage/index')}?state="+selectState+"&sortid="+selectsortid;
+        }
+        //选择项目状态时
+        else if(selectState!='all' && selectsortid=='all'){
+            location.href="{:url('admin/Promanage/index')}?state="+selectState;
+
+        }
+        else {
+            location.href="{:url('admin/Promanage/index')}";
+
+        }
     });
     layui.use('laydate', function(){
         var laydate = layui.laydate;
@@ -136,6 +161,8 @@
             elem: '#end' //指定元素
         });
     });
+
+
 
 </script>
 </html>
