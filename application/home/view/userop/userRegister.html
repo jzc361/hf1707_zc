@@ -16,7 +16,7 @@
         <div class="head_cont" style="background:#fff">
             <div class="wrap1000 constr clearfix">
                 <div class="logo_1 f_l">
-                    <!--<a class="link" href="/4stage/fangweizhongchouV1.53/"></a>-->
+                    <a class="link" href="{:url('index/Index')}">首页</a>
                 </div>
                 <div class="f_yahei no-nav-text">注册</div>
             </div>
@@ -43,9 +43,9 @@
                             <label class="title control-label"><span class="f_red">*</span>会员名称</label>
                             <input type="text" value="" class="textbox" name="user_name" ng-model="user_name" placeholder="请输入会员帐号" required>
                             <div class="tip_box">
-                                <span style="color:red" ng-show="user_register_form.user_name.$dirty && user_register_form.user_name.$invalid">
+                                <span style="color:red" ng-show="user_register_form.user_name.$dirty && user_register_form.user_name.$invalid || checkUser()">
                                     <span ng-show="user_register_form.user_name.$error.required">账号不能为空</span>
-                                    <span ng-show="user_register_form.user_name.$error.minlength || user_register_form.user_name.$error.maxlength">账号长度为4-8的字符串</span>
+                                    <span ng-show="checkUser()">支持数字、字母和"_"组成，5-10个字符</span>
                                 </span>
                             </div>
                         </div>
@@ -59,7 +59,6 @@
                         <div class="form_row control-group mycontrol-group">
                             <label class="title control-label"><span class="f_red">*</span>创建密码</label>
                             <input type="password" name="user_psd" ng-model="user_psd" class="textbox" placeholder="至少输入6个字符" ng-minlength="6" required>
-                            <!--<span class="holder_tip">至少输入4个字符</span>-->
                             <div class="tip_box">
                                 <span style="color:red" ng-show="user_register_form.user_psd.$dirty && user_register_form.user_psd.$invalid">
                                     <span ng-show="user_register_form.user_psd.$error.required">密码不能为空</span>
@@ -90,7 +89,6 @@
                                 </span>
                             </div>
                         </div>
-
 <!--                        <div class=" form_row control-group mycontrol-group">
                             <label for="signup-mobile control-label" class="title control-label"><span class="f_red">*</span>手机号码</label>
                             <input type="text" value="" class="textbox" id="settings-mobile" name="mobile" size="30" placeholder="请输入手机号码11位">
@@ -110,7 +108,7 @@
                         <div class="blank10"></div>
                         <div class="button_row do_register control-group">
                             <label class="title control-label"></label>
-                            <input type="button" value="注册" name="submit_form" class="ui-button theme_bgcolor" id="btn_do_register" ng-click="register()" ng-disabled="user_register_form.$dirty && user_register_form.$invalid ">
+                            <input type="button" value="注册" name="submit_form" class="ui-button theme_bgcolor" id="btn_do_register" ng-click="register()" ng-disabled="user_register_form.$dirty && user_register_form.$invalid">
                             <input type="hidden" value="1" name="ajax">
                             <div class="blank15"></div>
                         </div>
@@ -161,6 +159,7 @@
 <script>
     var app=angular.module('myApp',[]);
     app.controller('register',function($scope,$http){
+        //注册
         $scope.register=function(){
             $http.post('userRegister',
                     {'username':$scope.user_name,'userpsd':$scope.user_psd,'code':$scope.code}
@@ -168,16 +167,27 @@
                 if(res.data.code==10011){
                     //注册成功
                     alert(res.data.msg);
-                    location.href="{:url('/Userop/showLogin')}";
+                    location.href="{:url('userop/showLogin')}";
                 } else if(res.data.code==10002){
                     //验证码错误--刷新验证码
                     alert(res.data.msg);
                     $('#codeimg').attr('src','{:captcha_src()}?'+Math.random());
                 }else {
                     alert(res.data.msg);
+                    $('#codeimg').attr('src','{:captcha_src()}?'+Math.random());
                 }
             });
+        };
+
+        //正则验证--用户名
+        $scope.checkUser=function(){
+            var username=$scope.user_name;
+            var zz="[0-9a-zA-Z\_]{5,10}$";
+            var reg=new RegExp(zz);
+            var bool=reg.test(username);
+            return !bool;
         }
     });
+
 </script>
 </html>

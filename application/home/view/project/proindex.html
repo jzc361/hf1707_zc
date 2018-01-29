@@ -104,7 +104,7 @@
                 <!--项目图片-->
                 <div class="proimg">
                     <a href="prodetails?proid={$value.projectid}">
-                        <img src="__STATIC__/img/home/project/{$value.imgs}" alt="" class="img-responsive" style="margin: auto">
+                        <img src="{$value.projectimg}" alt="" class="img-responsive" style="margin: auto">
                     </a>
                 </div>
                 <!--项目名-->
@@ -113,7 +113,7 @@
                 </div>
                 <!--目标-->
                 <div>
-                    <span>目标：天</span>
+                    <span>目标：{$value.daysnumber}天</span>
                     <span>￥{$value.tolamount}</span>
                     <div style="float: right">{$value.statename}</div>
                 </div>
@@ -141,7 +141,6 @@
             <div class="space col-sm-1"></div>
             {/volist}
         </div>
-        <!--<iframe src="showpro" frameborder="0" style="width:100%;height: 1200px;"></iframe>-->
     </div>
     <div align="center">{$pro->render()}</div>
 </body>
@@ -150,7 +149,7 @@
 <script>
 
     //分类
-    $('.sortList').find('li').click(function(){
+/*    $('.sortList').find('li').click(function(){
         $('.sortList').find('li').attr('class','');
         $(this).attr('class','active');
     });
@@ -159,7 +158,7 @@
     $('.stateList').find('li').click(function(){
         $('.stateList').find('li').attr('class','');
         $(this).attr('class','active');
-    });
+    });*/
 
 /*    function order(){
         var order=$('#order option:selected').val();

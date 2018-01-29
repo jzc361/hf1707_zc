@@ -14,7 +14,9 @@
     <div class="head_1 z100" id="J_head">
         <div class="head_cont" style="background:#fff">
             <div class="wrap1000 constr clearfix">
-                <div class="logo_1 f_l"></div>
+                <div class="logo_1 f_l">
+                    <a class="link" href="{:url('index/Index')}">首页</a>
+                </div>
                 <div class="f_yahei no-nav-text">登录</div>
             </div>
         </div>
@@ -30,7 +32,7 @@
                             用户注册
                         </li>
                     </ul>
-                    <span class="f_r" style="font-size:14px;color:#8c8c8c;line-height:14px; margin-top:16px;">还没账号<a href="showRegister" style="color:#0196db;"> 注册</a> </span>
+                    <span class="f_r" style="font-size:14px;color:#8c8c8c;line-height:14px; margin-top:16px;">还没账号！<a href="showRegister" style="color:#0196db;"> 注册</a> </span>
                 </div>
                 <div class="item c_1" style="display: block;">
                     <form ng-app="myApp" ng-controller="login" id="user_login_form" name="user_login_form" action="" novalidate>
@@ -38,8 +40,7 @@
                         <div class="blank0"></div>
                         <div class="form_row control-group mycontrol-group">
                             <label class="title control-label"><span class="f_red">*</span>会员名称</label>
-                            <input type="text" value="" class="textbox" name="user_name" ng-model="user_name" placeholder="请输入会员帐号"  required>
-                            <!--<span class="holder_tip">请输入会员帐号</span>-->
+                            <input type="text" value="" class="textbox" name="user_name" ng-model="user_name" placeholder="请输入会员帐号" ng-blur="checkUser()" required>
                             <div class="tip_box">
                                 <span style="color:red" ng-show="user_login_form.user_name.$dirty && user_login_form.user_name.$invalid">
                                     <span ng-show="user_login_form.user_name.$error.required">账号不能为空</span>
@@ -50,7 +51,6 @@
                         <div class="form_row control-group mycontrol-group">
                             <label class="title control-label"><span class="f_red">*</span>密&emsp;&emsp;码</label>
                             <input type="password" name="user_psd" ng-model="user_psd" class="textbox" placeholder="请输入密码" required>
-                            <!--<span class="holder_tip">至少输入4个字符</span>-->
                             <div class="tip_box">
                                 <span style="color:red" ng-show="user_login_form.user_psd.$dirty && user_login_form.user_psd.$invalid">
                                     <span ng-show="user_login_form.user_psd.$error.required">密码不能为空</span>
@@ -100,12 +100,14 @@
 <script src="__JS__/bootstrap.min.js"></script>
 <script>
     var app=angular.module('myApp',[]);
+
     app.controller('login',function($scope,$http){
+        //登录
         $scope.login=function(){
             $http.post('userLogin',
                     {'username':$scope.user_name,'userpsd':$scope.user_psd,'code':$scope.code}
             ).then(function(res){
-                //console.log(res.data);
+                //登录成功--跳转首页
                 if(res.data.code==10001){
                     alert(res.data.msg);
                     location.href="{:url('index/Index')}";
@@ -114,7 +116,9 @@
                     alert(res.data.msg);
                     $('#codeimg').attr('src', '{:captcha_src()}?' + Math.random());
                 }else {
+                    //登录失败
                     alert(res.data.msg);
+                    $('#codeimg').attr('src','{:captcha_src()}?'+Math.random());
                 }
             });
         }
