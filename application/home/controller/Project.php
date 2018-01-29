@@ -112,18 +112,55 @@ class Project extends Controller
         return $this->fetch();
     }*/
 
-    //项目评论
+    //项目评论（页面）
     public function prodetails_comment(){
         $proid=input('?get.proid')?input('get.proid'):"";
         //$data=db('comments')->where('projectid',$proid)->select();
         //多表查询
-        $re=Db::table('zc_comments')
+        $data=Db::table('zc_comments')
             ->alias('a')
             ->join('zc_user b','a.userid = b.userid')
+            ->where('a.projectid',$proid)
+            ->order('a.ctime','desc')
+            ->field('a.*,b.userid,b.username,b.headimg')
             ->select();
-        var_dump($re);
-        $this->assign('comments',$re);
+        $this->assign('comments',$data);
+        $this->assign('proid',$proid);
         return $this->fetch();
     }
 
+    //评论
+    public function comment(){
+        $proid=input('?post.proid')?input('post.proid'):"";
+        $comment=input('?post.comment')?input('post.comment'):"";
+        $userid=session('zc_user')[0]['userid'];
+        $condition=['projectid'=>$proid,'userid'=>$userid];
+        //评论内容为空
+        if(!$comment){
+            $reMsg=[
+                'code'=>30004,
+                'msg'=>config('Msg')['comment']['null'],
+                'data'=>[]
+            ];
+            return json($reMsg);
+        }
+        //查看用户订单表，用户是否支持过该项目
+        $res=db('orders')->where($condition)->select();
+        if(empty($res)){
+            //未支持项目
+            $reMsg=[
+                'code'=>30003,
+                'msg'=>config('Msg')['comment']['notAllow'],
+                'data'=>[]
+            ];
+            return json($reMsg);
+        }else{
+            $reMsg=[
+                'code'=>30003,
+                'msg'=>config('Msg')['comment']['success'],
+                'data'=>[]
+            ];
+            return json($reMsg);
+        }
+    }
 }

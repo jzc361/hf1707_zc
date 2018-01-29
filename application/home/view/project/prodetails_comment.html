@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>评论</title>
+    <title>{$proid}</title>
     <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
     <style>
         .comment{
@@ -15,7 +15,9 @@
         .comText{
             border-bottom: 1px solid gainsboro;
             padding: 10px 0 10px 0;
-
+        }
+        .comText span{
+            margin: 5px;
         }
     </style>
 </head>
@@ -31,22 +33,43 @@
         </div>
 
         {voList name="comments" id="value"}
+        {if $value.commentto==0}
         <div class="comText">
-            <div style="float: left">头像</div>
+            <div style="float: left">
+                <img src="{$value.headimg}" alt="加载失败">
+            </div>
             <div style="">
-                <p><span>username：</span><span>comment</span></p>
-                <p><span>评论时间</span><span>回复</span></p>
+                <p><span>{$value.username}：</span><span>{$value.content}</span></p>
+                <p><span>{$value.ctime}</span><span>回复</span></p>
             </div>
         </div>
+        {/if}
         {/voList}
     </div>
 </body>
 <script src="__JS__/jquery-2.1.4.js"></script>
 <script src="__JS__/bootstrap.min.js"></script>
+<script src="__JS__/vue.js"></script>
 <script>
+    //对项目评论
     function comToPro(){
         var comToPro=$('#comToPro').val();
-        console.log(comToPro);
+        var proid=$(document).attr("title");
+        $.ajax({
+            url:'comment',
+            type:'post',
+            data:{comment:comToPro,proid:proid},
+            dataType:'json',
+            success:function(res){
+                if(res.code==30001){
+                    alert(res.msg);
+                    //评论成功，刷新页面
+                    location.reload(true);
+                }else {
+                    alert(res.msg);
+                }
+            }
+        });
     }
 </script>
 </html>
