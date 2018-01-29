@@ -6,7 +6,7 @@
 #优惠劵
 
 
-
+断点
 -- SELECT  @@FOREIGN_KEY_CHECKS;
 DROP DATABASE IF EXISTS hf1707_zc;
 CREATE DATABASE hf1707_zc DEFAULT CHARACTER
@@ -229,10 +229,10 @@ create table if not exists zc_activity
 -- 6关注项目表
 drop table if exists zc_focuspro;
 create table zc_focuspro(
-
 		focusid INT(10) primary key auto_increment,
 		projectid int(10),
 		userid int(10),
+		focustime datetime,
 		FOREIGN KEY (userid) REFERENCES zc_user (userid),
 		FOREIGN KEY (projectid) REFERENCES zc_project (projectid),
 -- 		KEY `projectid`(`projectid`), -- 用户id，项目id关联索引
@@ -240,6 +240,14 @@ create table zc_focuspro(
 		key focu(`projectid`,`userid`)
 --  KEYs (`projectid`,`userid`) -- 用户id，项目id关联索引
 );
+insert into zc_focuspro VALUES
+(DEFAULT,1,10001,NOW()),
+(DEFAULT,2,10001,NOW()),
+(DEFAULT,3,10001,NOW()),
+(DEFAULT,4,10001,NOW()),
+(DEFAULT,5,10001,NOW()),
+(DEFAULT,6,10001,NOW()),
+(DEFAULT,7,10001,NOW());
 
 
 
@@ -291,8 +299,14 @@ create table zc_orders
 		FOREIGN KEY (userid) REFERENCES zc_user (userid) ON DELETE CASCADE ON UPDATE CASCADE,
 		FOREIGN KEY (addressid) REFERENCES zc_address (addressid) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
-
+INSERT into zc_orders VALUES
+(DEFAULT,10001,1,1,20.00,'普通众筹','2018-2-1 00:00:00',DEFAULT,'交易成功'),
+(DEFAULT,10001,2,1,20.00,'普通众筹','2018-2-1 00:00:00',DEFAULT,'交易成功'),
+(DEFAULT,10001,3,1,20.00,'普通众筹','2018-2-1 00:00:00',DEFAULT,'交易成功'),
+(DEFAULT,10001,4,1,20.00,'普通众筹','2018-2-1 00:00:00',DEFAULT,'交易成功'),
+(DEFAULT,10001,5,1,20.00,'普通众筹','2018-2-1 00:00:00',DEFAULT,'交易成功');
+--
+-- UPDATE `zc_project` SET `imgs`='mainView/goods1.jpg' WHERE (`projectid`<8)
 -- -- 10项目状态表
 -- create table zc_state
 -- (
@@ -316,20 +330,36 @@ create table zc_project
 	projectid int(10) primary key auto_increment,	-- 项目id
 	projectname varchar(50),				-- 项目名
 	intro text,							-- 项目简介 - -富文本编辑器 -》js插件
-	imgs varchar(100),					-- 首页图片
+	projectimg varchar(100),					-- 首页图片
 	createtime datetime,						-- 发布时间
-	begintime datetime,							-- 开始时间
+	daysnumber int(3),                -- 众筹天数
+ 	begintime datetime,							-- 开始时间
 	endtime datetime,								-- 结束时间
 	tolamount float(10,2) not NULL,	-- 众筹目标金额
 	curamount float(10,2) not NULL DEFAULT 00000000.00,	-- 当前筹集金额
-	focuscount int(10),									-- 关注人数
-  statename enum('审核中','众筹中','众筹中','众筹成功','众筹失败') not null,	-- 项目状态(众筹中，众筹成功，众筹失败) 对应专门状态表
+	focuscount int(10) DEFAULT 0,									-- 关注人数
+  statename enum('待审核','审核中','审核成功','审核失败','众筹中','众筹成功','众筹失败') not null,	-- 项目状态(众筹中，众筹成功，众筹失败) 对应专门状态表
+
 	sortid SMALLINT(2),											-- 项目类型
 	userid int(10),											-- 发起人id
 -- 	foreign key(stateid) references zc_state(stateid),
 	foreign key(sortid) references zc_sort(sortid) ON DELETE CASCADE ON UPDATE CASCADE
 
 );
+INSERT into zc_project VALUES
+(DEFAULT,'短片电影1','富文本编辑','__STATIC__/img/home/mainView/goods1.jpg',NOW(),10,'2018-1-1 00:00:00','2018-5-1 00:00:00','100000',DEFAULT,0,'众筹中',1,1),
+(DEFAULT,'短片电影2','富文本编辑','__STATIC__/img/home/mainView/goods1.jpg',NOW(),10,'2018-1-1 00:00:00','2018-5-1 00:00:00','100000',DEFAULT,0,'众筹中',1,1),
+(DEFAULT,'短片电影3','富文本编辑','__STATIC__/img/home/mainView/goods1.jpg',NOW(),10,'2018-1-1 00:00:00','2018-5-1 00:00:00','100000',DEFAULT,0,'众筹中',1,1),
+(DEFAULT,'短片电影4','富文本编辑','__STATIC__/img/home/mainView/goods1.jpg',NOW(),10,'2018-1-1 00:00:00','2018-5-1 00:00:00','100000',DEFAULT,0,'众筹中',1,1),
+(DEFAULT,'短片电影5','富文本编辑','__STATIC__/img/home/mainView/goods1.jpg',NOW(),10,'2018-1-1 00:00:00','2018-5-1 00:00:00','100000',DEFAULT,0,'众筹中',1,1),
+(DEFAULT,'短片电影6','富文本编辑','__STATIC__/img/home/mainView/goods1.jpg',NOW(),10,'2018-1-1 00:00:00','2018-5-1 00:00:00','100000',DEFAULT,0,'众筹中',1,1),
+(DEFAULT,'短片电影7','富文本编辑','__STATIC__/img/home/mainView/goods1.jpg',NOW(),10,'2018-1-1 00:00:00','2018-5-1 00:00:00','100000',DEFAULT,0,'众筹中',1,1),
+(DEFAULT,'短片电影8','富文本编辑','__STATIC__/img/home/mainView/goods1.jpg',NOW(),10,'2018-1-1 00:00:00','2018-5-1 00:00:00','100000',DEFAULT,0,'众筹中',1,1);
+-- SELECT *,datediff(endtime,NOW()) resttime FROM `zc_project` WHERE `begintime` <= '2018-01-27 00:01:11' AND `endtime` > '2018-01-27 00:01:11' ORDER BY `endtime` LIMIT 3
+-- SELECT datediff('2018-4-1  00:01:11',NOW())
+-- SELECT datediff('2018-1-29',NOW()) d1;
+-- SELECT TIMESTAMPDIFF(DAY,now(),"2018-1-29") d2
+UPDATE zc_project set projectimg='__STATIC__/img/home/mainView/goods1.jpg'
 
 -- -- 众筹状态表
 -- create table zc_projectstate
@@ -352,7 +382,9 @@ create table zc_prodetails
 	curcount int,						-- 当前支持者数
 	foreign key(projectid) references zc_project(projectid) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
+SELECT * FROM zc_focuspro a INNER JOIN `zc_project` `b` ON `a`.`projectid`=`b`.`projectid`
+INNER JOIN `zc_prodetails` `c` ON `a`.`projectid`=`c`.`projectid`
+GROUP BY a.projectid ORDER BY a.focustime desc LIMIT 0,5
 
 #15评论表
 drop table if exists zc_comments;
