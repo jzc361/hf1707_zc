@@ -74,13 +74,22 @@
                             <!--<span class="holder_tip">至少输入4个字符</span>-->
                             <div class="tip_box">
                                 <span style="color:red" ng-show="user_register_form.user_repsd.$dirty">
-                                    <span ng-show="user_register_form.user_repsd.$error.required">不能为空</span><br>
+                                    <span ng-show="user_register_form.user_repsd.$error.required">不能为空</span>
                                     <span ng-show="user_repsd!=user_psd">两次密码输入不一致</span>
                                 </span>
                             </div>
                         </div>
                         <div class="blank0"></div>
-
+                        <div class="form_row control-group mycontrol-group">
+                            <label class="title control-label"><span class="f_red">*</span>验证码&emsp;</label>
+                            <input type="text" name="code" ng-model="code" class="textbox" placeholder="验证码" maxlength="4" required style="width: 20%">
+                            <img id="codeimg" src="{:captcha_src()}" alt="captcha" onclick="this.src='{:captcha_src()}?'+Math.random()"/>
+                            <div class="tip_box" style="display: inline-block">
+                                <span style="color:red" ng-show="user_register_form.code.$dirty">
+                                    <span ng-show="user_register_form.code.$error.required">请输入验证码</span>
+                                </span>
+                            </div>
+                        </div>
 
 <!--                        <div class=" form_row control-group mycontrol-group">
                             <label for="signup-mobile control-label" class="title control-label"><span class="f_red">*</span>手机号码</label>
@@ -154,11 +163,16 @@
     app.controller('register',function($scope,$http){
         $scope.register=function(){
             $http.post('userRegister',
-                    {'username':$scope.user_name,'userpsd':$scope.user_psd}
+                    {'username':$scope.user_name,'userpsd':$scope.user_psd,'code':$scope.code}
             ).then(function(res){
                 if(res.data.code==10011){
+                    //注册成功
                     alert(res.data.msg);
                     location.href="{:url('/Userop/showLogin')}";
+                } else if(res.data.code==10002){
+                    //验证码错误--刷新验证码
+                    alert(res.data.msg);
+                    $('#codeimg').attr('src','{:captcha_src()}?'+Math.random());
                 }else {
                     alert(res.data.msg);
                 }

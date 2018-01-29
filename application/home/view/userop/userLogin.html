@@ -14,9 +14,7 @@
     <div class="head_1 z100" id="J_head">
         <div class="head_cont" style="background:#fff">
             <div class="wrap1000 constr clearfix">
-                <div class="logo_1 f_l">
-<!--                    <a class="link" href="/4stage/fangweizhongchouV1.53/"></a>-->
-                </div>
+                <div class="logo_1 f_l"></div>
                 <div class="f_yahei no-nav-text">登录</div>
             </div>
         </div>
@@ -59,6 +57,16 @@
                                 </span>
                             </div>
                         </div>
+                        <div class="form_row control-group mycontrol-group">
+                            <label class="title control-label"><span class="f_red">*</span>验证码&emsp;</label>
+                            <input type="text" name="code" ng-model="code" class="textbox" placeholder="验证码" maxlength="4" required style="width: 20%">
+                            <img id="codeimg" src="{:captcha_src()}" alt="captcha" onclick="this.src='{:captcha_src()}?'+Math.random()"/>
+                            <div class="tip_box" style="display: inline-block">
+                                <span style="color:red" ng-show="user_register_form.code.$dirty">
+                                    <span ng-show="user_register_form.code.$error.required">请输入验证码</span>
+                                </span>
+                            </div>
+                        </div>
                         <div class="blank0"></div>
                         <div class="blank0"></div>
                         <div class="blank10"></div>
@@ -95,12 +103,16 @@
     app.controller('login',function($scope,$http){
         $scope.login=function(){
             $http.post('userLogin',
-                    {'username':$scope.user_name,'userpsd':$scope.user_psd}
+                    {'username':$scope.user_name,'userpsd':$scope.user_psd,'code':$scope.code}
             ).then(function(res){
-                console.log(res.data);
+                //console.log(res.data);
                 if(res.data.code==10001){
                     alert(res.data.msg);
                     location.href="{:url('index/Index')}";
+                } else if(res.data.code==10002) {
+                    //验证码错误--刷新验证码
+                    alert(res.data.msg);
+                    $('#codeimg').attr('src', '{:captcha_src()}?' + Math.random());
                 }else {
                     alert(res.data.msg);
                 }

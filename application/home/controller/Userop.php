@@ -27,10 +27,8 @@ class Userop extends Controller
         $username=input('?post.username')?input('post.username'):"";
         $userpsd=input('?post.userpsd')?md5(input('post.userpsd')):"";
         $code=input('?post.code')?input('code'):"";
-        $condition=['username'=>$username,'userpsw'=>$userpsd];
-        $data=db('user')->where($condition)->select();
         //验证码
-        /*if(!captcha_check($code)){
+        if(!captcha_check($code)){
             //验证失败
             $reMsg=[
                 'code'=>10002,
@@ -38,7 +36,9 @@ class Userop extends Controller
                 'data'=>[]
             ];
             return json($reMsg);
-        }*/
+        }
+        $condition=['username'=>$username,'userpsw'=>$userpsd];
+        $data=db('user')->where($condition)->select();
         if(empty($data)){
             //登录失败
             $reMsg=[
@@ -63,10 +63,22 @@ class Userop extends Controller
     public function userRegister(){
         $username=input('?post.username')?input('post.username'):"";
         $userpsd=input('?post.userpsd')?md5(input('post.userpsd')):"";
-        $condition=['username'=>$username,'userpsw'=>$userpsd];
+        $code=input('?post.code')?input('code'):"";
+        //验证码
+        if(!captcha_check($code)){
+            //验证失败
+            $reMsg=[
+                'code'=>10002,
+                'msg'=>config('Msg')['register']['codeFail'],
+                'data'=>[]
+            ];
+            return json($reMsg);
+        }
         if($username&&$userpsd){
+            $condition=['username'=>$username,'userpsw'=>$userpsd];
             $data=db('user')->where('username',$username)->select();
-            if(!empty($data)){//账号存在，注册失败
+            if(!empty($data)){
+                //账号存在，注册失败
                 $reMsg=[
                     'code'=>10014,
                     'msg'=>config('Msg')['register']['fail'],
@@ -74,8 +86,9 @@ class Userop extends Controller
                 ];
                 return json($reMsg);
             }else{
-                //$res=db('user')->insert($condition);
-                if(1){//注册成功
+                $res=db('user')->insert($condition);
+                if($res){
+                    //注册成功
                     $reMsg=[
                         'code'=>10001,
                         'msg'=>config('Msg')['register']['success'],
