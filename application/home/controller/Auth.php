@@ -19,7 +19,7 @@ class Auth extends  Controller
          *  跟配制文件的数组比对，在里面，
          * */
         $request = Request::instance();
-        $do=$request->module().'/'.$request->controller().'/'.$request->action();
+        $do=$request->path();
 //        var_dump($do);
 //        if(!in_array($do,config('msg')['whiteList'])){
 //            if(empty($zc_user)){

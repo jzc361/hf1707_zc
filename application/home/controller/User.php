@@ -77,16 +77,54 @@ class User extends Auth
     //收货地址页面
     public function address()
     {
+        ////////////////
+        $zc_user=[];
+        $zc_user['userid']=10001;//(测试用)
+        //////////////
+        $data=db('address a')
+            ->field('a.*,')
+            ->join('zc_address b','a.province=b.id')
+            ->join('zc_address c','a.city=c.id')
+            ->join('zc_address d','a.county=d.id')
+            ->where('a.userid',$zc_user['userid'])
+            ->select();
+        $this->assign('addrList',$data);
         return $this->fetch('address');
+    }
+    //个人设置页面-获取省份
+    public function getProvince(){
+        $data=db('region')
+            ->where('type',0)
+            ->select();
+        if($data){
+            $msgResp=[
+                'code'=>20007,
+                'msg'=>config('msg')['oper']['select'],
+                'data'=>$data
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20008,
+                'msg'=>config('msg')['oper']['selectFail'],
+                'data'=>$data
+            ];
+        }
+        return json($msgResp);
+
     }
     //个人设置页面-获取省市区
     public function getAddr(){
 ////////////////
+//        $zc_user=Session::get('zc_user');
+
         $zc_user=[];
         $zc_user['userid']=10001;//(测试用)
-        $zc_user['province']=350000;//(测试用)
-        $zc_user['city']=350100;//(测试用)
-        $zc_user['county']=350102;//(测试用)
+        $zc_user=db('user')
+            ->where('userid',10001)
+            ->find();//(测试用)
+//        $zc_user['province']=350000;//(测试用)
+//        $zc_user['city']=350100;//(测试用)
+//        $zc_user['county']=350102;//(测试用)
  //////////////
         $data=db('region')
             ->where('type',0)
@@ -94,6 +132,7 @@ class User extends Auth
             ->whereOr('pid',$zc_user['city'])
             ->select();
         if($data){
+
             $msgResp=[
                 'code'=>20007,
                 'msg'=>config('msg')['oper']['select'],
@@ -186,12 +225,36 @@ class User extends Auth
                     'data'=>$file->getError()
                 ];
             }
-            return $msgResp;
+            return json($msgResp);
         }
     }
     //更新用户信息
     public function updateInfo(){
-
+        ////////////////
+        $zc_user=[];
+        $zc_user['userid']=10001;//(测试用)
+//////////////
+        $sex=input('?post.sex')?input('sex'):'';
+        $province=input('?post.province')?input('province'):'';
+        $city=input('?post.city')?input('city'):'';
+        $county=input('?post.county')?input('county'):'';
+        $res=db('user')
+            ->where('userid',$zc_user['userid'])
+            ->update(['sex' => $sex,'province'=>$province,'city'=>$city,'county'=>$county]);
+        if($res>0){
+            $msgResp=[
+                'code'=>2000,
+                'msg'=>config('msg')['oper']['update'],
+                'data'=>''
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20006,
+                'msg'=>config('msg')['oper']['updateFail'],
+                'data'=>''
+            ];
+        }
+        return json($msgResp);
     }
     //test
     public function test()

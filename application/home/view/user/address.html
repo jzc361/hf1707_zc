@@ -37,20 +37,15 @@
         </tr>
         </thead>
         <tbody>
+        {volist name='addrList' id='vo'}
         <tr>
-            <td>福建福州 仓山区</td>
-            <td>350000</td>
-            <td>小明</td>
-            <td>1828000001</td>
-            <td><span>修改</span><span>删除</span><span>默认地址</span></td>
+            <td><span>{$vo.province_name}{$vo.city_name}</span><span>{$vo.county_name}</span></td>
+            <td>{$vo.county}</td>
+            <td>{$vo.revername}</td>
+            <td>{$vo.revertel}</td>
+            <td><span><a href="javascript:void(0);">修改</a></span><span><a href="javascript:void(0);">删除</a></span><span><a href="javascript:void(0);">默认地址</a></span></td>
         </tr>
-        <tr>
-            <td>福建福州 仓山区</td>
-            <td>350000</td>
-            <td>小明</td>
-            <td>1828000001</td>
-            <td><span>修改</span><span>删除</span><span>默认地址</span></td>
-        </tr>
+        {/volist}
         </tbody>
     </table>
 </div>
@@ -72,48 +67,19 @@
                     </div>
                     <div class="form-group">
                         <label class="col-xs-3 control-label">地区：</label>
-                        <div class="col-xs-4">
+                        <div class="col-xs-3">
                             <select name="province" id="province" class="form-control">
-                                <option value="" rel="0">请选择省份</option>
-                                <option value="安徽" rel="3" >安徽</option>
-                                <option value="澳门" rel="396" >澳门</option>
-                                <option value="北京" rel="52" >北京</option>
-                                <option value="福建" rel="4" >福建</option>
-                                <option value="甘肃" rel="5" >甘肃</option>
-                                <option value="广东" rel="6" >广东</option>
-                                <option value="广西" rel="7" >广西</option>
-                                <option value="贵州" rel="8" >贵州</option>
-                                <option value="海南" rel="9" >海南</option>
-                                <option value="河北" rel="10" >河北</option>
-                                <option value="黑龙江" rel="12" >黑龙江</option>
-                                <option value="河南" rel="11" >河南</option>
-                                <option value="湖北" rel="13" >湖北</option>
-                                <option value="湖南" rel="14" >湖南</option>
-                                <option value="江苏" rel="16" >江苏</option>
-                                <option value="江西" rel="17" >江西</option>
-                                <option value="吉林" rel="15" >吉林</option>
-                                <option value="辽宁" rel="18" >辽宁</option>
-                                <option value="内蒙古" rel="19" >内蒙古</option>
-                                <option value="宁夏" rel="20" >宁夏</option>
-                                <option value="青海" rel="21" >青海</option>
-                                <option value="山东" rel="22" >山东</option>
-                                <option value="上海" rel="321" >上海</option>
-                                <option value="山西" rel="23" >山西</option>
-                                <option value="陕西" rel="24" >陕西</option>
-                                <option value="四川" rel="26" >四川</option>
-                                <option value="台湾" rel="397" >台湾</option>
-                                <option value="天津" rel="343" >天津</option>
-                                <option value="香港" rel="395" >香港</option>
-                                <option value="西藏" rel="28" >西藏</option>
-                                <option value="新疆" rel="29" >新疆</option>
-                                <option value="云南" rel="30" >云南</option>
-                                <option value="浙江" rel="31" >浙江</option>
-                                <option value="重庆" rel="394" >重庆</option>
+                                <option value="">请选择省份</option>
                             </select>
                         </div>
-                        <div class="col-xs-4">
+                        <div class="col-xs-3">
                             <select name="city" id="city" class="form-control">
-                                <option value="" rel="0">请选择城市</option>
+                                <option value="">请选择城市</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-3">
+                            <select name="county" id="county" class="form-control">
+                                <option value="">请选择地区</option>
                             </select>
                         </div>
                     </div>
@@ -147,10 +113,85 @@
 <div class="blank"></div>
 </body>
 <script>
+    var $province=$("#province");
+    var $county=$("#county");
+    var $city=$("#city");
     $(function(){
         $("#addBtn").click(function(){
-            $('#myModal').modal('show')
+            $('#myModal').modal('show');
         });
+        //获取省份
+        $.ajax({
+            type:'get',
+            url:"{:url('home/User/getProvince')}",
+            dataType:'json',
+            success:function(res){
+                console.log(res);
+                if(res.code==20007){
+                    $province.children('option :lt(0)').remove();
+                    for(var i=0;i<res.data.length;i++){
+                        //省
+                        if(res.data[i].type==0){
+                            $province.append("<option value='"+res.data[i].id+"'>"+res.data[i].name+"</option>");
+                        }
+                    }
+                }else{
+                    alert(res.msg);
+                }
+
+            }
+        });
+        //获取城市
+        $province.change(function(){
+            if ($province.val()!=0){
+                $.ajax({
+                    type:'get',
+//                    url:'index.php?type=Question&do=createQuestionnaire',
+                    url:"{:url('home/User/getCity')}?province="+$province.val(),
+                    dataType:'json',
+//            data:{'q_title':$("#q_title").val()},
+                    success:function(res){
+                        console.log(res);
+                        if(res.code==20007){
+                            $city.children('option:gt(0)').remove();
+                            $county.children("option:gt(0)").remove();
+                            for(var i=0;i<res.data.length;i++){
+                                $city.append("<option value='"+res.data[i].id+"'>"+res.data[i].name+"</option>");
+                            }
+                        }else{
+                            alert(res.msg);
+                        }
+                    }
+                });
+
+            }
+
+        });
+        //获取地区
+        $city.change(function(){
+            if ($city.val()!=0){
+                $.ajax({
+                    type:'get',
+                    url:"{:url('home/User/getCounty')}?city="+$city.val(),
+                    dataType:'json',
+//            data:{'q_title':$("#q_title").val()},
+                    success:function(res){
+                        console.log(res);
+                        if(res.code==20007){
+                            $county.children("option:gt(0)").remove();
+                            for(var i=0;i<res.data.length;i++){
+                                $county.append("<option value='"+res.data[i].id+"'>"+res.data[i].name+"</option>");
+                            }
+                        }else{
+                            alert(res.msg);
+                        }
+                    }
+                });
+
+            }
+
+        });
+
         //正则校验
         $('#defaultForm').bootstrapValidator({
 //        live: 'disabled',
@@ -182,6 +223,13 @@
                         }
                     }
                 },
+                county: {
+                    validators: {
+                        notEmpty: {
+                            message: '地区不能为空'
+                        }
+                    }
+                },
                 detailAddr: {
                     validators: {
                         notEmpty: {
@@ -200,6 +248,11 @@
                     validators: {
                         notEmpty: {
                             message: '电话号码不能为空'
+                        },
+                        regexp: {
+//                            regexp: /^[a-zA-Z0-9_\.]+$/,
+                            regexp:/^1[3|4|5|8][0-9]\d{4,8}$/,
+                            message: '电话号码格式不正确'
                         }
                     }
                 }
@@ -208,8 +261,25 @@
         $('#resetBtn').click(function() {
             $('#defaultForm').data('bootstrapValidator').resetForm(true);
         });
-        $('#submitBtn').click(function() {
-            $('#defaultForm').submit();
+        $('#submitBtn').click(function(){
+            var formData =$("#defaultForm").serialize();
+            $.ajax({
+                url: "{:url('home/User/addDeliveryAddr')}",
+                type: "POST",
+                data: formData,
+                dataType: "json",
+                success: function(res) {
+                    console.log(res);
+                    if(res.code==20005){
+                        alert(res.msg);
+                    }else{
+                        alert(res.msg);
+                    }
+                },
+                error: function(res) {
+                }
+            });
+
         });
 
     });
