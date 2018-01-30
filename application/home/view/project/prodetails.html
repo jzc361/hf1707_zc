@@ -204,7 +204,7 @@
                 <p>当前进度：{$pro.curamount/$pro.tolamount*100}%</p>
                 <p>目标：￥{$pro.tolamount}</p>
                 <p>项目截止时间：{$pro.endtime|substr=0,10}</p>
-                <button id="focus" class="btn btn-info">关注({$pro.focuscount})</button>
+                <button type="button" id="focus" class="btn btn-info" onclick="profocus({$pro.projectid})">关注({$pro.focuscount})</button>
             </div>
         </div>
         <div class="showdetails">
@@ -212,7 +212,7 @@
                 <ul class="nav nav-tabs details-ls" role="tablist">
                     <li role="presentation" class="active d-ls col-sm-3"><a href="#intro" aria-controls="intro" role="tab" data-toggle="tab">项目简介</a></li>
                     <li role="presentation" class="d-ls col-sm-3"><a href="#progress" aria-controls="progress" role="tab" data-toggle="tab">进展</a></li>
-                    <li role="presentation" class="d-ls col-sm-3"><a href="#comment" aria-controls="comment" role="tab" data-toggle="tab">评论</a></li>
+                    <li role="presentation" class="d-ls col-sm-3"><a href="#comment" aria-controls="comment" role="tab" data-toggle="tab">评论({$commentnum})</a></li>
                     <li role="presentation" class="d-ls col-sm-3"></li>
                 </ul>
 
@@ -239,7 +239,7 @@
                     </div>
                     <!--评论-->
                     <div role="tabpanel" class="tab-pane" id="comment">
-                        <iframe src="prodetails_comment?proid={$pro.projectid}" frameborder="0" style="width: 90%;" height="500px"></iframe>
+                        <iframe src="showComment?proid={$pro.projectid}" frameborder="0" style="width: 90%;" height="1000px"></iframe>
                     </div>
                 </div>
             </div>
@@ -249,8 +249,8 @@
                 <div class="initiator">
                     <div class="title">项目发起人</div>
                     <div class="initiator-con">
-                        <div style="width: 35%"><img src="__STATIC__/img/head.png" alt="" style="width: 65%"></div>
-                        <div class="initiator-peo"><p>发起人</p></div>
+                        <div style="width: 35%"><img src="{$headimg}" alt="" style="width: 65%"></div>
+                        <div class="initiator-peo"><p>{$username}</p></div>
                     </div>
                     <div>
                         <button type="button">消息</button>
@@ -289,4 +289,19 @@
         //…
     }();
 </script>-->
+<script>
+    //关注
+    function profocus(projectid){
+        //console.log(projectid);
+        $.ajax({
+            url:'{:url("home/Project/proFocus")}',
+            type:'post',
+            data:{proid:projectid},
+            dataType:'json',
+            success:function(res){
+                alert(res.msg);
+            }
+        });
+    }
+</script>
 </html>

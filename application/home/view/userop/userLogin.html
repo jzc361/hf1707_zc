@@ -107,10 +107,11 @@
             $http.post('userLogin',
                     {'username':$scope.user_name,'userpsd':$scope.user_psd,'code':$scope.code}
             ).then(function(res){
-                //登录成功--跳转首页
+                //登录成功--跳转
                 if(res.data.code==10001){
                     alert(res.data.msg);
-                    location.href="{:url('index/Index')}";
+                    //location.href="{:url('index/Index')}";
+                    location.href='javascript:history.go(-1)';//回到上一页
                 } else if(res.data.code==10002) {
                     //验证码错误--刷新验证码
                     alert(res.data.msg);
