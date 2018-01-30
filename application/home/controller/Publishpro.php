@@ -114,11 +114,12 @@ class Publishpro extends Controller
     }
     //提交审核
     public function sumbitPro(){
-        $proMsg=Session::get('proMsg'); // 项目基本信息
-        $returnMsg=Session::get('returnMsg');//回报信息
-       // var_dump($proMsg);
-       // Session::delete('proMsg');
-       // Session::delete('returnMsg');
+        $proMsg=Session::has('proMsg')?Session::get('proMsg'):''; // 项目基本信息
+        $returnMsg=Session::has('returnMsg')?Session::get('returnMsg'):'';//回报信息
+        $user =Session::has('zc_user')?Session::get('zc_user'):'';
+        if(is_array($user)){
+            $userid=$user[0]['userid'];
+        }
         //插入众筹项目表
         $data = [
             'projectname' =>$proMsg['proTitle'],
@@ -126,10 +127,11 @@ class Publishpro extends Controller
             'projectimg' =>'__STATIC__/img/home/project/'.$proMsg[0],
             'tolamount' =>$proMsg['tolamount'],
             'daysnumber' =>$proMsg['daysNumber'],
-            'statename' =>'待审核',
+            'stateid' =>1,
             'sortid' =>$proMsg['proSort'],
-            'createtime'=>date("Y-m-d H:i:s",time())
-           // 'userid' =>,
+            'createtime'=>date("Y-m-d H:i:s",time()),
+            'projecttype'=>'普通众筹',
+            'userid' =>$userid,
         ];
        // var_dump($data);exit();
         $maxProId=Db::name('project')->insertGetId($data);

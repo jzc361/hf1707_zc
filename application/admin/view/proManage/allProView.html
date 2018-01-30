@@ -31,18 +31,37 @@
             <select name="1"  style="width: 160px;height: 38px;" id="selectProSort" >
                 <option value="all">全部</option>
                 {volist name="proSort" id="val"}
-                <option value="{$val.sortid}">{$val.sortname}</option>
+                {if session('selectsortid')}
+                <option  v-if="{$selectsortid}=={$val.sortid}" selected  value="{$val.sortid}">{$val.sortname}</option>
+                {/if}
+                {if session('selectsortid')}
+                <option  v-if="{$selectsortid}!={$val.sortid}"  value="{$val.sortid}">{$val.sortname}</option>
+                {/if}
+                {if !session('selectsortid')}
+                <option  value="{$val.sortid}">{$val.sortname}</option>
+                {/if}
+
                 {/volist}
             </select>
             <span style="font-size: 17px;margin-left:10px;">项目状态：</span>
             <select name="" style="width: 160px;height: 38px;" id="searchState">
                 <option value="all">全部</option>
                 {volist name="stateList" id="val"}
-                <option value="{$val}">{$val}</option>
+                {if session('stateid')}
+                <option  v-if="{$stateid}=={$val.stateid}" selected  value="{$val.stateid}">{$val.statename}</option>
+                {/if}
+                {if session('stateid')}
+                <option  v-if="{$stateid}!={$val.stateid}"  value="{$val.stateid}">{$val.statename}</option>
+                {/if}
+                {if !session('stateid')}
+                <option  value="{$val.stateid}">{$val.statename}</option>
+                {/if}
+
                 {/volist}
             </select>
-            <input type="text" name="username"  placeholder="请输入项目名称" autocomplete="off" class="layui-input">
-            <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+
+            <input type="text" name="" id="keyword"  value="{$keyword}" placeholder="请输入项目名称" autocomplete="off" class="layui-input">
+            <button class="layui-btn"  type="button" id="searchkeyword" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
         </form>
     </div>
     <table class="layui-table" style="text-align: center">
@@ -63,7 +82,7 @@
         {volist name="allProList" id="val"}
         <tr>
             <!--<td>{$i}</td>-->
-            <td>{$val.userid}</td>
+            <td>{$val.username}</td>
             <td>{$val.projectname}</td>
             <td>{$val.sortname}</td>
             <td>{$val.daysnumber}</td>
@@ -117,36 +136,51 @@
     $(function(){
 
     });
+    //查询的多种可能
+    function search(selectstateid,selectsortid,key){
+        //两个都不为全部时
+        if(selectstateid!='all' && selectsortid!='all'){
+            location.href="{:url('admin/Promanage/index')}?stateid="+selectstateid+"&sortid="+selectsortid+"&keyword="+key;
+        }
+        //选择项目状态时
+        else if(selectstateid!='all' && selectsortid=='all'){
+            location.href="{:url('admin/Promanage/index')}?stateid="+selectstateid+"&keyword="+key;
+        }
+        //选择项目分类时
+        else if(selectstateid=='all' && selectsortid!='all'){
+            location.href="{:url('admin/Promanage/index')}?sortid="+selectsortid+"&keyword="+key;
+
+        }
+        //都不选时
+        else if(selectstateid=='all' && selectsortid=='all'){
+            console.log("dbx");
+            location.href="{:url('admin/Promanage/index')}?keyword="+key;
+        }
+    }
+
     //选择项目分类
     $("#selectProSort").change(function(){
         console.log($(this).val());
         var selectsortid=$(this).val();
-        if(selectsortid!='all'){
-            location.href="{:url('admin/Promanage/index')}?sortid="+selectsortid;
-        }
-        else {
-            location.href="{:url('admin/Promanage/index')}";
-
-        }
+        var selectstateid=$("#searchState").val();
+        var keyword=$("#keyword").val();
+        search(selectstateid,selectsortid,keyword);
     });
     //选择项目状态
     $("#searchState").change(function(){
-        var selectState=$(this).val();
+        var selectstateid=$(this).val();
         var selectsortid=$("#selectProSort").val();
-        console.log(selectState);
-        //两个都不为全部时
-        if(selectState!='all' && selectsortid!='all'){
-            location.href="{:url('admin/Promanage/index')}?state="+selectState+"&sortid="+selectsortid;
-        }
-        //选择项目状态时
-        else if(selectState!='all' && selectsortid=='all'){
-            location.href="{:url('admin/Promanage/index')}?state="+selectState;
-
-        }
-        else {
-            location.href="{:url('admin/Promanage/index')}";
-
-        }
+        var keyword=$("#keyword").val();
+//        console.log(selectstateid);
+        search(selectstateid,selectsortid,keyword);
+    });
+    //点击搜索
+    $("#searchkeyword").click(function(){
+        var keyword=$("#keyword").val();
+        var selectsortid=$("#selectProSort").val();
+        var selectstateid=$("#searchState").val();
+//        console.log(selectstateid);
+        search(selectstateid,selectsortid,keyword);
     });
     layui.use('laydate', function(){
         var laydate = layui.laydate;

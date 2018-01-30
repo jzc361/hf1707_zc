@@ -13,11 +13,15 @@
 
 <body>
 <div class="x-body" id="vueDiv">
+    <div v-if="'{$promsg[0]['statename']}'=='待审核'" style="margin-bottom: 15px;" >
+        <button type="button" onclick="proPass()"  value="{$promsg[0]['projectid']}" class="td-status layui-btn layui-btn-normal layui-btn-mini">通过审核</button>
+        <button type="button" onclick="proDispass()"  value="{$promsg[0]['projectid']}" class="td-status layui-btn layui-btn-normal layui-btn-mini">不通过</button>
+    </div>
     <div>基本信息：</div>
     <table class="layui-table" style="text-align: center">
         <tr>
             <td style="text-align: center">发起人</td>
-            <td style="text-align: center">用户名</td>
+            <td style="text-align: center">{$promsg[0]['username']}</td>
             <td style="text-align: center">项目名称</td>
             <td colspan="3" style="text-align: center">{$promsg[0]['projectname']}</td>
             <td rowspan="3" style="width: 260px;">
@@ -70,6 +74,50 @@
 <script src="__JS__/jquery-2.1.4.js"></script>
 <script src="__JS__/vue.js"></script>
 <script>
+    //通过审核
+    function proPass(){
+        var btn=event.target;
+        var projectid=$(btn).attr('value');
+        console.log(projectid);
+        if(confirm("通过审核？")){
+            $.ajax({
+                type: "post",
+                url: "{:url('admin/promanage/proPass')}",
+                data: {projectid:projectid},
+                dataType: "json",
+                success: function (responseData){
+                    alert(responseData.msg);
+                    top.location.href="{:url('admin/Promanage/index')}";
+                },
+                error:function(){
+                    alert("error");
+                }
+            });
+        }
+
+    }
+    //不通过
+    function proDispass(){
+        var btn=event.target;
+        var projectid=$(btn).attr('value');
+        console.log(projectid);
+        if(confirm("审核不通过？")){
+            $.ajax({
+                type: "post",
+                url: "{:url('admin/promanage/proDispass')}",
+                data: {projectid:projectid},
+                dataType: "json",
+                success: function (responseData){
+                    alert(responseData.msg);
+                    top.location.href="{:url('admin/Promanage/index')}";
+                },
+                error:function(){
+                    alert("error");
+                }
+            });
+        }
+    }
+
     new Vue({
         el : '#vueDiv',
         //数据
