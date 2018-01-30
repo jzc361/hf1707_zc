@@ -64,9 +64,11 @@ class Login extends Controller
 
 
     //进入后台管理界面
-
+    //判断权限
     public function  adminMain(){
+
         return $this->fetch('index');
+
     }
 
     //回到首页

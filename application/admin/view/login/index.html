@@ -12,13 +12,14 @@
     <meta name="author" content="js代码" />
     <meta name="copyright" content="js代码" />
     <!--加载css-->
-    <link rel="stylesheet" href="__STATIC__/css/admin/font.css">
-	<link rel="stylesheet" href="__STATIC__/css/admin/xadmin.css">
+    <link rel="stylesheet" href="__CSS__/admin/font.css">
+	<link rel="stylesheet" href="__CSS__/admin/xadmin.css">
 </head>
+
 <body>
     <!-- 顶部开始 -->
     <div class="container">
-        <div class="logo"><a href="./index.html">后台管理系统</a></div>
+        <div class="logo"><a href="{:url('admin/login/adminMain')}">后台管理系统</a></div>
         <div class="left_open">
             <i title="展开左侧栏" class="iconfont">&#xe699;</i>
         </div>
@@ -46,178 +47,61 @@
           </li>
           <li class="layui-nav-item to-index"><a href="{:url('admin/login/toMain')}">前台首页</a></li>
         </ul>
-        
+
     </div>
     <!-- 顶部结束 -->
     <!-- 中部开始 -->
      <!-- 左侧菜单开始 -->
-    <div class="left-nav">
+    <div id="menuApp" class="left-nav">
       <div id="side-nav">
-        <ul id="nav">
-            <li>
+        <ul id="nav" v-for="menu in menuData">
+            <li  v-for="rolemenu in menu" v-if="rolemenu.menufid==0">
                 <a href="javascript:;">
-                    <i class="iconfont">&#xe6b8;</i>
-                    <cite>会员管理</cite>
+                            <!--<i>小图标</i>-->
+                            <!--<i class="iconfont">&#xe6b8;</i>-->
+                        <cite>{{rolemenu.menuname}}</cite>
+
+                        <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                            <!---->
+                    <li v-for="chilemenu in menu" v-if="rolemenu.menuid==chilemenu.menufid">
+                                    <!--传参数显示页面-->
+                        <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>{{chilemenu.menuname}}</cite>
+                        </a>
+                    </li >
+                </ul>
+            </li>
+            <li  v-for="rolemenu in menu" v-if="rolemenu.menufid==0">
+                <a href="javascript:;">
+                    <span>diyici</span>
+                    <!--<i>小图标</i>-->
+                    <!--<i class="iconfont">&#xe6b8;</i>-->
+                    <cite>22223415</cite>
+
                     <i class="iconfont nav_right">&#xe697;</i>
                 </a>
                 <ul class="sub-menu">
-                    <li>
+                    <!---->
+                    <span>XXD</span>
+                    <li v-for="chilemenu in menu" v-if="rolemenu.menuid==chilemenu.menufid">
                         <!--传参数显示页面-->
                         <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
                             <i class="iconfont">&#xe6a7;</i>
-                            <cite>会员列表</cite>
-                            
+                            <span>DDDDOOPPPPPP</span>
+                            <cite>2222211</cite>
                         </a>
                     </li >
-                    <li>
-                        <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>会员删除</cite>
-                            
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;">
-                            <i class="iconfont">&#xe70b;</i>
-                            <cite>会员管理</cite>
-                            <i class="iconfont nav_right">&#xe697;</i>
-                        </a>
-                        <ul class="sub-menu">
-                            <li>
-                                <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>会员列表</cite>
-                                    
-                                </a>
-                            </li >
-                            <li>
-                                <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>会员删除</cite>
-                                    
-                                </a>
-                            </li>
-                            <li>
-                                <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>等级管理</cite>
-                                    
-                                </a>
-                            </li>
-                            
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="javascript:;">
-                    <i class="iconfont">&#xe723;</i>
-                    <cite>订单管理</cite>
-                    <i class="iconfont nav_right">&#xe697;</i>
-                </a>
-                <ul class="sub-menu">
-                    <li>
-                        <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>订单列表</cite>
-                        </a>
-                    </li >
-                </ul>
-            </li>
-            <li>
-                <a href="javascript:;">
-                    <i class="iconfont">&#xe726;</i>
-                    <cite>管理员管理</cite>
-                    <i class="iconfont nav_right">&#xe697;</i>
-                </a>
-                <ul class="sub-menu">
-                    <li>
-                        <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>管理员列表</cite>
-                        </a>
-                    </li >
-                    <li>
-                        <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>角色管理</cite>
-                        </a>
-                    </li >
-                    <li>
-                        <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>权限分类</cite>
-                        </a>
-                    </li >
-                    <li>
-                        <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>权限管理</cite>
-                        </a>
-                    </li >
-                </ul>
-            </li>
-            <li>
-                <a href="javascript:;">
-                    <i class="iconfont">&#xe6ce;</i>
-                    <cite>系统统计</cite>
-                    <i class="iconfont nav_right">&#xe697;</i>
-                </a>
-                <ul class="sub-menu">
-                    <li>
-                        <a _href="{:url('admin/controll/toIframe','htmlName=echarts1')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>拆线图</cite>
-                        </a>
-                    </li >
-                    <li>
-                        <a _href="{:url('admin/controll/toIframe','htmlName=echarts2')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>柱状图</cite>
-                        </a>
-                    </li>
-                    <li>
-                        <a _href="{:url('admin/controll/toIframe','htmlName=echarts3')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>地图</cite>
-                        </a>
-                    </li>
-                    <li>
-                        <a _href="{:url('admin/controll/toIframe','htmlName=echarts4')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>饼图</cite>
-                        </a>
-                    </li>
-                    <li>
-                        <a _href="{:url('admin/controll/toIframe','htmlName=echarts5')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>雷达图</cite>
-                        </a>
-                    </li>
-                    <li>
-                        <a _href="{:url('admin/controll/toIframe','htmlName=echarts6')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>k线图</cite>
-                        </a>
-                    </li>
-                    <li>
-                        <a _href="{:url('admin/controll/toIframe','htmlName=echarts7')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>热力图</cite>
-                        </a>
-                    </li>
-                    <li>
-                        <a _href="{:url('admin/controll/toIframe','htmlName=echarts8')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>仪表图</cite>
-                        </a>
-                    </li>
                 </ul>
             </li>
         </ul>
       </div>
     </div>
-    <!-- <div class="x-slide_left"></div> -->
+
+
+     <div class="x-slide_left"></div>
     <!-- 左侧菜单结束 -->
     <!-- 右侧主体开始 -->
     <div class="page-content">
@@ -242,11 +126,49 @@
         <div class="copyright">Copyright ©2017 All Rights Reserved</div>
     </div>
     <!-- 底部结束 -->
-    
+
 </body>
 <!--js加载-->
 <script type="text/javascript" src="__STATIC__/js/admin/jquery.min.js"></script>
 <script src="__STATIC__/lib/layui/layui.js" charset="utf-8"></script>
 <script type="text/javascript" src="__STATIC__/js/admin/xadmin.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!--引用vue-->
+<script src="__JS__/vue.js"></script>
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<!--引用jq文件-->
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/bootstrap.min.js"></script>
+<script>
+    //页面一加载就发送ajax到后台获取当前用户的权限内容
+    $(
+            $.ajax({
+                url:'{:url("admin/index/menuctrl")}',//ajax访问地址
+                data:'getMenu',
+                dataType:'json',//接收返回值json格式
+                type:'post',
+                success:function(res){
+                    //绑定数据
+                    $getMenu = [];
+//                  //返回数据
+                    for($i = 0;$i<res.length;$i++){
+                        $getMenu.push(res[$i]);
+                    }
+
+                    var $menu = new Vue({
+                        el:"#menuApp",
+                        data:{
+                            'menuData':[$getMenu]
+                        }
+                    })
+
+                }
+            })
+    )
+
+</script>
 </html>

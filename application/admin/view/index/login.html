@@ -76,7 +76,7 @@
             dataType:'json',//接收返回值json格式
             type:'post',
             success:function(res){
-                console.log(res);
+
                 if(res.code==10002||res.code==10000){
                     validate();
                 }else if(res.code==10001){
