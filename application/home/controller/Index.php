@@ -12,6 +12,8 @@ class Index extends  Auth
     //跳转首页
     public function index()
     {
+        //Session::set('current','index');//当前所在页面
+        session('current',null);//清空所在页面session
         //获取banner
         $adList=db('ad')
             ->where('starttime','<=',date('Y-m-d H:i:s'))

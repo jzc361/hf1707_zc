@@ -15,6 +15,7 @@ class Publishpro extends Controller
     //跳转到众筹发布页
     public function jumpToProBaseMsg()
     {
+        Session::set('current','proBaseMsg');//当前所在页面
         //获取项目分类
         $proSort=Db::table('zc_sort')->select();
         $this->assign('proSortList',$proSort);

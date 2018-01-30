@@ -18,6 +18,7 @@ class Project extends Controller
 {
     //产品项目（更多众筹）
     public function proindex(){
+        Session::set('current','proindex');//当前所在页面
         cookie( null,'pro_');//清空前缀为pro_的cookie
         $condition=[];
         $condition['projecttype']='普通众筹';
@@ -161,8 +162,11 @@ class Project extends Controller
             return json($reMsg);
         }else{
             $condition['focustime']=$now_time;
-            $res=db('focuspro')->insert($condition);
-            if($res){
+            //更新项目表中的关注人数字段
+            $res1=db('project')->where('projectid',$proid)->setInc('focuscount');
+            //数据插入关注表
+            $res2=db('focuspro')->insert($condition);
+            if($res1&&$res2){
                 //关注成功
                 $reMsg=[
                     'code'=>40001,
