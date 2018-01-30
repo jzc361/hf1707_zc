@@ -116,18 +116,22 @@ class Publishpro extends Controller
     public function sumbitPro(){
         $proMsg=Session::get('proMsg'); // 项目基本信息
         $returnMsg=Session::get('returnMsg');//回报信息
+       // var_dump($proMsg);
        // Session::delete('proMsg');
-        //Session::delete('returnMsg');
+       // Session::delete('returnMsg');
         //插入众筹项目表
         $data = [
             'projectname' =>$proMsg['proTitle'],
             'intro' =>$proMsg['proDetails'],
-            'imgs' =>$proMsg[0],
+            'projectimg' =>'__STATIC__/img/home/project/'.$proMsg[0],
             'tolamount' =>$proMsg['tolamount'],
-            'statename' =>'审核中',
-            'sortid' =>$proMsg['proSort']
+            'daysnumber' =>$proMsg['daysNumber'],
+            'statename' =>'待审核',
+            'sortid' =>$proMsg['proSort'],
+            'createtime'=>date("Y-m-d H:i:s",time())
            // 'userid' =>,
         ];
+       // var_dump($data);exit();
         $maxProId=Db::name('project')->insertGetId($data);
         Session::delete('proMsg');
         //插入回报表
@@ -136,7 +140,7 @@ class Publishpro extends Controller
             $returnData=[
                 'projectid'=>$maxProId,
                 'introduce'=>$returnMsg[$i]['returnDetails'],
-                'imgs'=>$returnMsg[$i][0],
+                'imgs'=>'__STATIC__/img/home/project/'.$returnMsg[$i][0],
                 'price'=>$returnMsg[$i]['price'],
                 'limitcount'=>$returnMsg[$i]['limitpart'],
             ];

@@ -13,4 +13,5 @@ class Controll extends Controller
     public function toIframe($htmlName){
         return $this->fetch($htmlName);
     }
+
 }

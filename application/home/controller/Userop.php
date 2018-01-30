@@ -14,13 +14,16 @@ use \think\Session;
 
 class Userop extends Controller
 {
+    //登录页
     public function showLogin(){
         return $this->fetch('userLogin');
     }
 
+    //注册页
     public function showRegister(){
         return $this->fetch('userRegister');
     }
+
 
     //登录
     public function userLogin(){
@@ -48,8 +51,17 @@ class Userop extends Controller
             ];
             return json($reMsg);
         }else{
+            if($data[0]['usestate']=='锁定'){
+                //账号被锁定
+                $reMsg=[
+                    'code'=>10005,
+                    'msg'=>config('Msg')['login']['usestateFail'],
+                    'data'=>[]
+                ];
+                return json($reMsg);
+            }
             //登录成功
-            Session::set('user',$data);
+            Session::set('zc_user',$data);
             $reMsg=[
                 'code'=>10001,
                 'msg'=>config('Msg')['login']['success'],
@@ -90,7 +102,7 @@ class Userop extends Controller
                 if($res){
                     //注册成功
                     $reMsg=[
-                        'code'=>10001,
+                        'code'=>10011,
                         'msg'=>config('Msg')['register']['success'],
                         'data'=>[]
                     ];
