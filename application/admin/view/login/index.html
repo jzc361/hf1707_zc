@@ -57,11 +57,71 @@
         <ul id="nav" v-for="menu in menuData">
             <li  v-for="rolemenu in menu" v-if="rolemenu.menufid==0">
                 <a href="javascript:;">
+<<<<<<< HEAD
                             <!--<i>小图标</i>-->
                             <!--<i class="iconfont">&#xe6b8;</i>-->
                         <cite>{{rolemenu.menuname}}</cite>
 
                         <i class="iconfont nav_right">&#xe697;</i>
+=======
+                    <i class="iconfont">&#xe6b8;</i>
+                    <cite>会员管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <!--传参数显示页面-->
+                        <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>会员列表</cite>
+                        </a>
+                    </li >
+                    <li>
+                        <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>会员删除</cite>
+                            
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="iconfont">&#xe70b;</i>
+                            <cite>会员管理</cite>
+                            <i class="iconfont nav_right">&#xe697;</i>
+                        </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>会员列表</cite>
+                                    
+                                </a>
+                            </li >
+                            <li>
+                                <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>会员删除</cite>
+                                    
+                                </a>
+                            </li>
+                            <li>
+                                <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>等级管理</cite>
+                                    
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe723;</i>
+                    <cite>订单管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+>>>>>>> 0709c676e6650c25fd50eaa2dfcafb92a9572be0
                 </a>
                 <ul class="sub-menu">
                             <!---->

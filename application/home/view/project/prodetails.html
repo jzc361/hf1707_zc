@@ -6,9 +6,10 @@
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{$pro.projectname}</title>
+    <link rel="stylesheet" href="__CSS__/layui.css">
+    <!--<link rel="stylesheet" href="__STATIC__/layui/css/layui.css">-->
     <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
     <style>
-
         .center{
             margin-top: 50px;
             /*width: 1200px;*/
@@ -81,6 +82,9 @@
         .initiator-peo{
             width: 65%;
             float: right;
+        }
+        #intro img{
+            width: 80%;;
         }
         .grade{
             padding: 0 20px;
@@ -187,7 +191,7 @@
 
     <div class="center container">
         <div class="showpro">
-            <img src="__STATIC__/img/home/project/{$pro.imgs}" alt="" style="display: inline-block" class="img-responsive">
+            <img src="{$pro.projectimg}" alt="" style="display: inline-block" class="img-responsive">
             <div class="pro_introduce">
                 <p class="pro-title">{$pro.projectname}</p>
                 <p class="pro-have">已筹到</p>
@@ -200,22 +204,11 @@
                 <p>当前进度：{$pro.curamount/$pro.tolamount*100}%</p>
                 <p>目标：￥{$pro.tolamount}</p>
                 <p>项目截止时间：{$pro.endtime|substr=0,10}</p>
-                <button id="focus" class="btn btn-info">关注{$pro.focuscount}</button>
+                <button id="focus" class="btn btn-info">关注({$pro.focuscount})</button>
             </div>
         </div>
         <div class="showdetails">
             <div class="details-left">
-<!--                <div class="details-ls">
-                    <div class="d-ls d-click col-sm-3" mysrc="prodetails_intro">项目简介</div>
-                    <div class="d-ls d-normal col-sm-3" mysrc="prodetails_progress">进展</div>
-                    <div class="d-ls d-normal col-sm-3" mysrc="prodetails_comment">评论</div>
-                    <div class="d-ls d-normal col-sm-3"></div>
-                </div>
-                <div class="details-con">
-                    <iframe id="iframe" src="prodetails_intro" frameborder="0" width="100%" height="100%"></iframe>
-                </div>-->
-
-
                 <ul class="nav nav-tabs details-ls" role="tablist">
                     <li role="presentation" class="active d-ls col-sm-3"><a href="#intro" aria-controls="intro" role="tab" data-toggle="tab">项目简介</a></li>
                     <li role="presentation" class="d-ls col-sm-3"><a href="#progress" aria-controls="progress" role="tab" data-toggle="tab">进展</a></li>
@@ -223,27 +216,44 @@
                     <li role="presentation" class="d-ls col-sm-3"></li>
                 </ul>
 
-
                 <div class="tab-content details-con">
+                    <!--项目简介-->
                     <div role="tabpanel" class="tab-pane active" id="intro">
-                        <p>{$pro.intro}</p>
-
-
+                        {$pro.intro}
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="progress">进展</div>
+                    <!--进展-->
+                    <div role="tabpanel" class="tab-pane" id="progress">
+                        <ul class="layui-timeline">
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis"><div class="glyphicon glyphicon-record"></div></i>
+                                <div class="layui-timeline-content layui-text">
+                                    <h3 class="layui-timeline-title">time</h3>
+                                    <p>
+                                        layui 2.0 的一切准备工作似乎都已到位。发布之弦，一触即发。
+                                        <br>不枉近百个日日夜夜与之为伴。因小而大，因弱而强。
+                                        <br>无论它能走多远，抑或如何支撑？至少我曾倾注全心，无怨无悔
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--评论-->
                     <div role="tabpanel" class="tab-pane" id="comment">
-                        <iframe src="prodetails_comment" frameborder="0" style="width: 90%"></iframe>
+                        <iframe src="prodetails_comment?proid={$pro.projectid}" frameborder="0" style="width: 90%;" height="500px"></iframe>
                     </div>
                 </div>
-
             </div>
+
             <div class="details-right">
-                <!--发起人简介-->
+                <!--发起人信息-->
                 <div class="initiator">
                     <div class="title">项目发起人</div>
                     <div class="initiator-con">
                         <div style="width: 35%"><img src="__STATIC__/img/head.png" alt="" style="width: 65%"></div>
                         <div class="initiator-peo"><p>发起人</p></div>
+                    </div>
+                    <div>
+                        <button type="button">消息</button>
                     </div>
                 </div>
                 <!--分额度众筹-->
@@ -256,7 +266,7 @@
                     <div class="grade-con">
                         <div class="grade-limit">限额 {$value.limitcount}份 | 剩余 {$value.limitcount-$value.curcount}份</div>
                         <p class="grade-intro">{$value.introduce}</p>
-                        <div class="grade-img"><img src="__STATIC__/img/home/project/{$value.imgs}" alt="" width="50px" height="50px"></div>
+                        <div class="grade-img"><img src="{$value.imgs}" alt="" width="50px" height="50px"></div>
                         <p>配送费用： 免运费</p>
                         <p>预计回报发送时间：项目众筹成功后30天内</p>
                         <div class="grade-btn"><button type="button" class="btn btn-info" style="width: 100%">支持￥{$value.price}</button></div>
@@ -269,30 +279,14 @@
 </body>
 <script src="__JS__/jquery-2.1.4.js"></script>
 <script src="__JS__/bootstrap.min.js"></script>
+<script src="__JS__/layui.js"></script>
 <!--<script>
-    $('.d-ls').click(function(){
-        //$(this).attr('class','d-click');
-        //fun_tag($('.details-left'),'d-click','d-normal');
-        console.log($(this).attr('class'));
-        var src=$(this).attr('mysrc');
-        $('#iframe').attr('src',src);
+    !function(){
+        //无需再执行layui.use()方法加载模块，直接使用即可
+        var form = layui.form
+                ,layer = layui.layer;
 
-    });
-
-    function fun_tag($div1,classname1,classname2){
-        for(var i=0;i<$div1.children().length;i++)
-        {
-            $div1.children()[i].index=i;//获取当前下标
-            //console.log($div1.children()[i].index);
-            $div1.children()[i].onclick=function(){
-                var index=this.index;
-                for(var i=0;i<$div1.children().length;i++)
-                {
-                    $div1.children()[i].className=classname1;
-                }
-                $div1.children()[index].className=classname2;
-            }
-        }
-    }
+        //…
+    }();
 </script>-->
 </html>

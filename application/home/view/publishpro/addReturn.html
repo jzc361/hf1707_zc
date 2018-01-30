@@ -216,8 +216,8 @@
             },
             //限制只能输入正整数
             limitInt:function(){
-                this.price=this.price.replace(/[^1-9]/g,'');
-                this.limitpart=this.limitpart.replace(/[^1-9]/g,'');
+                this.price=this.price.replace(/[^0-9]/g,'');
+                this.limitpart=this.limitpart.replace(/[^0-9]/g,'');
             },
             //获取图片信息
             getImgMsg:function($event){
