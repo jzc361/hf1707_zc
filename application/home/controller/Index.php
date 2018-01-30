@@ -7,19 +7,43 @@ use \think\Request;
 use \think\Session;
 use \think\Cache;
 
-class Index extends  Controller
+class Index extends  Auth
 {
     //跳转首页
     public function index()
     {
         //获取banner
-        $adList=db('ad')->where('starttime','<=',date('Y-m-d H:i:s'))->where('endtime','>',date('Y-m-d H:i:s'))->select(); //获取有效期广告
+        $adList=db('ad')
+            ->where('starttime','<=',date('Y-m-d H:i:s'))
+            ->where('endtime','>',date('Y-m-d H:i:s'))
+            ->select(); //获取有效期广告
         //热门众筹
-        $hotList=db('project')->where('begintime','<=',date('Y-m-d H:i:s'))->where('endtime','>',date('Y-m-d H:i:s'))->order('focuscount desc')->limit(4)->field('*,datediff(endtime,NOW()) resttime')->select();
+        $hotList=db('project a')
+            ->join('zc_state b','a.stateid=b.stateid')
+            ->where('a.begintime','<=',date('Y-m-d H:i:s'))
+            ->where('a.endtime','>',date('Y-m-d H:i:s'))
+            ->order('a.focuscount desc')
+            ->limit(4)
+            ->field('*,datediff(a.endtime,NOW()) resttime')
+            ->select();
         //最新众筹
-        $newList=db('project')->where('begintime','<=',date('Y-m-d H:i:s'))->where('endtime','>',date('Y-m-d H:i:s'))->order('createtime desc')->limit(3)->field('*,datediff(endtime,NOW()) resttime')->select();
+        $newList=db('project a')
+            ->join('zc_state b','a.stateid=b.stateid')
+            ->where('a.begintime','<=',date('Y-m-d H:i:s'))
+            ->where('a.endtime','>',date('Y-m-d H:i:s'))
+            ->order('a.createtime desc')
+            ->limit(3)
+            ->field('*,datediff(a.endtime,NOW()) resttime')
+            ->select();
         //即将下架
-        $oldList=db('project')->where('begintime','<=',date('Y-m-d H:i:s'))->where('endtime','>',date('Y-m-d H:i:s'))->order('endtime')->limit(3)->field('*,datediff(endtime,NOW()) resttime')->select();
+        $oldList=db('project a')
+            ->join('zc_state b','a.stateid=b.stateid')
+            ->where('a.begintime','<=',date('Y-m-d H:i:s'))
+            ->where('a.endtime','>',date('Y-m-d H:i:s'))
+            ->order('a.endtime')
+            ->limit(3)
+            ->field('*,datediff(a.endtime,NOW()) resttime')
+            ->select();
 
         $this->assign('adList',$adList);
         $this->assign('hotList',$hotList);

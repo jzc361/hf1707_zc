@@ -132,7 +132,7 @@ create table zc_user
     userid  INT(10) primary key auto_increment,
 		username       VARCHAR(10),
 		userpsw  VARCHAR(32) NOT NULL DEFAULT '202cb962ac59075b964b07152d234b70', -- 123
-		sex				enum('0','1','2'),
+		sex				enum('0','1','2') not null DEFAULT '0',
 		registertime	datetime not NULL,
 		province     				mediumint(6), -- w 省
 		city				 				mediumint(6), -- w 市
@@ -157,7 +157,9 @@ create table zc_user
 		key address(`province`,`city`,`county`)
 
 );
-ALTER TABLE zc_user AUTO_INCREMENT=10001;
+ALTER TABLE zc_user AUTO_INCREMENT=10001; -- 设置自增长id从10001开始
+-- SELECT * FROM zc_user a WHERE `a`.`userid` = 10001
+
 -- ALTER  TABLE  `zc_user`  ADD  INDEX login(`username`,`userpsw`);
 -- ALTER  TABLE  `zc_user`  ADD  INDEX address(`province`,`city`,`county`);
 
@@ -379,12 +381,15 @@ create table zc_prodetails
 	imgs varchar(100),			-- 回报图片
 	price 	FLOAT(10,2) DEFAULT 00000000.00, -- 金额
 	limitcount int(10),					-- 份数限额
-	curcount int,						-- 当前支持者数
+	curcount int not null DEFAULT 0,						-- 当前支持者数
 	foreign key(projectid) references zc_project(projectid) ON DELETE CASCADE ON UPDATE CASCADE
 );
-SELECT * FROM zc_focuspro a INNER JOIN `zc_project` `b` ON `a`.`projectid`=`b`.`projectid`
-INNER JOIN `zc_prodetails` `c` ON `a`.`projectid`=`c`.`projectid`
-GROUP BY a.projectid ORDER BY a.focustime desc LIMIT 0,5
+-- UPDATE zc_prodetails set curcount =0;
+--
+-- SELECT *,sum(c.curcount) sum_curcount FROM zc_focuspro a
+-- INNER JOIN `zc_project` `b` ON `a`.`projectid`=`b`.`projectid`
+-- INNER JOIN `zc_prodetails` `c` ON `a`.`projectid`=`c`.`projectid`
+--  GROUP BY a.projectid ORDER BY a.focustime desc LIMIT 0,5
 
 #15评论表
 drop table if exists zc_comments;
@@ -406,6 +411,7 @@ KEY comid(`projectid`,`userid`)
 );
 
 -- 16选择地址表
+drop table if exists zc_region;
 CREATE TABLE `zc_region` (
 
   `id` mediumint(6) NOT NULL,

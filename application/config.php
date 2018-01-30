@@ -268,6 +268,9 @@ return [
     ],
     //提示信息
     'msg'=>[
+        'whiteList' => [
+            'home/Index/index'
+        ],
         'login'=>[
             'error'=>'登录失败，请从稍后再试',  //10000
             'success'=>'恭喜您，登录成功',  //10001
@@ -293,7 +296,8 @@ return [
         'publishPro'=>[
             'publish'=>'发布成功，等待审核',  //20009
             'publishFail'=>'发布失败',  //20010
-        ],
+        ]
+
     ]
 
 
