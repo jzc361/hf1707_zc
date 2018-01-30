@@ -34,16 +34,20 @@ class Login extends Controller
                 'emppsw' => $md5pwd
             ];
             //数据库查询
-            //测试本地连接无问题
-            $sel =  Db::name('emp')->where($where)->find();
-            if ($sel) {//有结果
+            //测试连接无问题
+            $sel = Db::name('emp')
+                ->alias('a')
+                ->join('role b','a.roleid = b.roleid')
+                ->where($where)
+                ->select();
+            if ($sel!==NULL) {//有结果
                 //session存值
-                Session::set('onlineEmp',$sel);
+                Session::set('adminEmp',$sel);
 
                 $res = [
                     'code' => 10001,
                     'msg' => config('msg')['login']['success'],
-                    'data' => []
+                    'data' => [$sel]
                 ];
             } else {
                 $res = [

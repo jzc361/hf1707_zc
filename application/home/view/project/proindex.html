@@ -71,6 +71,7 @@
     <div class="center container">
         <div style="background-color: #fff">
             <div class="sortList">
+                <!--分类列表-->
                 <ul class="nav nav-pills">
                     {volist name="sortList" id="sort"}
                     <li role="presentation" class="{if cookie('pro_sortid')==$sort.sortid}active{/if}"><a href="proindex?sortid={$sort.sortid}" class="{$sort.sortid}">{$sort.sortname}</a></li>
@@ -79,20 +80,24 @@
             </div>
             <div class="stateList">
                 <!--<div class="col-sm-7"></div>-->
+                <!--状态列表-->
                 <ul class="nav nav-pills col-xs-4" style="font-size: 12px">
-                    <li role="presentation" class="{if !cookie('pro_staname')}active{/if}"><a href="proindex">所有项目({$pronum})</a></li>
-                    <li role="presentation" class="{if cookie('pro_staname')=='众筹中'}active{/if}"><a href="proindex?staname=众筹中&sortid={if cookie('pro_sortid')}{$sortid}{/if}">众筹中</a></li>
-                    <li role="presentation" class="{if cookie('pro_staname')=='众筹成功'}active{/if}"><a href="proindex?staname=众筹成功&sortid={if cookie('pro_sortid')}{$sortid}{/if}">众筹成功</a></li>
-                    <li role="presentation" class="{if cookie('pro_staname')=='众筹失败'}active{/if}"><a href="#">众筹失败</a></li>
+                    <li role="presentation" class="{if !cookie('pro_stateid')}active{/if}"><a href="proindex">所有项目({$pronum})</a></li>
+                    {volist name="stateList" id="state"}
+                    <li role="presentation" class="{if cookie('pro_stateid')==$state.stateid}active{/if}"><a href="proindex?stateid={$state.stateid}&sortid={if cookie('pro_sortid')}{$sortid}{/if}">{$state.statename}</a></li>
+                    {/volist}
+                    <!--<li role="presentation" class="{if cookie('pro_stateid')=='众筹中'}active{/if}"><a href="proindex?staname=众筹中&sortid={if cookie('pro_sortid')}{$sortid}{/if}">众筹中</a></li>
+                    <li role="presentation" class="{if cookie('pro_stateid')=='众筹成功'}active{/if}"><a href="proindex?staname=众筹成功&sortid={if cookie('pro_sortid')}{$sortid}{/if}">众筹成功</a></li>
+                    <li role="presentation" class="{if cookie('pro_stateid')=='众筹失败'}active{/if}"><a href="#">众筹失败</a></li>-->
                 </ul>
                 <div class="col-xs-6"></div>
                 <div class="col-xs-2">
                     <span>排序</span>
                     <select name="order" onchange="window.location=this.value">
-                        <option value="proindex?sortid={$sortid}" {if !cookie('order')}echo selected{/if}>请选择</option>
-                        <option value="proindex?order=1&sortid={$sortid}" {if cookie('order')==1}echo selected{/if}>热度</option>
-                        <option value="proindex?order=2&sortid={$sortid}" {if cookie('order')==2}echo selected{/if}>最新上线</option>
-                        <option value="proindex?order=3&sortid={$sortid}" {if cookie('order')==3}echo selected{/if}>金额最多</option>
+                        <option value="proindex?sortid={$sortid}&stateid={$stateid}" {if !cookie('order')}echo selected{/if}>请选择</option>
+                        <option value="proindex?order=1&sortid={$sortid}&stateid={$stateid}" {if cookie('order')==1}echo selected{/if}>热度</option>
+                        <option value="proindex?order=2&sortid={$sortid}&stateid={$stateid}" {if cookie('order')==2}echo selected{/if}>最新上线</option>
+                        <option value="proindex?order=3&sortid={$sortid}&stateid={$stateid}" {if cookie('order')==3}echo selected{/if}>金额最多</option>
                         <!--<option value="proindex?order=4&sortid={$sortid}" {if cookie('order')==4}echo selected{/if}>支持最多</option>-->
                     </select>
                 </div>
@@ -115,7 +120,12 @@
                 <div>
                     <span>目标：{$value.daysnumber}天</span>
                     <span>￥{$value.tolamount}</span>
-                    <div style="float: right">{$value.statename}</div>
+                    <!--显示众筹状态-->
+                    <div style="float: right">
+                        {if $value.stateid==5}众筹中{/if}
+                        {if $value.stateid==6}众筹成功{/if}
+                        {if $value.stateid==7}众筹失败{/if}
+                    </div>
                 </div>
                 <div class="progress progress-striped active" style="width: 85%">
                     <div class="progress-bar progress-bar-success" role="progressbar"aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:{$value.curamount/$value.tolamount*100}%;">
