@@ -19,9 +19,9 @@
         <div id="darkbannerwrap"></div>
         
         <form method="post" class="layui-form" >
-            <input id="account" placeholder="用户名"  type="text" lay-verify="required" class="layui-input" >
+            <input value="1" id="account" placeholder="用户名"  type="text" lay-verify="required" class="layui-input" >
             <hr class="hr15">
-            <input id="pwd" lay-verify="required" placeholder="密码"  type="password" class="layui-input">
+            <input value="123" id="pwd" lay-verify="required" placeholder="密码"  type="password" class="layui-input">
             <hr class="hr15">
             <input id="vali" lay-verify="required" placeholder="验证码"  type="text" class="layui-input">
             <div><img id="code" src="{:captcha_src()}" alt="load error" onclick="validate()"></div>
@@ -63,7 +63,7 @@
     //登录方法
     $("#login").click(function(){
 
-        //数据库问题待解决
+        //数据库问题已解决
         var $data = {
             'account':$("#account").val(),
             'pwd':$("#pwd").val(),
@@ -81,6 +81,9 @@
                     validate();
                 }else if(res.code==10001){
                     //        本地页面跳转
+                    //前台session存值供前台使用/从后台获取的数据转换未JSON格式
+                    sessionStorage.setItem('adminInfo',JSON.stringify(res.data[0][0]));
+                    //console.log(JSON.stringify(res.data[0][0]));
                     window.location.href = "{:url('admin/login/adminMain')}";
                 }
 

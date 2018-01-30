@@ -35,123 +35,42 @@
           </li>
         </ul>
         <ul class="layui-nav right" lay-filter="">
-          <li class="layui-nav-item">
-            <a href="javascript:;">admin</a>
-            <dl class="layui-nav-child"> <!-- 二级菜单 -->
-                <!--弹框显示个人信息-->
-              <dd><a  onclick="x_admin_show('资讯','{:url(\'admin/index/index\')}')">个人信息</a></dd>
-                <!--退出事件-->
-              <dd><a onclick="" href="{:url('admin/index/index')}">切换帐号</a></dd>
-              <dd><a onclick="" href="{:url('admin/index/index')}">退出</a></dd>
-            </dl>
-          </li>
-          <li class="layui-nav-item to-index"><a href="{:url('admin/login/toMain')}">前台首页</a></li>
-        </ul>
+            <li id="role" class="layui-nav-item to-index">
 
+            </li>
+            <li class="layui-nav-item">
+                <a id="onlineName" href="javascript:;"></a>
+                <dl class="layui-nav-child"> <!-- 二级菜单 -->
+                    <!--弹框显示个人信息-->
+                  <dd><a  onclick="x_admin_show('资讯','{:url(\'admin/index/index\')}')">个人信息</a></dd>
+                    <!--退出事件-->
+                  <dd><a onclick="" href="{:url('admin/index/index')}">切换帐号</a></dd>
+                  <dd><a onclick="quit(this)" href="#">退出</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item to-index"><a href="{:url('admin/login/toMain')}">前台首页</a></li>
+        </ul>
     </div>
     <!-- 顶部结束 -->
     <!-- 中部开始 -->
      <!-- 左侧菜单开始 -->
-    <div id="menuApp" class="left-nav">
+    <div class="left-nav">
       <div id="side-nav">
         <ul id="nav" v-for="menu in menuData">
             <li  v-for="rolemenu in menu" v-if="rolemenu.menufid==0">
                 <a href="javascript:;">
-<<<<<<< HEAD
                             <!--<i>小图标</i>-->
                             <!--<i class="iconfont">&#xe6b8;</i>-->
                         <cite>{{rolemenu.menuname}}</cite>
 
                         <i class="iconfont nav_right">&#xe697;</i>
-=======
-                    <i class="iconfont">&#xe6b8;</i>
-                    <cite>会员管理</cite>
-                    <i class="iconfont nav_right">&#xe697;</i>
                 </a>
-                <ul class="sub-menu">
+                <ul class="sub-menu" v-for="chilemenu in menu" v-if="rolemenu.menuid==chilemenu.menufid">
                     <li>
                         <!--传参数显示页面-->
-                        <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>会员列表</cite>
-                        </a>
-                    </li >
-                    <li>
-                        <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <cite>会员删除</cite>
-                            
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;">
-                            <i class="iconfont">&#xe70b;</i>
-                            <cite>会员管理</cite>
-                            <i class="iconfont nav_right">&#xe697;</i>
-                        </a>
-                        <ul class="sub-menu">
-                            <li>
-                                <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>会员列表</cite>
-                                    
-                                </a>
-                            </li >
-                            <li>
-                                <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>会员删除</cite>
-                                    
-                                </a>
-                            </li>
-                            <li>
-                                <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>等级管理</cite>
-                                    
-                                </a>
-                            </li>
-                            
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="javascript:;">
-                    <i class="iconfont">&#xe723;</i>
-                    <cite>订单管理</cite>
-                    <i class="iconfont nav_right">&#xe697;</i>
->>>>>>> 0709c676e6650c25fd50eaa2dfcafb92a9572be0
-                </a>
-                <ul class="sub-menu">
-                            <!---->
-                    <li v-for="chilemenu in menu" v-if="rolemenu.menuid==chilemenu.menufid">
-                                    <!--传参数显示页面-->
-                        <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
+                        <a :_href="chilemenu.menuurl">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>{{chilemenu.menuname}}</cite>
-                        </a>
-                    </li >
-                </ul>
-            </li>
-            <li  v-for="rolemenu in menu" v-if="rolemenu.menufid==0">
-                <a href="javascript:;">
-                    <span>diyici</span>
-                    <!--<i>小图标</i>-->
-                    <!--<i class="iconfont">&#xe6b8;</i>-->
-                    <cite>22223415</cite>
-
-                    <i class="iconfont nav_right">&#xe697;</i>
-                </a>
-                <ul class="sub-menu">
-                    <!---->
-                    <span>XXD</span>
-                    <li v-for="chilemenu in menu" v-if="rolemenu.menuid==chilemenu.menufid">
-                        <!--传参数显示页面-->
-                        <a _href="{:url('admin/controll/toIframe','htmlName=admin-list')}">
-                            <i class="iconfont">&#xe6a7;</i>
-                            <span>DDDDOOPPPPPP</span>
-                            <cite>2222211</cite>
                         </a>
                     </li >
                 </ul>
@@ -205,30 +124,49 @@
 <script src="__JS__/bootstrap.min.js"></script>
 <script>
     //页面一加载就发送ajax到后台获取当前用户的权限内容
-    $(
-            $.ajax({
-                url:'{:url("admin/index/menuctrl")}',//ajax访问地址
-                data:'getMenu',
-                dataType:'json',//接收返回值json格式
-                type:'post',
-                success:function(res){
-                    //绑定数据
-                    $getMenu = [];
+    $.ajax({
+        url:'{:url("admin/index/menuctrl")}',//ajax访问地址
+        data:'getMenu',
+        dataType:'json',//接收返回值json格式
+        type:'post',
+        //设置同步请求/保证页面样式/效果正常显示/实现
+        async: false,
+        success:function(res){
+            //绑定数据
+            $getMenu = [];
 //                  //返回数据
-                    for($i = 0;$i<res.length;$i++){
-                        $getMenu.push(res[$i]);
-                    }
+            for($i = 0;$i<res.length;$i++){
+                $getMenu.push(res[$i]);
+            }
 
-                    var $menu = new Vue({
-                        el:"#menuApp",
-                        data:{
-                            'menuData':[$getMenu]
-                        }
-                    })
+            var $menu = new Vue({
+                el:"#side-nav",
+                data:{
+                    'menuData':[$getMenu]
+                },
+                created: function () {
 
                 }
             })
-    )
+        }
+    });
+    //获取JSON格式的数据
+    $getAdmin = JSON.parse(sessionStorage.getItem('adminInfo'));
+
+    $('#onlineName').html($getAdmin['empname']);
+    $('#role').html($getAdmin['rolename']);
+
+function quit(hre){
+    var $check = confirm('您确定要退出吗？');
+    if ($check==true)
+    {
+        $(hre).attr('href',"{:url('admin/index/index')}");
+    }
+    else
+    {
+        $(hre).attr('href',"#");
+    }
+}
 
 </script>
 </html>
