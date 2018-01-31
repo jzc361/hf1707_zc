@@ -65,7 +65,7 @@
                 margin-top: 30px;
             }
         }
-            /*--md--*/
+        /*--md--*/
         @media (max-width:992px) {
             #contentRight{
                 float: left;
@@ -86,13 +86,13 @@
             <!--项目标题-->
             <div class="setlist">
                 <label class="setmid">项目标题</label>
-                <input type="text" class="pro_lf textbox" id="proTitle" name="projectname" v-model="proTitle">
+                <input type="text" class="pro_lf textbox" id="proTitle" name="proTitle" v-model="proTitle">
             </div>
             <!--众筹天数-->
             <div class="blank0"></div>
             <div class="setlist">
                 <label class="setmid">众筹天数</label>
-                <input name="daysnumber" id="daysNumber" v-model='daysNumber' @keyup="limitInt()" class="pro_lf textbox">
+                <input name="daysNumber" id="daysNumber" v-model='daysNumber' @keyup="limitInt()" class="pro_lf textbox">
                 <span class="setmid">天</span>
             </div>
             <!--众筹金额-->
@@ -104,11 +104,11 @@
             <!--项目分类-->
             <div class="setlist">
                 <label class="setmid" style="margin-right:25px;">项目分类</label>
-                    <select id="proSort" name="proSort" class="btn_select f_l">
-                        {volist name='proSortList' id='val'}
-                            <option :value="{$val.sortid}">{$val.sortname}</option>
-                        {/volist}
-                    </select>
+                <select id="proSort" name="proSort" class="btn_select f_l">
+                    {volist name='proSortList' id='val'}
+                    <option :value="{$val.sortid}">{$val.sortname}</option>
+                    {/volist}
+                </select>
             </div>
             <!--项目封面-->
             <div class="blank0"></div>
@@ -126,12 +126,13 @@
             <div class="blank0"></div>
             <div class="setlist">
                 <label class="setmid">项目详情</label>
+
                 <!--<textarea name="probrief" id="probrief" class="textareabox textbox w350"></textarea>-->
             </div>
             <div class="blank0"></div>
-            <!--<div>-->
-                <div id="editor"  name="proDetails"></div>
-            <!--</div>-->
+            <div>
+                <script id="editor" name="proDetails" type="text/plain"></script>
+            </div>
             <!---->
             <!--保存-->
             <div class="blank5"></div>
@@ -147,7 +148,7 @@
             <!--图片 名称-->
             <div class="deal_content_box">
                 <a href="#" title="">
-                    <img id="imagePreview"  :src="projectimg" />
+                    <img id="imagePreview"  src="__STATIC__/img/home/publishPro/empty_thumb.gif" />
                     <!--<img id="imagePreview"  src="__STATIC__/img/home/publishPro/empty_thumb.gif" />-->
                 </a>
                 <div class="blank"></div>
@@ -207,7 +208,7 @@
             <div class="blank"></div>
         </div>
     </div>
-        <!--右边end-->
+    <!--右边end-->
     <!--</div>-->
 </div>
 {include file="public/footer"}
@@ -220,17 +221,13 @@
 <script type="text/javascript"  src="__STATIC__/ueditor/dist/utf8-php/ueditor.all.js"></script>
 <script>
     var ue = UE.getEditor('editor');//富文本
-    var proList = {$proList};
-    console.log(proList);
     new Vue({
         el : '#vueDiv',
         //数据
         data:{
-            proTitle:proList.projectname?proList.projectname : '',
-            daysNumber:proList.daysnumber?proList.daysnumber : '',
-            tolamount:proList.tolamount?proList.tolamount:'',
-//            proDetails:proList?proList.intro : '',
-            projectimg:proList.projectimg? proList.projectimg: '__STATIC__/img/home/publishPro/empty_thumb.gif',
+            proTitle:'',
+            daysNumber:'',
+            tolamount:'',
             isAddImg:false//是否添加图片
         },
         //方法
@@ -257,11 +254,11 @@
         var file = document.getElementById("imgFile").files;
         var result=document.getElementById("imagePreview");
         $(result).empty();
-            var reader    = new FileReader();
-            reader.readAsDataURL(file[0]);
-            reader.onload=function(e){
-                $(result).attr("src",this.result);
-            };
+        var reader    = new FileReader();
+        reader.readAsDataURL(file[0]);
+        reader.onload=function(e){
+            $(result).attr("src",this.result);
+        };
     });
 
     //点击下一步
@@ -284,22 +281,7 @@
             }
         });
     });
-    //保留数据
-    $(function(){
-        $("#editor").find("div:eq(0)").css({width:"90%"});
-//       var proMsgList=$("#saveProMsgList").text();
-//        console.log(proMsgList);
-//        var proMsgArr=JSON.parse(proMsgList);
-//        console.log(proMsgArr);
-//        $("#proTitle").val(proMsgArr['proTitle']);
-//        $("#deal_title").text(proMsgArr['proTitle']);
-//        $("#daysNumber").val(proMsgArr['daysNumber']);
-//        $("#dNumber").text(proMsgArr['daysNumber']);
-//        $("#tolamount").val(proMsgArr['tolamount']);
-//        $("#tolamount2").text(proMsgArr['tolamount']);
-//        $("#proSort").val(proMsgArr['proSort']);
-//        $("#probrief").text(proMsgArr['probrief']);
-    });
+
 
 </script>
 </html>

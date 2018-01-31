@@ -33,8 +33,20 @@ class User extends Auth
     //我的项目页面
     public function myProject()
     {
+        //获取当前用户发布的项目
+        $usermsg=session("zc_user");
+        $userid=$usermsg['userid'];
+        $proList=db('project a')
+            ->join('state b','a.stateid=b.stateid')
+            ->field('a.projectid,a.projectname,a.projectimg,b.statename')
+            ->where('userid',$userid)
+            ->order('a.createtime desc')
+            ->paginate(3);
+        //var_dump($proList);
+        $this->assign('proList',$proList);
         return $this->fetch('myProject');
     }
+
     //关注的项目页面
     public function focus()
     {

@@ -42,10 +42,10 @@
                 <a id="onlineName" href="javascript:;"></a>
                 <dl class="layui-nav-child"> <!-- 二级菜单 -->
                     <!--弹框显示个人信息-->
-                  <dd><a  onclick="x_admin_show('资讯','{:url(\'admin/index/index\')}')">个人信息</a></dd>
+                  <dd><a onclick="x_admin_show('个人信息','{:url(\'admin/controll/person\')}')">个人信息</a></dd>
                     <!--退出事件-->
-                  <dd><a onclick="" href="{:url('admin/index/index')}">切换帐号</a></dd>
-                  <dd><a onclick="quit(this)" href="#">退出</a></dd>
+                  <dd><a onclick="quit()" href="#">切换帐号</a></dd>
+                  <dd><a onclick="quit()" href="#">退出</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item to-index"><a href="{:url('admin/login/toMain')}">前台首页</a></li>
@@ -66,13 +66,29 @@
                         <i class="iconfont nav_right">&#xe697;</i>
                 </a>
                 <ul class="sub-menu" v-for="chilemenu in menu" v-if="rolemenu.menuid==chilemenu.menufid">
-                    <li>
-                        <!--传参数显示页面-->
+                    <li v-if="chilemenu.menuid!=10">
                         <a :_href="chilemenu.menuurl">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>{{chilemenu.menuname}}</cite>
                         </a>
-                    </li >
+                    </li>
+                    <li v-if="chilemenu.menuid==10">
+
+                        <a href="javascript:;">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>{{chilemenu.menuname}}</cite>
+                            <i class="iconfont nav_right">&#xe697;</i>
+                        </a>
+                        <ul class="sub-menu" v-for="cchile in menu" v-if="cchile.menufid==10">
+                            <li>
+                                <a :_href="cchile.menuurl">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>{{cchile.menuname}}</cite>
+                                </a>
+                            </li >
+                        </ul>
+                    </li>
+                    <!---->
                 </ul>
             </li>
         </ul>
@@ -86,11 +102,11 @@
     <div class="page-content">
         <div class="layui-tab tab" lay-filter="xbs_tab" lay-allowclose="false">
           <ul class="layui-tab-title">
-            <li>我的桌面</li>
+            <li>个人中心</li>
           </ul>
           <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
-                <iframe src="{:url('admin/controll/welcome')}" frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+                <iframe id="showframe" src="{:url('admin/controll/person')}" frameborder="0" scrolling="yes" class="x-iframe"></iframe>
             </div>
 
               <!--{:url('admin/login/toMain')}-->
@@ -124,6 +140,7 @@
 <script src="__JS__/bootstrap.min.js"></script>
 <script>
     //页面一加载就发送ajax到后台获取当前用户的权限内容
+
     $.ajax({
         url:'{:url("admin/index/menuctrl")}',//ajax访问地址
         data:'getMenu',
@@ -138,6 +155,8 @@
             for($i = 0;$i<res.length;$i++){
                 $getMenu.push(res[$i]);
             }
+
+//            console.log($getMenu);//检查数据用
 
             var $menu = new Vue({
                 el:"#side-nav",
@@ -156,17 +175,37 @@
     $('#onlineName').html($getAdmin['empname']);
     $('#role').html($getAdmin['rolename']);
 
-function quit(hre){
+function quit(){
     var $check = confirm('您确定要退出吗？');
+    //确认注销
     if ($check==true)
     {
-        $(hre).attr('href',"{:url('admin/index/index')}");
+        //sessionStorage.clear('adminInfo');
+        $.ajax({
+            url: '{:url("admin/controll/quit")}',
+            data:[],
+            dataType:'json',
+            type:'post',
+            success:function (res){
+                console.log(res);
+                //提示退出情况
+                alert(res.msg);
+                if(res.code==90011) {
+                    //返回登录页面
+                    window.location.href = "{:url('admin/index/index')}";
+                }
+            }
+        });
     }
-    else
+    else //取消退出注销
     {
-        $(hre).attr('href',"#");
+        window.location.href = "#";
     }
 }
+
+    function showPerson(){
+        $("#showframe").attr('src',"{:url('admin/controll/person')}");
+    }
 
 </script>
 </html>

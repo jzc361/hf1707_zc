@@ -48,7 +48,7 @@
 {include file="public/nav"}
 <div class="container" id="vueDiv" style="height: 605px;">
     <div class="col-md-1"></div>
-    <div class="xqmain xqmain1000 col-md-10 col-sm-12 col-xs-12" style="margin-top:50px;">
+    <div class="xqmain xqmain1000 col-md-10 col-sm-12 col-xs-12" style="margin-top:10px;">
         <div class="xqmain_main">
             <div class="page_title">回报设置 - {$proTitle}</div>
             <div class="switch_nav">
@@ -207,7 +207,8 @@
             limitpart:'', //限制份数
             returnDetails:'', //回报内容,
             imgFile:'', //图片信息
-            returnArr:[]//回报数组
+            returnArr:[],//回报数组
+            allformdata:localStorage.allformdata?localStorage.allformdata:[]
         },
         //方法
         methods:{
@@ -255,6 +256,46 @@
                     error: function(responseData) {
                     }
                 });
+
+
+
+
+//                $.ajax({
+//                    url: "{:url('home/Publishpro/aa')}",
+//                    type: "POST",
+//                    data: formData,
+//                    dataType: "json",
+//                    async: false,
+//                    cache: false,
+//                    contentType: false,
+//                    processData: false,
+//                    success: function(responseData) {
+//                        //保存好后的显示
+//                    },
+//                    error: function(responseData) {
+//                    }
+//                });
+//                console.log(formData);
+//                console.log(this.allformdata.length);
+//                this.formdata.push(['id']);
+//                if( localStorage.allformdata!=undefined ){
+//                    var allformdata=JSON.parse(localStorage.allformdata);
+//                    console.log(allformdata);
+//                    var data1={"index":localStorage.allformdata.length,"dataDetails":formData};
+                    //allformdata.push(data1);
+                   // localStorage.allformdata=JSON.stringify(allformdata);
+//               }
+//               else {
+//                    this.allformdata.push([this.allformdata.length,formData]);
+//                    localStorage.allformdata=this.allformdata;
+//                    console.log( localStorage.allformdata);
+                    //console.log(this.allformdata);
+
+//                this.allformdata.push([this.allformdata.length,formData]);
+//                localStorage.allformdata=[this.allformdata];
+//                console.log(this.allformdata);
+
+
             },
             //提交审核
             sumbitPro:function(){
