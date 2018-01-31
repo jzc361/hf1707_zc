@@ -76,7 +76,7 @@
     {include file="public/nav"}
     <div class="center container">
         <div style="background-color: #fff">
-            <div class="sortList">
+            <div class="list sortList">
                 <!--分类列表-->
                 <ul class="nav nav-pills">
                     {volist name="sortList" id="sort"}
@@ -84,7 +84,7 @@
                     {/volist}
                 </ul>
             </div>
-            <div class="stateList">
+            <div class="list stateList">
                 <!--<div class="col-sm-7"></div>-->
                 <!--状态列表-->
                 <ul class="nav nav-pills col-xs-4" style="font-size: 12px">
@@ -117,7 +117,7 @@
                 </div>
                 <!--项目名-->
                 <div class="proname">
-                    <a href="prodetails?proid={$value.projectid}">{$value.projectname}</a>
+                    <h4><a href="prodetails?proid={$value.projectid}">{$value.projectname}</a></h4>
                 </div>
                 <!--目标-->
                 <div>

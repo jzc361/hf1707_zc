@@ -42,7 +42,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div id="comments" class="container">
         <!--评论区（项目）-->
         <div class="comment">
             <h4>有什么想和大家交流的?</h4>
@@ -90,6 +90,8 @@
             {/voList}
         </div>
         <div></div>
+        <comments></comments>
+
     </div>
 </body>
 <script src="__JS__/jquery-2.1.4.js"></script>
@@ -111,18 +113,12 @@
             success:function(res){
                 if(res.code==30001){
                     //alert(res.msg);
-                    layer.open({
-                        title: '提示'
-                        ,content: res.msg
-                    });
+                    parent.showPrompt(res.msg);//调用父页面showPrompt方法
                     //评论成功，刷新页面
                     location.reload(true);
                 }else {
                     //alert(res.msg);
-                    layer.open({
-                        title: '提示'
-                        ,content: res.msg
-                    });
+                    parent.showPrompt(res.msg);//调用父页面showPrompt方法
                 }
             }
         });
@@ -146,18 +142,12 @@
                 //console.log(res);
                 if(res.code==30001){
                     //alert(res.msg);
-                    layer.open({
-                        title: '提示'
-                        ,content: res.msg
-                    });
+                    parent.showPrompt(res.msg);//调用父页面showPrompt方法
                     //评论成功，刷新页面
                     location.reload(true);
                 }else {
                     //alert(res.msg);
-                    layer.open({
-                        title: '提示'
-                        ,content: res.msg
-                    });
+                    parent.showPrompt(res.msg);//调用父页面showPrompt方法
                 }
             }
         });
@@ -166,6 +156,8 @@
     /*new Vue({
         e1:'.recom'
     });*/
+
+
 
 
 
@@ -210,31 +202,47 @@
         el:'#comList'
     });*/
 
-    var toUser=new Vue();
-    Vue.component('comment',{
+/*    var toUser=new Vue();
+
+    //评论组件
+    Vue.component('comments',{
         template:'<div class="comment">\
                         <h4>有什么想和大家交流的?</h4>\
                             <textarea name="" id="comToPro" maxlength="150" cols="30" rows="8" placeholder="输入您想要跟大家交流的内容~" style="width: 100%;"></textarea>\
                             <div style="float: right;">\
-                            \
                             <div>\
-                            <p>请登录后提问，立即 <a href="" onclick=top.location="">登录</a>或\
-                            <a href="" onclick=top.location="">注册</a>\
+                            <p>请登录后提问，立即 <a href="">登录</a>或\
+                            <a href="">注册</a>\
                             </p>\
                             </div>\
-                            \
-                    <div><button type="button" class="btn btn-info" onclick="comToPro()">发布评论</button></div>\
+                    <div><button type="button" class="btn btn-info">发布评论</button></div>\
                     </div>\
                     </div>',
-        //创建前
-        beforeCreate:function(){
-            $.ajax({
-                url:{}
-            });
-        },
-        mounted: function () {
+        /!*data:function(){
+            return{
 
-        }
+            }
+        },*!/
+        methods:{}
+
+        /!*beforeCreate:function() {
+            $.ajax({
+                url: 'Project/getComment',
+                type: 'get',
+                data: '',
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res);
+                }
+            });
+        },*!/
+        /!*mounted: function () {
+
+        }*!/
     });
+    var app=new Vue({
+        e1:'#comments'
+    });*/
+
 </script>
 </html>

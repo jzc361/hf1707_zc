@@ -198,6 +198,7 @@
                 <p class="pro-title">{$pro.projectname}</p>
                 <p class="pro-have">已筹到</p>
                 <p class="pro-amount"><span style="font-size: 24px">￥</span>{$pro.curamount}</p>
+                {if $pro.projecttype=="普通众筹"}
                 <div class="progress progress-striped active" style="width: 85%">
                     <div class="progress-bar progress-bar-success" role="progressbar"aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:{$pro.curamount/$pro.tolamount*100}%;">
                         <span class="sr-only">{$pro.curamount/$pro.tolamount*100}% 完成</span>
@@ -205,13 +206,17 @@
                 </div>
                 <p>当前进度：{$pro.curamount/$pro.tolamount*100}%</p>
                 <p>目标：￥{$pro.tolamount}</p>
-                <p>项目截止时间：{$pro.endtime|substr=0,10}</p>
-                <p>状态：
+                {/if}
+                <p>截止时间：{$pro.endtime}</p>
+                <p class="state">
                     {if $pro.stateid==5}<span class="common-sprite">众筹中</span>{/if}
                     {if $pro.stateid==6}<span class="common-success">众筹成功</span>{/if}
                     {if $pro.stateid==7}<span class="common-fail">众筹失败</span> {/if}
                 </p>
-                <button type="button" id="focus" style="width: 85%" class="btn btn-info" onclick="profocus({$pro.projectid})">关注({$pro.focuscount})</button>
+                <button type="button" style="width: 85%" class="btn btn-info" onclick="profocus({$pro.projectid})">关注({$pro.focuscount})</button>
+                {if $pro.projecttype=="限时众筹"}
+                <button type="button" style="width: 85%;margin-top: 5%" class="btn btn-info" onclick="">立即支持</button>
+                {/if}
             </div>
         </div>
         <div class="showdetails">
@@ -251,6 +256,7 @@
                 </div>
             </div>
 
+            {if $pro.projecttype=="普通众筹"}
             <div class="details-right">
                 <!--发起人信息-->
                 <div class="initiator">
@@ -281,6 +287,7 @@
                 </div>
                 {/volist}
             </div>
+            {/if}
         </div>
     </div>
     {include file="public/footer"}
@@ -308,11 +315,16 @@
             dataType:'json',
             success:function(res){
                 //alert(res.msg);
-                layer.open({
-                    title: '提示'
-                    ,content: res.msg
-                });
+                showPrompt(res.msg);
             }
+        });
+    }
+
+    //提示
+    function showPrompt(content){
+        layer.open({
+            title: '提示'
+            ,content: content
         });
     }
 

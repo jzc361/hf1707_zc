@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>限时众筹</title>
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <link rel="stylesheet" href="__CSS__/project.css">
+    <!--<style>
+        .center{
+            margin-top: 30px;
+            /*height: 1420px;*/
+        }
+        .sortList{
+            width: 100%;
+            overflow: hidden;
+            padding: 5px;
+            background-color: #fff;
+        }
+        .sortList a{
+            cursor: pointer;
+        }
+        .stateList{
+            width: 100%;
+            margin: 20px 5px 40px;
+            height: 37px;
+        }
+        .proList{
+            /*width: 21%;*/
+            background-color: #fff;
+            margin: 0 5px 20px;
+        }
+        .proList>div{
+            margin: 15px 0;
+        }
+        .proimg img{
+            transition: all 0.5s;
+        }
+        .proimg img:hover{
+            transform: scale(1.03);
+        }
+        .intro{
+            margin: 0;
+            font-size: 12px;
+        }
+        .container-fluid{
+            padding: 0;
+        }
+        @media (min-width: 992px) {
+            .proList{
+                width: 21%;
+            }
+            .space{
+                width: 1%;
+            }
+            .intro{
+                font-size: 12px;
+            }
+        }
+        @media (min-width: 768px) {
+            .proList{
+                width: 46%;
+            }
+            .space{
+                width: 1%;
+            }
+            .intro{
+                font-size: 12px;
+            }
+        }
+    </style>-->
+</head>
+<body style="background: #f9f9f9;">
+{include file="public/nav"}
+<div class="center container">
+    <div style="background-color: #fff;margin-bottom: 30px">
+        <div class="list sortList">
+            <!--分类列表-->
+            <ul class="nav nav-pills">
+                <li role="presentation" class="active"><a href="proindex">全部</a></li>
+                {volist name="sortList" id="sort"}
+                <li role="presentation" class="{if cookie('pro_sortid')==$sort.sortid}active{/if}"><a href="proindex?sortid={$sort.sortid}{if cookie('pro_search')}&search={$search}{/if}" class="{$sort.sortid}">{$sort.sortname}</a></li>
+                {/volist}
+            </ul>
+        </div>
+    </div>
+    <div class="showPro">
+        {volist name="pro" id="value"}
+        <div class="proList col-sm-2">
+            <!--项目图片-->
+            <div class="proimg">
+                <a href="prodetails?proid={$value.projectid}">
+                    <img src="{$value.projectimg}" alt="" class="img-responsive" style="margin: auto">
+                </a>
+            </div>
+            <!--项目名-->
+            <div class="proname">
+                <h4><a href="prodetails?proid={$value.projectid}">{$value.projectname}</a></h4>
+            </div>
+            <!--脚-->
+            <div class="intro">
+
+                <div class="col-sm-3">
+                    <p>{$value.curamount}</p>
+                    <p>已筹集</p>
+                </div>
+                <div class="col-sm-6">
+                    <p>{$value.endtime}</p>
+                    <p>结束时间</p>
+                </div>
+            </div>
+        </div>
+        <div class="space col-sm-1"></div>
+        {/volist}
+    </div>
+</div>
+<div align="center">{$pro->render()}</div>
+{include file="public/footer"}
+</body>
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/bootstrap.min.js"></script>
+</html>

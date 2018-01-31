@@ -117,6 +117,23 @@ class Project extends Controller
         return $this->fetch();
     }
 
+    //限时众筹
+    public function prolimit(){
+        $limitstateid=$this->getlimitstateid('众筹中');
+        //var_dump($limitstateid);exit;
+        $condition=[
+            'projecttype'=>'限时众筹',
+            'limitstateid'=>$limitstateid
+        ];
+        //获取分类
+        $sort=db('sort')->select();
+        $pro=db('project')->where($condition)->paginate(4);//->whereOr($or)
+        //var_dump($pro);exit;
+        $this->assign('pro',$pro);
+        $this->assign('sortList',$sort);//分类列表
+        return $this->fetch();
+    }
+
     //项目详情（页面）
     public function prodetails(){
         //Session::set('current','proindex');
@@ -124,15 +141,19 @@ class Project extends Controller
         $proid=input('?get.proid')?input('get.proid'):"";
         //获取项目信息
         $pro=db('project')->where('projectid',$proid)->find() ;
+        //var_dump($pro);exit;
         //获取项目评论数
         $commentnum=db('comments')->where(['projectid'=>$proid,'commentto'=>0])->count('projectid');
-        //项目发起人信息
-        $username=db('user')->where('userid',$pro['userid'])->column('username,username');
-        $headimg=db('user')->where('userid',$pro['userid'])->column('headimg,headimg');
+
         //项目详情
         $prodetails=db('prodetails')->where('projectid',$proid)->select() ;
-        $this->assign("username",$username[0]);//发起人姓名
-        $this->assign('headimg',$headimg[0]);//发起人头像
+        if($pro['projecttype']=='普通众筹'){
+            //项目发起人信息
+            $username=db('user')->where('userid',$pro['userid'])->column('username,username');
+            $headimg=db('user')->where('userid',$pro['userid'])->column('headimg,headimg');
+            $this->assign("username",$username[0]);//发起人姓名
+            $this->assign('headimg',$headimg[0]);//发起人头像
+        }
         $this->assign('commentnum',$commentnum);//项目评论数
         $this->assign("pro",$pro);//项目信息
         $this->assign("proList",$prodetails);//项目详情
@@ -216,6 +237,19 @@ class Project extends Controller
         return $this->fetch('prodetails_comment');
     }
 
+    //评论信息
+/*    public function getComment(){
+        $proid=input('?get.proid')?input('get.proid'):"";//项目id
+        $data=Db::table('zc_comments')
+            ->alias('a')
+            ->join('zc_user b','a.userid = b.userid')
+            ->where('a.projectid',$proid)
+            ->order('a.ctime','desc')
+            ->field('a.*,b.userid,b.username,b.headimg')
+            ->select();
+        var_dump($data);
+    }*/
+
     //评论
     public function comToPro(){
         $proid=input('?post.proid')?input('post.proid'):"";//被评论的项目id
@@ -294,6 +328,16 @@ class Project extends Controller
             ->find();
         $stateid=$stateid['stateid'];
         return $stateid;
+    }
+
+    //获取限时众筹的状态id
+    public function getlimitstateid($limitstatename){
+        $limitstateid=db('limitstate')
+            ->where('limitstatename',$limitstatename)
+            ->field('limitstateid')
+            ->find();
+        $limitstateid=$limitstateid['limitstateid'];
+        return $limitstateid;
     }
 
     //获取普通众筹筹集的总金额
