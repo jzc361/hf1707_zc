@@ -379,12 +379,13 @@ class Promanage extends Controller
                 $endtimeStamp=strtotime($proList[$i]['endtime']);
 //                var_dump($begintimeStamp);
 //                var_dump($endtimeStamp);
-                if(time()>$begintimeStamp && time()< $endtimeStamp){  //众筹中
+                //众筹中
+                if(time()>$begintimeStamp && time()< $endtimeStamp){
                     //获取状态名为众筹中的stateid
                     $stateid=Db::table('zc_project')
                         ->alias('a')
                         ->join('zc_state b','a.stateid=b.stateid')
-                        ->where('b.statename','众筹中份')
+                        ->where('b.statename','众筹中')
                         ->group('a.stateid')
                         ->field('a.stateid')
                         ->find();
@@ -392,12 +393,13 @@ class Promanage extends Controller
                     var_dump($stateid) ;
                     if($stateid!=null){
                         //把项目状态改成众筹中
-
+                        $projectid= $proList[$i]['projectid'];
+                        Db::table('zc_project')->where('projectid',$projectid)->setField('stateid', $stateid);
                     }
-
-
 //                    var_dump($stateid) ;
                 }
+
+
 
             }
 

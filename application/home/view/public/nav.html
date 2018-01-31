@@ -16,12 +16,8 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav my_nav">
-<<<<<<< HEAD
-            <li {if !session('?current')} class="active"{/if}>首页
-=======
             <li {if !session('?current')} class="active"{/if}><!--||session('current')=='index'-->
                 <a href="{:url('/home/Index/index')}">首页</a>
->>>>>>> 0757489ec110562942dce581e6bc661d1ccdd488
             </li>
             <li {if session('current')=='proindex'} class="active"{/if}>
                 <a href="{:url('/home/Project/proindex')}">更多众筹</a>
