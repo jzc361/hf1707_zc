@@ -1,0 +1,113 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>我的项目</title>
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <link rel="stylesheet" href="__CSS__/proBaseMsg.css">
+    <link rel="stylesheet" href="__CSS__/default.css">
+    <link rel="stylesheet" href="__CSS__/myproject.css">
+    <style>
+        .btn_creat{ height:30px; font-size:14px; line-height:30px; padding:0 15px; background:#12adff; color:#fff; display:inline-block; -moz-border-radius:3px; -khtml-border-radius:3px; -webkit-border-radius:3px; border-radius:3px;  }
+        .btn_creat:hover{ color:#fff; }
+        input{border:solid 1px rgb(169, 169, 169);}
+        .label_l{height:31px;line-height:31px;font-size:14px;}
+        .small_textbox{padding:9px;}
+        .ui-button{height:39px;line-height:39px}
+        .btn_select ,
+        .btn_select .cur_select,
+        .btn_select select{height:29px;line-height:29px}
+        .select_arrow{margin-top:11px;}
+        .ui-button{height:31px;line-height:31px;font-size:14px;}
+    </style>
+</head>
+
+
+<body>
+
+<div style="background: #fff; border: 1px solid #e3e3e3;">
+    <div>
+        <div class="page_title">我的项目</div>
+        <div class="full">
+            <form method="post" action="" id="account_project">
+                <span>
+                <label class="label_l f_l mr10">项目名称:</label>
+                <input type="text" class="smaller_textbox mr10" id="project_label" name="search_name" >
+                </span>
+                <span>
+                <button name="submit_form" class="ui-button theme_bgcolor" id="screening">筛选</button>
+                </span>
+            </form>
+        </div>
+        <div class="blank0"></div>
+        <div class="full">
+            {if $proList}
+            <div class="i_deal_list clearfix">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="uc_table">
+                    <tr>
+                        <th width="50%">项目名称</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    {volist name='proList' id='val'}
+                    <tr>
+                         <td>
+                             <img style="width: 150px;height: 150px;float: left" src="{$val.projectimg}" alt="">
+                             <span style="height: 150px;line-height: 150px;">{$val.projectname}</span>
+                         </td>
+                         <td>{$val.statename}</td>
+                        <td>
+                            {if $val.statename=='待审核'}
+                            <span>等待审核</span>
+                            {elseif $val.statename=='审核成功'}
+                            <span>
+                                {$val.projectid}
+                                <a href="{:url('home/Publishpro/jumpToProBaseMsg')}?id={$val.projectid}">编辑</a>
+                                &nbsp;
+                                <a href="">删除</a>
+                            </span>
+                            {elseif $val.statename=='审核失败'}
+                            <span><a href="">查看原因</a></span>
+                            {elseif $val.statename=='众筹中'}
+                            <span><a href="">查看详情</a></span>
+                            {elseif $val.statename=='众筹成功'}
+                            <span>
+                                <a href="">项目日志</a>
+                                &nbsp;
+                                <a href="">支持记录</a>
+                            </span>
+                            {elseif $val.statename=='众筹失败'}
+                            <span>
+                                <a href="">编辑</a>&nbsp;<a href="">删除</a>
+                            </span>
+                            {/if}
+                        </td>
+
+                    </tr>
+                    {/volist}
+                </table>
+            </div>
+            <div class="blank20"></div>
+            <div class="">
+                {$proList->render()}
+            </div>
+            <div class="blank20"></div>
+            {/if}
+            {if !$proList}
+            <div class="empty_tip">
+                从未创建过任何项目
+                <a href="" class="btn_creat linkgreen">立即创建项目</a>
+            </div>
+            {/if}
+        </div>
+        <div class="blank"></div>
+    </div>
+    <div class="blank"></div>
+</div>
+</body>
+</html>
