@@ -9,7 +9,7 @@ use \think\Db;
 
 class Index extends Controller
 {
-    //转入主页
+    //页面入口登录
     public function index()
     {
         return $this->fetch('login');

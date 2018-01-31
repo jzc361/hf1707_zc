@@ -310,7 +310,12 @@ return [
             'already'=>'已关注'//40003
         ],
 
-        'nologin'=>['nologin'=>'请先登录']//00000
+        'nologin'=>['nologin'=>'请先登录'],//00000
+
+        'signOut'=>[
+            'signOut'=>'已退出',//90011
+            'outFail'=>'注销失败'//90010
+        ]
     ]
 
 ];
