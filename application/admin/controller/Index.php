@@ -9,15 +9,16 @@ use \think\Db;
 
 class Index extends Controller
 {
-    //转入主页
+    //页面入口登录
     public function index()
     {
         return $this->fetch('login');
     }
 
     public function menuctrl(){
+        //获取当前登陆者信息
         $online = Session::get('adminEmp');
-
+        //获当前登陆者角色
         $empRole = $online[0]['roleid'];
         //联表查询后的数据为二(多)维数组
         $menuDate = Db::name('backmenu')
