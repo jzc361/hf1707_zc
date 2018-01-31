@@ -20,6 +20,7 @@ class Promanage extends Controller
     //显示项目列表
     public function index()
     {
+        $this->updateProState();
 //        session('sortid', null);
 //        session('stateid', null);
 //        session('keyword', null);
@@ -214,10 +215,14 @@ class Promanage extends Controller
         $proMsg=input('post.');
         if($proMsg['selectVal']==1){ //马上开始众筹
             $proMsg['starttime']=date("Y-m-d H:i:s",time());
-            $stateid=5;//众筹中
+            //获取众筹中的id
+            $stateid=$this->getlimitstateid('众筹中');
+            //var_dump($stateid);exit();
         }
         else{
-            $stateid=3;//审核成功
+            //获取未开始的id
+            $stateid=$this->getlimitstateid('未开始');
+            //var_dump($stateid);exit();
         }
        // var_dump($file);
        // var_dump($proMsg);
@@ -233,7 +238,7 @@ class Promanage extends Controller
                     'projectname' =>$proMsg['proTitle'],
                     'intro' =>$proMsg['proDetails'],
                     'projectimg' =>'__STATIC__/img/home/project/'.$imgPath,
-                    'stateid' =>$stateid,
+                    'limitstateid' =>$stateid,
                     'sortid' =>$proMsg['proSort'],
                     'createtime'=>date("Y-m-d H:i:s",time()),
                     'begintime'=>$proMsg['starttime'],
@@ -265,6 +270,7 @@ class Promanage extends Controller
     }
     //限时众筹显示
     public function limitProView(){
+        $this->updateProState();
         $keyword=input('?get.akeyword')?input('get.akeyword'):'';
         session('akeyword',$keyword);
         $this->assign('akeyword',$keyword);
@@ -276,7 +282,7 @@ class Promanage extends Controller
             $allProList=Db::table('zc_project')
                 ->alias('a')
                 ->join('zc_sort b','a.sortid=b.sortid')
-                ->join('zc_state c','a.stateid=c.stateid')
+                ->join('zc_limitstate c','a.limitstateid=c.limitstateid')
                 ->join('zc_prodetails d','a.projectid=d.projectid')
                 ->where('a.projecttype','限时众筹')
                 ->where('a.sortid',$selectsortid)
@@ -294,10 +300,10 @@ class Promanage extends Controller
             $allProList=Db::table('zc_project')
                 ->alias('a')
                 ->join('zc_sort b','a.sortid=b.sortid')
-                ->join('zc_state c','a.stateid=c.stateid')
+                ->join('zc_limitstate c','a.limitstateid=c.limitstateid')
                 ->join('zc_prodetails d','a.projectid=d.projectid')
                 ->where('a.projecttype','限时众筹')
-                ->where('a.stateid',$stateid)
+                ->where('a.limitstateid',$stateid)
                 ->where('a.projectname','like','%'.$keyword.'%')
                 ->order('createtime', 'desc')->paginate(3,false,$config = ['query'=>array('astateid'=>$stateid,'akeyword'=>$keyword)]);
             $this->assign('astateid',$stateid);
@@ -310,12 +316,12 @@ class Promanage extends Controller
             //echo $selectsortid,$state;exit();
             $where=[
                 'a.sortid'=>$selectsortid,
-                'a.stateid'=>$stateid,
+                'a.limitstateid'=>$stateid,
             ];
             $allProList=Db::table('zc_project')
                 ->alias('a')
                 ->join('zc_sort b','a.sortid=b.sortid')
-                ->join('zc_state c','a.stateid=c.stateid')
+                ->join('zc_limitstate c','a.limitstateid=c.limitstateid')
                 ->join('zc_prodetails d','a.projectid=d.projectid')
                 ->where('a.projecttype','限时众筹')
                 ->where($where)
@@ -333,7 +339,7 @@ class Promanage extends Controller
             $allProList=Db::table('zc_project')
                 ->alias('a')
                 ->join('zc_sort b','a.sortid=b.sortid')
-                ->join('zc_state c','a.stateid=c.stateid')
+                ->join('zc_limitstate c','a.limitstateid=c.limitstateid')
                 ->join('zc_prodetails d','a.projectid=d.projectid')
                 ->where('a.projecttype','限时众筹')
                 ->where('a.projectname','like','%'.$keyword.'%')
@@ -344,7 +350,7 @@ class Promanage extends Controller
         $proSort=Db::table('zc_sort')->select();
         $this->assign('proSort',$proSort);
         //获取项目状态
-        $stateList=Db::table('zc_state')->select();
+        $stateList=Db::table('zc_limitstate')->select();
         $this->assign('stateList',$stateList);
         return $this->fetch("allLimitProView");
     }
@@ -355,55 +361,94 @@ class Promanage extends Controller
         $promsg=Db::table('zc_project')
             ->alias('a')
             ->join('zc_sort b','a.sortid=b.sortid')
-            ->join('zc_state c','a.stateid=c.stateid')
+            ->join('zc_limitstate c','a.limitstateid=c.limitstateid')
             ->join('zc_prodetails d','a.projectid=d.projectid')
             ->where('a.projecttype','限时众筹')
             ->where('a.projectid',$projectid)->select();
         $this->assign('promsg',$promsg);
-        //echo "<pre>";
-        //var_dump($allProList);
         return $this->fetch("limitProDetails");
-
+    }
+    //获取某普通众筹的状态id
+    public function getstateid($statename){
+        $stateid=Db::table('zc_state')
+            ->where('statename',$statename)
+            ->field('stateid')
+            ->find();
+        $stateid=$stateid['stateid'];
+        return $stateid;
+    }
+    //获取某限时众筹的状态id
+    public function getlimitstateid($statename){
+        $stateid=Db::table('zc_limitstate')
+            ->where('limitstatename',$statename)
+            ->field('limitstateid')
+            ->find();
+        $stateid=$stateid['limitstateid'];
+        return $stateid;
     }
     //实时更改项目状态
     public function updateProState(){
         $proList=Db::table('zc_project')->select();
-        echo "<pre>";
         //var_dump($proList);
         for($i=0;$i<count($proList);$i++)
         {
-            if($proList[$i]['begintime']!=NULL){
+            //更改普通众筹的状态
+            if($proList[$i]['projecttype']=='普通众筹'){
+                if($proList[$i]['begintime']!=NULL){
 //                var_dump($proList[$i]['begintime']);
 //                var_dump($proList[$i]['endtime']);
-                $begintimeStamp=strtotime($proList[$i]['begintime']);
-                $endtimeStamp=strtotime($proList[$i]['endtime']);
+                    $begintimeStamp=strtotime($proList[$i]['begintime']);
+                    $endtimeStamp=strtotime($proList[$i]['endtime']);
 //                var_dump($begintimeStamp);
 //                var_dump($endtimeStamp);
-                //众筹中
-                if(time()>$begintimeStamp && time()< $endtimeStamp){
-                    //获取状态名为众筹中的stateid
-                    $stateid=Db::table('zc_project')
-                        ->alias('a')
-                        ->join('zc_state b','a.stateid=b.stateid')
-                        ->where('b.statename','众筹中')
-                        ->group('a.stateid')
-                        ->field('a.stateid')
-                        ->find();
-                    $stateid=$stateid['stateid'];
-                    var_dump($stateid) ;
-                    if($stateid!=null){
-                        //把项目状态改成众筹中
-                        $projectid= $proList[$i]['projectid'];
-                        Db::table('zc_project')->where('projectid',$projectid)->setField('stateid', $stateid);
-                    }
+                    //众筹中
+                    if(time()>$begintimeStamp && time()< $endtimeStamp){
+                        //获取状态名为众筹中的stateid
+                        $stateid=$this->getstateid('众筹中');
+                       // var_dump($stateid) ;exit();
+                        if($stateid!=null){
+                            //把项目状态改成众筹中
+                            $projectid= $proList[$i]['projectid'];
+                            Db::table('zc_project')->where('projectid',$projectid)->setField('stateid', $stateid);
+                        }
 //                    var_dump($stateid) ;
+                    }
                 }
-
-
-
             }
-
-
+            //更改限时众筹的状态
+            else if($proList[$i]['projecttype']=='限时众筹'){
+                if($proList[$i]['begintime']!=NULL){
+                    $begintimeStamp=strtotime($proList[$i]['begintime']);
+                    $endtimeStamp=strtotime($proList[$i]['endtime']);
+                    //众筹中
+                    if(time()>$begintimeStamp && time()< $endtimeStamp){
+                        //获取状态名为众筹中的stateid
+                        $stateid=$this->getlimitstateid('众筹中');
+                        // var_dump($stateid) ;exit();
+                        if($stateid!=null){
+                            //把项目状态改成众筹中
+                            $projectid= $proList[$i]['projectid'];
+                            Db::table('zc_project')->where('projectid',$projectid)->setField('limitstateid', $stateid);
+                        }
+                    }
+                    //未开始
+                    else if(time()<$begintimeStamp){
+                        $stateid=$this->getlimitstateid('未开始');
+                        if($stateid!=null){
+                            $projectid= $proList[$i]['projectid'];
+                            Db::table('zc_project')->where('projectid',$projectid)->setField('limitstateid', $stateid);
+                        }
+                    }
+                    //已结束
+                    else if(time()> $endtimeStamp){
+                        $stateid=$this->getlimitstateid('已结束');
+                        if($stateid!=null){
+                            $projectid= $proList[$i]['projectid'];
+                            Db::table('zc_project')->where('projectid',$projectid)->setField('limitstateid', $stateid);
+                        }
+                    }
+                }
+            }
         }
     }
 
