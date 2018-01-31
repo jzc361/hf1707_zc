@@ -45,9 +45,10 @@
     </style>
 </head>
 <body>
-<div class="container" id="vueDiv">
+{include file="public/nav"}
+<div class="container" id="vueDiv" style="height: 605px;">
     <div class="col-md-1"></div>
-    <div class="xqmain xqmain1000 col-md-10 col-sm-12 col-xs-12" style="margin-top:10px;">
+    <div class="xqmain xqmain1000 col-md-10 col-sm-12 col-xs-12" style="margin-top:50px;">
         <div class="xqmain_main">
             <div class="page_title">回报设置 - {$proTitle}</div>
             <div class="switch_nav">
@@ -190,6 +191,7 @@
     </div>
     <div class="col-md-1"></div>
 </div>
+{include file="public/footer"}
 </body>
 <script src="__JS__/jquery-2.1.4.js"></script>
 <script src="__JS__/vue.js"></script>
