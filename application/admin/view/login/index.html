@@ -42,10 +42,10 @@
                 <a id="onlineName" href="javascript:;"></a>
                 <dl class="layui-nav-child"> <!-- 二级菜单 -->
                     <!--弹框显示个人信息-->
-                  <dd><a  onclick="x_admin_show('资讯','{:url(\'admin/controll/person\')}')">个人信息</a></dd>
+                  <dd><a onclick="x_admin_show('个人信息','{:url(\'admin/controll/person\')}')">个人信息</a></dd>
                     <!--退出事件-->
-                  <dd><a onclick="quit(this)" href="">切换帐号</a></dd>
-                  <dd><a onclick="quit(this)" href="">退出</a></dd>
+                  <dd><a onclick="quit()" href="#">切换帐号</a></dd>
+                  <dd><a onclick="quit()" href="#">退出</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item to-index"><a href="{:url('admin/login/toMain')}">前台首页</a></li>
@@ -106,7 +106,7 @@
           </ul>
           <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
-                <iframe src="{:url('admin/controll/person')}" frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+                <iframe id="showframe" src="{:url('admin/controll/person')}" frameborder="0" scrolling="yes" class="x-iframe"></iframe>
             </div>
 
               <!--{:url('admin/login/toMain')}-->
@@ -175,30 +175,37 @@
     $('#onlineName').html($getAdmin['empname']);
     $('#role').html($getAdmin['rolename']);
 
-function quit(hre){
+function quit(){
     var $check = confirm('您确定要退出吗？');
+    //确认注销
     if ($check==true)
     {
-        sessionStorage.clear('adminInfo');
+        //sessionStorage.clear('adminInfo');
         $.ajax({
             url: '{:url("admin/controll/quit")}',
             data:[],
             dataType:'json',
             type:'post',
             success:function (res){
+                console.log(res);
+                //提示退出情况
                 alert(res.msg);
                 if(res.code==90011) {
+                    //返回登录页面
                     window.location.href = "{:url('admin/index/index')}";
                 }
             }
         });
-        $(hre).attr('href',"{:url('admin/index/index')}");
     }
-    else
+    else //取消退出注销
     {
-        $(hre).attr('href',"#");
+        window.location.href = "#";
     }
 }
+
+    function showPerson(){
+        $("#showframe").attr('src',"{:url('admin/controll/person')}");
+    }
 
 </script>
 </html>
