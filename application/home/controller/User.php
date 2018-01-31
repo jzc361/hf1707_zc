@@ -9,6 +9,11 @@ use \think\Cache;
 
 class User extends Auth
 {
+    public function __construct(Request $request)
+    {
+        parent::__construct($request);
+    }
+
     //跳转用户中心
     public function user()
     {
@@ -33,20 +38,121 @@ class User extends Auth
     //我的项目页面
     public function myProject()
     {
+
+        $keyword=input('?get.keyword')?input('get.keyword'):'';
+        session('keyword',$keyword);
+        $this->assign('keyword',$keyword);
         //获取当前用户发布的项目
         $usermsg=session("zc_user");
         $userid=$usermsg['userid'];
         $proList=db('project a')
             ->join('state b','a.stateid=b.stateid')
-            ->field('a.projectid,a.projectname,a.projectimg,b.statename')
+            ->field('a.projectid,a.projectname,a.projectimg,b.statename,a.failreason')
             ->where('userid',$userid)
+            ->where('a.projectname','like','%'.$keyword.'%')
             ->order('a.createtime desc')
-            ->paginate(3);
+            ->paginate(2,false,$config = ['query'=>array('keyword'=>$keyword)]);
         //var_dump($proList);
         $this->assign('proList',$proList);
         return $this->fetch('myProject');
     }
 
+    //查看审核失败理由
+    public function showReason(){
+        $reason='';
+        $projectid=input('?get.projectid')?input('get.projectid'):'';
+       // var_dump($projectid) ;
+        if(!empty($projectid)){
+            $reason=db('project')->field('failreason')->where('projectid',$projectid)->find();
+            $reason=$reason['failreason'];
+        }
+        echo $reason;
+        //var_dump($reason);
+        //$this->assign('failreason',$reason);
+        //return $this->fetch('failReason');
+
+    }
+    //删除项目
+    public function deletePro(){
+        $projectid=input('?get.projectid')?input('get.projectid'):'';
+        $res=db('project')->field('projectname')->where('projectid',$projectid)->find();
+        if($res!=NULL){
+            //删除项目
+            $isdel=db('project')->where('projectid',$projectid)->delete();
+            if($isdel){
+                $msgResp=[
+                    'code'=>20003, //删除成功
+                    'msg'=>config('msg')['oper']['del'],
+                    'data'=>[]
+                ];
+            }
+            else{
+                $msgResp=[
+                    'code'=>20004,//删除失败
+                    'msg'=>config('msg')['oper']['delFail'],
+                    'data'=>[]
+                ];
+            }
+        }
+
+        return json($msgResp);
+       // var_dump($res);
+    }
+    //查看详情
+    public function showDetails(){
+        $projectid=input('get.id');
+        //echo $projectid;
+        $promsg=Db::table('zc_project')
+            ->alias('a')
+            ->join('zc_state c','a.stateid=c.stateid')
+            ->join('zc_user d','a.userid=d.userid')
+            ->where('projectid',$projectid)
+            ->select();
+//        $promsg=Db::name('project')->where('projectid',$projectid)->select();
+        $returnmsg=Db::name('prodetails')->where('projectid',$projectid)->select();
+        // echo "<pre>";
+        //  var_dump($promsg);exit();
+        // var_dump($returnmsg);exit();
+        $this->assign([
+            'promsg'=>$promsg,
+            'returnmsg'=>$returnmsg
+        ]);
+        return $this->fetch('proDetails');
+    }
+    //修改开始时间与结束时间
+    public function updateStartTime(){
+        $projectid=input('?post.projectid')?input('post.projectid'):'';
+        $starttime=input('?post.starttime')?input('post.starttime'):'';
+        //获取该项目的众筹天数
+        $daysnumber=db('project')->field('daysnumber')->where('projectid',$projectid)->find();
+        $daysnumber=$daysnumber['daysnumber'];
+        //转换时间获取结束时间
+        $startStamp=strtotime($starttime);
+        $endStamp=$startStamp+86400*$daysnumber;
+        $endtime=date("Y-m-d H:i:s",$endStamp);
+        //更新数据库
+        $res=db('project')
+            ->where('projectid',$projectid)
+            ->update(['begintime'=> $starttime,'endtime'=>$endtime]);
+
+        if($res){
+            //更改成功
+            $msgResp=[
+                'code'=>20005, //更新成功
+                'msg'=>config('msg')['oper']['update'],
+                'data'=>[]
+            ];
+        }
+        else{
+            //更改失败
+            $msgResp=[
+                'code'=>20006, //更新失败
+                'msg'=>config('msg')['oper']['updateFail'],
+                'data'=>[]
+            ];
+        }
+        return json($msgResp);
+    }
     //关注的项目页面
     public function focus()
     {

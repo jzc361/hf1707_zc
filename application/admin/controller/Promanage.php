@@ -169,10 +169,14 @@ class Promanage extends Controller
     //不通过审核
     public function proDispass(){
         $projectid=input('?post.projectid')?input('post.projectid'):'';
+        $failreason=input('?post.failreason')?input('post.failreason'):'';
         if(!empty($projectid)){
-            //更改项目状态
+            //更改项目状态为审核失败
+            $stateid=$this->getstateid('审核失败');
             $res=Db::table('zc_project')
-                ->where('projectid',$projectid)->setField('stateid',4);
+                ->where('projectid',$projectid)
+                ->update(['stateid'=> $stateid,'failreason'=>$failreason]);
+               // setField('stateid',4);
             if($res){
                 //更改成功
                 $msgResp=[

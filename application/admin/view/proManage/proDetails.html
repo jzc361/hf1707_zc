@@ -9,13 +9,33 @@
     <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
     <link rel="stylesheet" href="__CSS__/admin/font.css">
     <link rel="stylesheet" href="__CSS__/admin/xadmin.css">
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
 </head>
 
 <body>
+
 <div class="x-body" id="vueDiv">
+    <!--填写理由模态框-->
+    <div id="checkBtn" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">不合格原因：</h4>
+                </div><!--标题-->
+                <div class="modal-body">
+                    <div id="failreason" contenteditable style="width: 100%;height: 100px;border: 1px solid gray;"></div>
+                </div><!--内容-->
+                <div class="modal-footer">
+                    <button type="button" onclick="proDispass({$promsg[0]['projectid']})" class="btn btn-primary" >确定</button>
+                </div><!--脚注-->
+            </div>
+        </div>
+    </div>
+    <!--详情显示-->
     <div v-if="'{$promsg[0]['statename']}'=='待审核'" style="margin-bottom: 15px;" >
         <button type="button" onclick="proPass()"  value="{$promsg[0]['projectid']}" class="td-status layui-btn layui-btn-normal layui-btn-mini">通过审核</button>
-        <button type="button" onclick="proDispass()"  value="{$promsg[0]['projectid']}" class="td-status layui-btn layui-btn-normal layui-btn-mini">不通过</button>
+        <button type="button"  data-toggle="modal" data-target="#checkBtn"  value="{$promsg[0]['projectid']}" class="td-status layui-btn layui-btn-normal layui-btn-mini">不通过</button>
     </div>
     <div>基本信息：</div>
     <table class="layui-table" style="text-align: center">
@@ -73,6 +93,7 @@
 </body>
 <script src="__JS__/jquery-2.1.4.js"></script>
 <script src="__JS__/vue.js"></script>
+<script src="__JS__/bootstrap.min.js"></script>
 <script>
     //通过审核
     function proPass(){
@@ -97,15 +118,16 @@
 
     }
     //不通过
-    function proDispass(){
-        var btn=event.target;
-        var projectid=$(btn).attr('value');
-        console.log(projectid);
+    function proDispass(id){
+       // var btn=event.target;
+        var failreason=$("#failreason").text();
+        console.log(id,failreason);
+
         if(confirm("审核不通过？")){
             $.ajax({
                 type: "post",
                 url: "{:url('admin/promanage/proDispass')}",
-                data: {projectid:projectid},
+                data: {projectid:id,failreason:failreason},
                 dataType: "json",
                 success: function (responseData){
                     alert(responseData.msg);
@@ -122,10 +144,14 @@
         el : '#vueDiv',
         //数据
         data:{
+         //   failreason:''
 
         },
         //方法
         methods:{
+//            proDispass:function($projectid){
+//                console.log($projectid,this.failreason);
+//            }
         },
 
         mounted:function(){
