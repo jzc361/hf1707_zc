@@ -20,6 +20,33 @@
     @media (max-width: 767px) {
 
     }
+    .note {
+        padding: 2px 5px;
+        border-color: #ff3800;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        background: #ffd6cc;
+        color: #f30;
+    }
+    .note_show {
+        display: none;
+        /*padding: 4px 5px;*/
+        /*background: #f60;*/
+        /*color: #fff;*/
+        /*border: 1px solid #f60;*/
+        /*border-radius: 3px;*/
+        /*text-decoration: none;*/
+    }
+    tr .note_show:hover{
+        display: inline-block;
+        padding: 4px 5px;
+        background: #f60;
+        color: #fff;
+        border: 1px solid #f60;
+        border-radius: 3px;
+        text-decoration: none;
+    }
 
 </style>
 <body>
@@ -36,14 +63,18 @@
             <th>操作</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="addrTable">
         {volist name='addrList' id='vo'}
         <tr>
-            <td><span>{$vo.province_name}{$vo.city_name}</span><span>{$vo.county_name}</span></td>
+            <td><span>{$vo.province_name}{$vo.city_name}</span><span>{$vo.county_name}</span><span>{$vo.addressdetails}</span></td>
             <td>{$vo.county}</td>
             <td>{$vo.revername}</td>
             <td>{$vo.revertel}</td>
-            <td><span><a href="javascript:void(0);">修改</a></span><span><a href="javascript:void(0);">删除</a></span><span><a href="javascript:void(0);">默认地址</a></span></td>
+            <td>
+                <span><a href="javascript:void(0);" style="color: #12adff;" onclick="updateAddress({$vo.addressid})">修改 </a></span>
+                <span><a href="javascript:void(0);"  style="color: #12adff;" onclick="deleteAddress({$vo.addressid})"> 删除 </a></span>
+                <span class="note_show"><a href="javascript:void(0);"> 默认地址</a></span>
+            </td>
         </tr>
         {/volist}
         </tbody>
@@ -89,12 +120,12 @@
                             <textarea name="detailAddr" id="detailAddr" class="form-control" rows="3"></textarea>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-xs-3 control-label">邮编：</label>
-                        <div class="col-xs-4">
-                            <input type="text" class="form-control" name="Postcode"/>
-                        </div>
-                    </div>
+                    <!--<div class="form-group">-->
+                        <!--<label class="col-xs-3 control-label">邮编：</label>-->
+                        <!--<div class="col-xs-4">-->
+                            <!--<input type="text" class="form-control" name="Postcode"/>-->
+                        <!--</div>-->
+                    <!--</div>-->
                     <div class="form-group">
                         <label class="col-xs-3 control-label">手机：</label>
                         <div class="col-xs-8">
@@ -117,6 +148,7 @@
     var $county=$("#county");
     var $city=$("#city");
     $(function(){
+        //显示添加地址模态框
         $("#addBtn").click(function(){
             $('#myModal').modal('show');
         });
@@ -237,13 +269,13 @@
                         }
                     }
                 },
-                Postcode: {
-                    validators: {
-                        notEmpty: {
-                            message: '邮编地址不能为空'
-                        }
-                    }
-                },
+//                Postcode: {
+//                    validators: {
+//                        notEmpty: {
+//                            message: '邮编地址不能为空'
+//                        }
+//                    }
+//                },
                 telephone: {
                     validators: {
                         notEmpty: {
@@ -258,20 +290,84 @@
                 }
             }
         });
+        //模态框重置
         $('#resetBtn').click(function() {
             $('#defaultForm').data('bootstrapValidator').resetForm(true);
         });
+        //模态框提交
+        //出入数据库
         $('#submitBtn').click(function(){
-            var formData =$("#defaultForm").serialize();
+            $('#defaultForm').bootstrapValidator('validate');
+            if($('#defaultForm').data('bootstrapValidator').isValid()){
+//                console.log(1111,$res);
+                var formData =$("#defaultForm").serialize();
+                $.ajax({
+                    url: "{:url('home/User/insertAddress')}",
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    success: function(res) {
+                        console.log(res);
+                        if(res.code==20001){
+                            window.location.reload();
+                            alert(res.msg);
+                        }else{
+                            alert(res.msg);
+                        }
+                    },
+                    error: function(res) {
+                    }
+                });
+            }
+            else{
+                alert('不合法')
+            }
+
+
+        });
+    });
+    function updateAddress(id){
+//        console.log(this);
+//        console.log(event.target);
+        $.ajax({
+            url: "{:url('home/User/insertAddress')}",
+            type: "POST",
+            data: {'id':id},
+            dataType: "json",
+            success: function(res) {
+                console.log(res);
+                if(res.code==20001){
+                    console.log(res.msg);
+                    $("#reverName").val(res.data['revername']);
+                    $("#province").val(res.data['province']);
+//                    $("#city").children('option').val();
+                    $("#county").val(res.data['county']);
+                    $("#detailAddr").val(res.data['addressdetails']);
+                    $("#telephone").val(res.data['revertel']);
+                }else{
+                    alert(res.msg);
+                }
+            },
+            error: function(res) {
+            }
+        });
+
+        $('#myModal').modal('show');
+
+
+    }
+    function deleteAddress(id){
+        if(confirm("确认删除？")){
             $.ajax({
-                url: "{:url('home/User/addDeliveryAddr')}",
+                url: "{:url('home/User/deleteAddress')}",
                 type: "POST",
-                data: formData,
+                data: {'id':id},
                 dataType: "json",
                 success: function(res) {
                     console.log(res);
-                    if(res.code==20005){
+                    if(res.code==20003){
                         alert(res.msg);
+                        window.location.reload();
                     }else{
                         alert(res.msg);
                     }
@@ -279,11 +375,8 @@
                 error: function(res) {
                 }
             });
-
-        });
-
-    });
-
+        }
+    }
 </script>
 
 </html>
