@@ -82,12 +82,13 @@ class User extends Auth
         $zc_user['userid']=10001;//(测试用)
         //////////////
         $data=db('address a')
-            ->field('a.*,')
-            ->join('zc_address b','a.province=b.id')
-            ->join('zc_address c','a.city=c.id')
-            ->join('zc_address d','a.county=d.id')
+            ->field('a.*,b.name province_name,c.name city_name,d.name county_name')
+            ->join('zc_region b','a.province=b.id')
+            ->join('zc_region c','a.city=c.id')
+            ->join('zc_region d','a.county=d.id')
             ->where('a.userid',$zc_user['userid'])
             ->select();
+//        var_dump($data);
         $this->assign('addrList',$data);
         return $this->fetch('address');
     }
@@ -242,11 +243,7 @@ class User extends Auth
             ->where('userid',$zc_user['userid'])
             ->update(['sex' => $sex,'province'=>$province,'city'=>$city,'county'=>$county]);
         if($res>0){
-            $msgResp=[
-                'code'=>2000,
-                'msg'=>config('msg')['oper']['update'],
-                'data'=>''
-            ];
+
         }else{
             $msgResp=[
                 'code'=>20006,
@@ -255,6 +252,143 @@ class User extends Auth
             ];
         }
         return json($msgResp);
+    }
+    //添加地址
+    public function insertAddress(){
+        ////////////////
+        $zc_user=[];
+        $zc_user['userid']=10001;//(测试用)
+        //////////////
+
+        $reverName=input('?post.reverName')?input('reverName'):'';
+        $province=input('?post.province')?input('province'):'';
+        $city=input('?post.city')?input('city'):'';
+        $county=input('?post.county')?input('county'):'';
+        $detailAddr=input('?post.detailAddr')?input('detailAddr'):'';
+//        $Postcode=input('?post.Postcode')?input('Postcode'):'';
+        $telephone=input('?post.telephone')?input('telephone'):'';
+        $data=[
+            'userid'=>$zc_user['userid'],
+            'revername'=>$reverName,
+            'province'=>$province,
+            'city'=>$city,
+            'county'=>$county,
+            'addressdetails'=>$detailAddr,
+            'revertel'=>$telephone
+        ];
+        $res=db('address')->insert($data);
+        if($res>0){
+            $msgResp=[
+                'code'=>20001,
+                'msg'=>config('msg')['oper']['add'],
+                'data'=>''
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20002,
+                'msg'=>config('msg')['oper']['addFail'],
+                'data'=>''
+            ];
+        }
+        return json($msgResp);
+    }
+    //删除地址
+    public function deleteAddress(){
+////////////////
+        $zc_user=[];
+        $zc_user['userid']=10001;//(测试用)
+//////////////
+        $id=input('?post.id')?input('id'):'';
+        $res=db('address')
+            ->where('addressid',$id)
+            ->where('userid',$zc_user['userid'])
+            ->delete();
+        if($res>0){
+            $msgResp=[
+                'code'=>20003,
+                'msg'=>config('msg')['oper']['del'],
+                'data'=>''
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20004,
+                'msg'=>config('msg')['oper']['delFail'],
+                'data'=>''
+            ];
+        }
+        return json($msgResp);
+    }
+    //修改地址
+    public function updateAddress(){
+        $reverName=input('?post.reverName')?input('reverName'):'';
+        $province=input('?post.province')?input('province'):'';
+        $city=input('?post.city')?input('city'):'';
+        $county=input('?post.county')?input('county'):'';
+        $detailAddr=input('?post.detailAddr')?input('detailAddr'):'';
+        $Postcode=input('?post.Postcode')?input('Postcode'):'';
+        $telephone=input('?post.telephone')?input('telephone'):'';
+        $data=[
+            'revername'=>$reverName,
+            'rovince'=>$province,
+            'city'=>$city,
+            'county'=>$county,
+            'detailAddr'=>$detailAddr,
+            'Postcode'=>$Postcode,
+            'telephone'=>$telephone
+        ];
+        $res=db('address')->update($data);
+        if($res>0){
+            $msgResp=[
+                'code'=>20001,
+                'msg'=>config('msg')['oper']['add'],
+                'data'=>''
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20002,
+                'msg'=>config('msg')['oper']['addFail'],
+                'data'=>''
+            ];
+        }
+        return json($msgResp);
+    }
+    //获取收货地址
+    public function selectAddress(){
+////////////////
+//        $zc_user=Session::get('zc_user');
+        $id=input('?post.id')?input('id'):'';
+        $zc_user=[];
+        $zc_user['userid']=10001;//(测试用)
+        $addrData=db('address')
+            ->where('userid',10001)
+            ->where('addressid',$id)
+            ->find();//(测试用)
+//        $zc_user['province']=350000;//(测试用)
+//        $zc_user['city']=350100;//(测试用)
+//        $zc_user['county']=350102;//(测试用)
+        //////////////
+        $regionData=db('region')
+            ->where('type',0)
+            ->whereOr('pid',$addrData['province'])
+            ->whereOr('pid',$addrData['city'])
+            ->select();
+        if($regionData && $addrData){
+
+            $msgResp=[
+                'code'=>20007,
+                'msg'=>config('msg')['oper']['select'],
+                'data'=>[$regionData,$addrData]
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20008,
+                'msg'=>config('msg')['oper']['selectFail'],
+                'data'=>''
+            ];
+        }
+
+        return json($msgResp);
+
     }
     //test
     public function test()
