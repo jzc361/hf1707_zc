@@ -109,6 +109,7 @@ class Project extends Controller
 
     //项目详情（页面）
     public function prodetails(){
+        //Session::set('current','proindex');
         //项目id
         $proid=input('?get.proid')?input('get.proid'):"";
         //获取项目信息
