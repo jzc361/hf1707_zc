@@ -19,12 +19,12 @@ class User extends Auth
     {
         //获取分页项目
 ////////////////
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
+        $this->zc_user=[];
+        $this->zc_user['userid']=10001;//(测试用)
 //////////////
         $supportList=db('orders a,zc_project b')
             ->where('a.projectid=b.projectid')
-            ->where('a.userid',$zc_user['userid'])
+            ->where('a.userid',$this->zc_user['userid'])
             ->order('a.orderstime desc')
             ->paginate(5);
         $this->assign('supportList',$supportList);
@@ -41,13 +41,15 @@ class User extends Auth
 
         //获取分页项目
 ////////////////
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
+        $this->zc_user=[];
+        $this->zc_user['userid']=10001;//(测试用)
 //////////////
         $focusList=db('focuspro a')
-            ->field('*,sum(c.curcount) sum_curcount,datediff(b.endtime,NOW()) resttime')
-            ->join('zc_project b','a.projectid=b.projectid')
-            ->join('zc_prodetails c','a.projectid=c.projectid')
+            ->field('*,count(d.ordersid) surport_count,datediff(b.endtime,NOW()) resttime')
+            ->join('zc_project b','a.projectid=b.projectid','left')
+            ->join('zc_prodetails c','a.projectid=c.projectid','left')
+            ->join('zc_orders d','a.projectid=d.projectid','left')
+            ->where('a.userid',$this->zc_user['userid'])
             ->group('a.projectid')
             ->order('a.focustime desc')
             ->paginate(5);
@@ -63,11 +65,11 @@ class User extends Auth
     public function settings()
     {
 ////////////////
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
+        $this->zc_user=[];
+        $this->zc_user['userid']=10001;//(测试用)
 //////////////
         $data=db('user')
-            ->where('userid',$zc_user['userid'])
+            ->where('userid',$this->zc_user['userid'])
             ->find();
         //session保存个人信息
         Session::set('zc_user',$data);
@@ -77,20 +79,45 @@ class User extends Auth
     //收货地址页面
     public function address()
     {
+        $data=db('address a')
+            ->field('a.*,b.name province_name,c.name city_name,d.name county_name')
+            ->join('zc_region b','a.province=b.id')
+            ->join('zc_region c','a.city=c.id')
+            ->join('zc_region d','a.county=d.id')
+            ->where('a.userid',$this->zc_user['userid'])
+            ->select();
+        $this->assign('addrList',json_encode($data));
+        return $this->fetch('address');
+    }
+    //获取收货地址列表
+    public function getAddrList()
+    {
         ////////////////
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
+        $this->zc_user=[];
+        $this->zc_user['userid']=10001;//(测试用)
         //////////////
         $data=db('address a')
             ->field('a.*,b.name province_name,c.name city_name,d.name county_name')
             ->join('zc_region b','a.province=b.id')
             ->join('zc_region c','a.city=c.id')
             ->join('zc_region d','a.county=d.id')
-            ->where('a.userid',$zc_user['userid'])
+            ->where('a.userid',$this->zc_user['userid'])
             ->select();
 //        var_dump($data);
-        $this->assign('addrList',$data);
-        return $this->fetch('address');
+        if($data){
+            $msgResp=[
+                'code'=>20007,
+                'msg'=>config('msg')['oper']['select'],
+                'data'=>$data
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20008,
+                'msg'=>config('msg')['oper']['selectFail'],
+                'data'=>$data
+            ];
+        }
+        return json($msgResp);
     }
     //个人设置页面-获取省份
     public function getProvince(){
@@ -116,21 +143,21 @@ class User extends Auth
     //个人设置页面-获取省市区
     public function getAddr(){
 ////////////////
-//        $zc_user=Session::get('zc_user');
+//        $this->zc_user=Session::get('zc_user');
 
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
-        $zc_user=db('user')
+        $this->zc_user=[];
+        $this->zc_user['userid']=10001;//(测试用)
+        $this->zc_user=db('user')
             ->where('userid',10001)
             ->find();//(测试用)
-//        $zc_user['province']=350000;//(测试用)
-//        $zc_user['city']=350100;//(测试用)
-//        $zc_user['county']=350102;//(测试用)
+//        $this->zc_user['province']=350000;//(测试用)
+//        $this->zc_user['city']=350100;//(测试用)
+//        $this->zc_user['county']=350102;//(测试用)
  //////////////
         $data=db('region')
             ->where('type',0)
-            ->whereOr('pid',$zc_user['province'])
-            ->whereOr('pid',$zc_user['city'])
+            ->whereOr('pid',$this->zc_user['province'])
+            ->whereOr('pid',$this->zc_user['city'])
             ->select();
         if($data){
 
@@ -195,11 +222,11 @@ class User extends Auth
         return json($msgResp);
 
     }
-    //头像上传
+    //个人设置页面-头像上传
     public function headImg(){
 ////////////////
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
+        $this->zc_user=[];
+        $this->zc_user['userid']=10001;//(测试用)
 //////////////
         //上传预览图
         $file = request()->file('headImg');
@@ -211,7 +238,7 @@ class User extends Auth
                 // 成功上传后 获取上传信息
                 $imgPath='__STATIC__/img/home/headImg/'.$info->getSaveName();
                 db('user')
-                    ->where('userid',$zc_user['userid'])
+                    ->where('userid',$this->zc_user['userid'])
                     ->update(['headimg' => $imgPath]);
                 $msgResp=[
                     'code'=>20005,
@@ -232,15 +259,15 @@ class User extends Auth
     //更新用户信息
     public function updateInfo(){
         ////////////////
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
+        $this->zc_user=[];
+        $this->zc_user['userid']=10001;//(测试用)
 //////////////
         $sex=input('?post.sex')?input('sex'):'';
         $province=input('?post.province')?input('province'):'';
         $city=input('?post.city')?input('city'):'';
         $county=input('?post.county')?input('county'):'';
         $res=db('user')
-            ->where('userid',$zc_user['userid'])
+            ->where('userid',$this->zc_user['userid'])
             ->update(['sex' => $sex,'province'=>$province,'city'=>$city,'county'=>$county]);
         if($res>0){
 
@@ -256,8 +283,8 @@ class User extends Auth
     //添加地址
     public function insertAddress(){
         ////////////////
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
+        $this->zc_user=[];
+        $this->zc_user['userid']=10001;//(测试用)
         //////////////
 
         $reverName=input('?post.reverName')?input('reverName'):'';
@@ -268,7 +295,7 @@ class User extends Auth
 //        $Postcode=input('?post.Postcode')?input('Postcode'):'';
         $telephone=input('?post.telephone')?input('telephone'):'';
         $data=[
-            'userid'=>$zc_user['userid'],
+            'userid'=>$this->zc_user['userid'],
             'revername'=>$reverName,
             'province'=>$province,
             'city'=>$city,
@@ -295,13 +322,13 @@ class User extends Auth
     //删除地址
     public function deleteAddress(){
 ////////////////
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
+        $this->zc_user=[];
+        $this->zc_user['userid']=10001;//(测试用)
 //////////////
         $id=input('?post.id')?input('id'):'';
         $res=db('address')
             ->where('addressid',$id)
-            ->where('userid',$zc_user['userid'])
+            ->where('userid',$this->zc_user['userid'])
             ->delete();
         if($res>0){
             $msgResp=[
@@ -355,17 +382,17 @@ class User extends Auth
     //获取收货地址
     public function selectAddress(){
 ////////////////
-//        $zc_user=Session::get('zc_user');
+//        $this->zc_user=Session::get('zc_user');
         $id=input('?post.id')?input('id'):'';
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
+        $this->zc_user=[];
+        $this->zc_user['userid']=10001;//(测试用)
         $addrData=db('address')
             ->where('userid',10001)
             ->where('addressid',$id)
             ->find();//(测试用)
-//        $zc_user['province']=350000;//(测试用)
-//        $zc_user['city']=350100;//(测试用)
-//        $zc_user['county']=350102;//(测试用)
+//        $this->zc_user['province']=350000;//(测试用)
+//        $this->zc_user['city']=350100;//(测试用)
+//        $this->zc_user['county']=350102;//(测试用)
         //////////////
         $regionData=db('region')
             ->where('type',0)
@@ -390,10 +417,34 @@ class User extends Auth
         return json($msgResp);
 
     }
-    //test
-    public function test()
+
+
+
+
+    //关注的项目页面-取消关注
+    public function cancelFocus()
     {
-        return $this->fetch('money');
+        $this->zc_user=[];
+        $this->zc_user['userid']=10001;//(测试用)
+        $focusId=input('?get.id')?input('id'):'';
+        $res=db('focuspro')
+            ->where('userid', $this->zc_user['userid'])
+            ->where('focusid', $focusId)
+            ->delete();
+        if($res>0){
+            $msgResp=[
+                'code'=>20003,
+                'msg'=>config('msg')['oper']['del'],
+                'data'=>''
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20004,
+                'msg'=>config('msg')['oper']['delFail'],
+                'data'=>''
+            ];
+        }
+        return json($msgResp);
     }
     //
 }

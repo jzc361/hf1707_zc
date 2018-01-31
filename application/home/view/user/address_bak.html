@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge"><!--设置ie内核浏览器下的渲染模式-->
+    <meta name="renderer" content="webkit"><!--设置成网页以webkit(极速模式)来渲染页面-->
+    <meta name="viewport" content="width=device-width,initial-scale=1"><!--设置网页宽度和访问设备宽度保持一致，且显示比例1:1，-->
+    <title>收货地址管理</title>
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <link rel="stylesheet" href="__CSS__/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="__CSS__/home/userView.css">
+    <script src="__JS__/jquery-2.1.4.js"></script>
+    <script src="__JS__/bootstrap.min.js"></script>
+    <script src="__JS__/bootstrapValidator.min.js"></script>
+</head>
+<style>
+    @media (min-width: 768px) {
+
+    }
+    @media (max-width: 767px) {
+
+    }
+    .note {
+        padding: 2px 5px;
+        border-color: #ff3800;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        background: #ffd6cc;
+        color: #f30;
+    }
+    .note_show {
+        display: none;
+        /*padding: 4px 5px;*/
+        /*background: #f60;*/
+        /*color: #fff;*/
+        /*border: 1px solid #f60;*/
+        /*border-radius: 3px;*/
+        /*text-decoration: none;*/
+    }
+    tr .note_show:hover{
+        display: inline-block;
+        padding: 4px 5px;
+        background: #f60;
+        color: #fff;
+        border: 1px solid #f60;
+        border-radius: 3px;
+        text-decoration: none;
+    }
+
+</style>
+<body>
+<div id="app" class="container-fluid" style="min-height: 880px">
+    <div class="page_title">配送地址</div>
+    <button id="addBtn" class="btn btn-primary btn-lg">添加配送地址</button>
+    <table class="table table-hover table-responsive">
+        <thead>
+        <tr>
+            <th>地址</th>
+            <th>邮编</th>
+            <th>收货人</th>
+            <th>电话号码</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="addrTable">
+
+        <tr v-for="vo in addrList">
+            <td><span>{{vo.province_name}}{{vo.city_name}}</span><span>{{$vo.county_name}}</span><span>{{$vo.addressdetails}}</span></td>
+            <td>{{$vo.county}}</td>
+            <td>{{$vo.revername}}</td>
+            <td>{{$vo.revertel}}</td>
+            <td>
+                <span><a href="javascript:void(0);" style="color: #12adff;" @onclick="updateAddress({{$vo.addressid}})">修改 </a></span>
+                <span><a href="javascript:void(0);"  style="color: #12adff;" onclick="deleteAddress({{$vo.addressid}})"> 删除 </a></span>
+                <span class="note_show"><a href="javascript:void(0);"> 默认地址</a></span>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">添加配送地址</h4>
+            </div>
+            <div class="modal-body">
+                <form id="defaultForm" method="post" class="form-horizontal" action="{:url('/home/User/addAddr')}">
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">收货人姓名：</label>
+                        <div class="col-xs-4">
+                            <input type="text" class="form-control" name="reverName" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">地区：</label>
+                        <div class="col-xs-3">
+                            <select name="province" id="province" class="form-control">
+                                <option value="">请选择省份</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-3">
+                            <select name="city" id="city" class="form-control">
+                                <option value="">请选择城市</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-3">
+                            <select name="county" id="county" class="form-control">
+                                <option value="">请选择地区</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">详细地址：</label>
+                        <div class="col-xs-8">
+                            <textarea name="detailAddr" id="detailAddr" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <!--<div class="form-group">-->
+                        <!--<label class="col-xs-3 control-label">邮编：</label>-->
+                        <!--<div class="col-xs-4">-->
+                            <!--<input type="text" class="form-control" name="Postcode"/>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">手机：</label>
+                        <div class="col-xs-8">
+                            <input type="text" class="form-control" name="telephone"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary"  id="submitBtn">保存</button>
+                <button type="button" class="btn btn-default" id="resetBtn">重置</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<div class="blank"></div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: {$addrList}
+        }
+    });
+
+
+
+    var $province=$("#province");
+    var $county=$("#county");
+    var $city=$("#city");
+    $(function(){
+        //显示添加地址模态框
+        $("#addBtn").click(function(){
+            $('#myModal').modal('show');
+        });
+        //获取省份
+        $.ajax({
+            type:'get',
+            url:"{:url('home/User/getProvince')}",
+            dataType:'json',
+            success:function(res){
+                console.log(res);
+                if(res.code==20007){
+                    $province.children('option :lt(0)').remove();
+                    for(var i=0;i<res.data.length;i++){
+                        //省
+                        if(res.data[i].type==0){
+                            $province.append("<option value='"+res.data[i].id+"'>"+res.data[i].name+"</option>");
+                        }
+                    }
+                }else{
+                    alert(res.msg);
+                }
+
+            }
+        });
+        //获取城市
+        $province.change(function(){
+            if ($province.val()!=0){
+                $.ajax({
+                    type:'get',
+//                    url:'index.php?type=Question&do=createQuestionnaire',
+                    url:"{:url('home/User/getCity')}?province="+$province.val(),
+                    dataType:'json',
+//            data:{'q_title':$("#q_title").val()},
+                    success:function(res){
+                        console.log(res);
+                        if(res.code==20007){
+                            $city.children('option:gt(0)').remove();
+                            $county.children("option:gt(0)").remove();
+                            for(var i=0;i<res.data.length;i++){
+                                $city.append("<option value='"+res.data[i].id+"'>"+res.data[i].name+"</option>");
+                            }
+                        }else{
+                            alert(res.msg);
+                        }
+                    }
+                });
+
+            }
+
+        });
+        //获取地区
+        $city.change(function(){
+            if ($city.val()!=0){
+                $.ajax({
+                    type:'get',
+                    url:"{:url('home/User/getCounty')}?city="+$city.val(),
+                    dataType:'json',
+//            data:{'q_title':$("#q_title").val()},
+                    success:function(res){
+                        console.log(res);
+                        if(res.code==20007){
+                            $county.children("option:gt(0)").remove();
+                            for(var i=0;i<res.data.length;i++){
+                                $county.append("<option value='"+res.data[i].id+"'>"+res.data[i].name+"</option>");
+                            }
+                        }else{
+                            alert(res.msg);
+                        }
+                    }
+                });
+
+            }
+
+        });
+
+        //正则校验
+        $('#defaultForm').bootstrapValidator({
+//        live: 'disabled',
+            message: '该值不能为空',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                reverName: {
+                    validators: {
+                        notEmpty: {
+                            message: '收货人不能为空'
+                        }
+                    }
+                },
+                province: {
+                    validators: {
+                        notEmpty: {
+                            message: '省份不能为空'
+                        }
+                    }
+                },
+                city: {
+                    validators: {
+                        notEmpty: {
+                            message: '城市不能为空'
+                        }
+                    }
+                },
+                county: {
+                    validators: {
+                        notEmpty: {
+                            message: '地区不能为空'
+                        }
+                    }
+                },
+                detailAddr: {
+                    validators: {
+                        notEmpty: {
+                            message: '详细地址不能为空'
+                        }
+                    }
+                },
+//                Postcode: {
+//                    validators: {
+//                        notEmpty: {
+//                            message: '邮编地址不能为空'
+//                        }
+//                    }
+//                },
+                telephone: {
+                    validators: {
+                        notEmpty: {
+                            message: '电话号码不能为空'
+                        },
+                        regexp: {
+//                            regexp: /^[a-zA-Z0-9_\.]+$/,
+                            regexp:/^1[3|4|5|8][0-9]\d{4,8}$/,
+                            message: '电话号码格式不正确'
+                        }
+                    }
+                }
+            }
+        });
+        //模态框重置
+        $('#resetBtn').click(function() {
+            $('#defaultForm').data('bootstrapValidator').resetForm(true);
+        });
+        //模态框提交
+        //出入数据库
+        $('#submitBtn').click(function(){
+            $('#defaultForm').bootstrapValidator('validate');
+            if($('#defaultForm').data('bootstrapValidator').isValid()){
+//                console.log(1111,$res);
+                var formData =$("#defaultForm").serialize();
+                $.ajax({
+                    url: "{:url('home/User/insertAddress')}",
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    success: function(res) {
+                        console.log(res);
+                        if(res.code==20001){
+                            window.location.reload();
+                            alert(res.msg);
+                        }else{
+                            alert(res.msg);
+                        }
+                    },
+                    error: function(res) {
+                    }
+                });
+            }
+            else{
+                alert('不合法')
+            }
+
+
+        });
+    });
+    function updateAddress(id){
+//        console.log(this);
+//        console.log(event.target);
+        $.ajax({
+            url: "{:url('home/User/insertAddress')}",
+            type: "POST",
+            data: {'id':id},
+            dataType: "json",
+            success: function(res) {
+                console.log(res);
+                if(res.code==20001){
+                    console.log(res.msg);
+                    $("#reverName").val(res.data['revername']);
+                    $("#province").val(res.data['province']);
+//                    $("#city").children('option').val();
+                    $("#county").val(res.data['county']);
+                    $("#detailAddr").val(res.data['addressdetails']);
+                    $("#telephone").val(res.data['revertel']);
+                }else{
+                    alert(res.msg);
+                }
+            },
+            error: function(res) {
+            }
+        });
+
+        $('#myModal').modal('show');
+
+
+    }
+    function deleteAddress(id){
+        if(confirm("确认删除？")){
+            $.ajax({
+                url: "{:url('home/User/deleteAddress')}",
+                type: "POST",
+                data: {'id':id},
+                dataType: "json",
+                success: function(res) {
+                    console.log(res);
+                    if(res.code==20003){
+                        alert(res.msg);
+                        window.location.reload();
+                    }else{
+                        alert(res.msg);
+                    }
+                },
+                error: function(res) {
+                }
+            });
+        }
+    }
+</script>
+
+</html>
