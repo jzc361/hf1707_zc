@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>产品项目</title>
     <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
-    <style>
+    <link rel="stylesheet" href="__CSS__/project.css">
+    <!--<style>
         .center{
             margin-top: 30px;
             /*height: 1420px;*/
@@ -69,7 +70,7 @@
                 font-size: 12px;
             }
         }
-    </style>
+    </style>-->
 </head>
 <body style="background: #f9f9f9;">
     {include file="public/nav"}
@@ -79,7 +80,7 @@
                 <!--分类列表-->
                 <ul class="nav nav-pills">
                     {volist name="sortList" id="sort"}
-                    <li role="presentation" class="{if cookie('pro_sortid')==$sort.sortid}active{/if}"><a href="proindex?sortid={$sort.sortid}" class="{$sort.sortid}">{$sort.sortname}</a></li>
+                    <li role="presentation" class="{if cookie('pro_sortid')==$sort.sortid}active{/if}"><a href="proindex?sortid={$sort.sortid}{if cookie('pro_search')}&search={$search}{/if}" class="{$sort.sortid}">{$sort.sortname}</a></li>
                     {/volist}
                 </ul>
             </div>
@@ -89,11 +90,8 @@
                 <ul class="nav nav-pills col-xs-4" style="font-size: 12px">
                     <li role="presentation" class="{if !cookie('pro_stateid')}active{/if}"><a href="proindex">所有项目({$pronum})</a></li>
                     {volist name="stateList" id="state"}
-                    <li role="presentation" class="{if cookie('pro_stateid')==$state.stateid}active{/if}"><a href="proindex?stateid={$state.stateid}&sortid={if cookie('pro_sortid')}{$sortid}{/if}">{$state.statename}</a></li>
+                    <li role="presentation" class="{if cookie('pro_stateid')==$state.stateid}active{/if}"><a href="proindex?stateid={$state.stateid}{if cookie('pro_sortid')}&sortid={$sortid}{/if}{if cookie('pro_search')}&search={$search}{/if}">{$state.statename}</a></li>
                     {/volist}
-                    <!--<li role="presentation" class="{if cookie('pro_stateid')=='众筹中'}active{/if}"><a href="proindex?staname=众筹中&sortid={if cookie('pro_sortid')}{$sortid}{/if}">众筹中</a></li>
-                    <li role="presentation" class="{if cookie('pro_stateid')=='众筹成功'}active{/if}"><a href="proindex?staname=众筹成功&sortid={if cookie('pro_sortid')}{$sortid}{/if}">众筹成功</a></li>
-                    <li role="presentation" class="{if cookie('pro_stateid')=='众筹失败'}active{/if}"><a href="#">众筹失败</a></li>-->
                 </ul>
                 <div class="col-xs-6"></div>
                 <div class="col-xs-2">
@@ -127,9 +125,9 @@
                     <span>￥{$value.tolamount}</span>
                     <!--显示众筹状态-->
                     <div style="float: right">
-                        {if $value.stateid==5}众筹中{/if}
-                        {if $value.stateid==6}众筹成功{/if}
-                        {if $value.stateid==7}众筹失败{/if}
+                        {if $value.stateid==5}<span class="common-sprite">众筹中</span>{/if}
+                        {if $value.stateid==6}<span class="common-success">众筹成功</span>{/if}
+                        {if $value.stateid==7}<span class="common-fail">众筹失败</span> {/if}
                     </div>
                 </div>
                 <div class="progress progress-striped active" style="width: 85%">
@@ -156,8 +154,8 @@
             <div class="space col-sm-1"></div>
             {/volist}
         </div>
-        <div align="center">{$pro->render()}</div>
     </div>
+    <div align="center">{$pro->render()}</div>
     {include file="public/footer"}
 </body>
 <script src="__JS__/jquery-2.1.4.js"></script>

@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{$proid}</title>
     <!--<link rel="stylesheet" href="__CSS__/layui.css">-->
+    <link rel="stylesheet" href="__CSS__/layer.css">
     <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
     <style>
         textarea{
@@ -95,6 +96,7 @@
 <!--<script src="__JS__/layui.js"></script>-->
 <script src="__JS__/bootstrap.min.js"></script>
 <script src="__JS__/vue.js"></script>
+<script src="__JS__/lay/modules/layer.js"></script>
 <script>
 
     //对项目评论
@@ -108,11 +110,19 @@
             dataType:'json',
             success:function(res){
                 if(res.code==30001){
-                    alert(res.msg);
+                    //alert(res.msg);
+                    layer.open({
+                        title: '提示'
+                        ,content: res.msg
+                    });
                     //评论成功，刷新页面
                     location.reload(true);
                 }else {
-                    alert(res.msg);
+                    //alert(res.msg);
+                    layer.open({
+                        title: '提示'
+                        ,content: res.msg
+                    });
                 }
             }
         });
@@ -135,11 +145,19 @@
             success:function(res){
                 //console.log(res);
                 if(res.code==30001){
-                    alert(res.msg);
+                    //alert(res.msg);
+                    layer.open({
+                        title: '提示'
+                        ,content: res.msg
+                    });
                     //评论成功，刷新页面
                     location.reload(true);
                 }else {
-                    alert(res.msg);
+                    //alert(res.msg);
+                    layer.open({
+                        title: '提示'
+                        ,content: res.msg
+                    });
                 }
             }
         });
@@ -191,5 +209,32 @@
     var app=new Vue({
         el:'#comList'
     });*/
+
+    var toUser=new Vue();
+    Vue.component('comment',{
+        template:'<div class="comment">\
+                        <h4>有什么想和大家交流的?</h4>\
+                            <textarea name="" id="comToPro" maxlength="150" cols="30" rows="8" placeholder="输入您想要跟大家交流的内容~" style="width: 100%;"></textarea>\
+                            <div style="float: right;">\
+                            \
+                            <div>\
+                            <p>请登录后提问，立即 <a href="" onclick=top.location="">登录</a>或\
+                            <a href="" onclick=top.location="">注册</a>\
+                            </p>\
+                            </div>\
+                            \
+                    <div><button type="button" class="btn btn-info" onclick="comToPro()">发布评论</button></div>\
+                    </div>\
+                    </div>',
+        //创建前
+        beforeCreate:function(){
+            $.ajax({
+                url:{}
+            });
+        },
+        mounted: function () {
+
+        }
+    });
 </script>
 </html>

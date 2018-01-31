@@ -1,0 +1,83 @@
+.center{
+    margin-top: 30px;
+    /*height: 1420px;*/
+}
+.sortList{
+    width: 100%;
+    overflow: hidden;
+    padding: 5px;
+    background-color: #fff;
+}
+.sortList a{
+    cursor: pointer;
+}
+.stateList{
+    width: 100%;
+    margin: 20px 5px 40px;
+    height: 37px;
+}
+.proList{
+    /*width: 21%;*/
+    background-color: #fff;
+    margin: 0 5px 20px;
+}
+.proList>div{
+    margin: 15px 0;
+}
+.proimg img{
+    transition: all 0.5s;
+}
+.proimg img:hover{
+    transform: scale(1.03);
+}
+.intro{
+    margin: 0;
+    font-size: 12px;
+}
+.container-fluid{
+    padding: 0;
+}
+@media (min-width: 992px) {
+    .proList{
+        width: 21%;
+    }
+    .space{
+        width: 1%;
+    }
+    .intro{
+        font-size: 12px;
+    }
+}
+@media (min-width: 768px) {
+    .proList{
+        width: 46%;
+    }
+    .space{
+        width: 1%;
+    }
+    .intro{
+        font-size: 12px;
+    }
+}
+.common-fail , .common-sprite , .common-success , .common-begin {
+    color:#FFF;
+    font-size: 12px;
+    padding:0 5px;	height:20px;
+    line-height:20px;
+    _line-height:21px;
+    display:inline-block;
+    text-align:center;
+    border-radius:3px;
+}
+.common-fail {
+    background:#c2c2c2;
+}
+.common-sprite{
+    background:#12adff;
+}
+.common-success{
+    background:#2dce2d;
+}
+.common-begin{
+    background:#ffae00;
+}
