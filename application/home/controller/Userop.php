@@ -41,7 +41,7 @@ class Userop extends Controller
             return json($reMsg);
         }
         $condition=['username'=>$username,'userpsw'=>$userpsd];
-        $data=db('user')->where($condition)->select();
+        $data=db('user')->where($condition)->find();
         if(empty($data)){
             //登录失败
             $reMsg=[
@@ -51,7 +51,7 @@ class Userop extends Controller
             ];
             return json($reMsg);
         }else{
-            if($data[0]['usestate']=='锁定'){
+            if($data['usestate']=='锁定'){
                 //账号被锁定
                 $reMsg=[
                     'code'=>10005,

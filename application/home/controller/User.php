@@ -153,6 +153,23 @@ class User extends Auth
         }
         return json($msgResp);
     }
+    //查看项目日志
+    public function showLog(){
+        $proid=input('get.id');
+        $condition=['projectid'=>$proid];
+        $pro=db('project')->where($condition)->field('projectid,projectname')->find();
+        $log=Db::table('zc_prolog')
+            ->alias('a')
+            ->join('zc_user b','a.userid=b.userid')
+            ->where($condition)
+            ->order('logtime','desc')
+            ->field('a.*,b.userid,b.username')
+            ->select();
+        //项目进度
+        $this->assign('pro',$pro);
+        $this->assign('prolog',$log);
+        return $this->fetch('proLog');
+    }
     //关注的项目页面
     public function focus()
     {
