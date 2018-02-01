@@ -170,6 +170,44 @@ class User extends Auth
         $this->assign('prolog',$log);
         return $this->fetch('proLog');
     }
+    //更新日志
+    public function updateLog(){
+        $userid=session('zc_user')['userid'];
+        $proid=input('?post.projectid')?input('post.projectid'):"";
+        $prologinfo=input('?post.prologinfo')?input('post.prologinfo'):"";
+        //$file=request()->file('imgFile');
+        if(!$prologinfo){
+            $reMsg=[
+                'code'=>50003,
+                'msg'=>config('Msg')['prolog']['null'],
+                'data'=>$proid
+            ];
+            return json($reMsg);
+        }
+        $condition=[
+            'projectid'=>$proid,
+            'prologinfo'=>$prologinfo,
+            'userid'=>$userid,
+            'logtime'=>date('Y-m-d H:i:s',time())
+        ];
+        //var_dump($condition);
+        $res=db('prolog')->insert($condition);
+        if($res){
+            $reMsg=[
+                'code'=>50001,
+                'msg'=>config('Msg')['prolog']['success'],
+                'data'=>$proid
+            ];
+            return json($reMsg);
+        }else{
+            $reMsg=[
+                'code'=>50002,
+                'msg'=>config('Msg')['prolog']['error'],
+                'data'=>$proid
+            ];
+            return json($reMsg);
+        }
+    }
     //关注的项目页面
     public function focus()
     {
