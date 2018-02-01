@@ -30,4 +30,33 @@ class Backmanager extends Controller
         }
         return json($res);
     }
+
+    public function roleDel(){
+        $rid = isset($_POST['rid'])?$_POST['rid']:'';
+        $res = [
+            'code'=>20004,
+            'msg'=>config('msg')['oper']['delFail'],
+            'data'=>''
+        ];
+
+        if($rid!=''){
+            //条件
+            $where = [
+                'roleid'=>$rid
+            ];
+            //返回值
+            $data = db('role')->where($where)->delete();
+
+            if($data!=0){//删除成功
+                $res = [
+                    'code'=>20003,
+                    'msg'=>config('msg')['oper']['del'],
+                    'data'=>''
+                ];
+            }
+            return $res;
+        }else{
+            return $res;
+        }
+    }
 }
