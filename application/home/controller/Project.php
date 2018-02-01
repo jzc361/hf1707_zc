@@ -40,6 +40,7 @@ class Project extends Controller
         $pageParam['query']['order'] = $order;
         //获取分类
         $sort=db('sort')->select();
+<<<<<<< HEAD
         //获取状态--众筹中，众筹成功，众筹失败
         $stateType['stateid']=['>',4];
         $state=db('state')->where($stateType)->select();
@@ -112,6 +113,11 @@ class Project extends Controller
         $this->assign('search',cookie('pro_search'));
         $this->assign('sortList',$sort);//分类列表
         $this->assign('stateList',$state);//状态列表
+=======
+        $pronum=db('project')->count('projectid');
+        $pro=db('project')->select();
+        $this->assign('sortList',$sort);
+>>>>>>> parent of 43a3670... 前后台跳转
         $this->assign('pronum',$pronum);
         $this->assign('pro',$pro);
         return $this->fetch();
