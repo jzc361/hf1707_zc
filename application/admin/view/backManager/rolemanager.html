@@ -42,7 +42,7 @@
                       <td>{{roleInfo.rolename}}</td><td>{{roleInfo.roledetails}}</td><td>权限修改</td><td>删除</td>
                   </tr>
                   <tr v-for="roleInfo in allrole" v-if="roleInfo.roleid!=1">
-                      <td>{{roleInfo.rolename}}</td><td>{{roleInfo.roledetails}}</td><td><a onclick="roleEdit" href="">权限修改</a></td>
+                      <td>{{roleInfo.rolename}}</td><td>{{roleInfo.roledetails}}</td><td><a data-toggle="modal" data-target="#odalEdit" onclick="roleEdit" href="">权限修改</a></td>
                       <a onclick="roleDelete()" href=""><td>删除</td></a>
                   </tr>
                   </tbody>
@@ -52,28 +52,29 @@
       <!--<blockquote class="layui-elem-quote layui-quote-nm"></blockquote>-->
   </div>
   <div style="text-align: center" class="layui-form-item">
-      <button class="btn layui-btn" data-toggle="modal" data-target="#myModal" style="width: 30%" id="addrole" lay-filter="add">
+      <button class="btn layui-btn" data-toggle="modalAdd" data-target="#modalAdd" style="width: 30%" id="roleAdd" lay-filter="add">
           添加角色
       </button>
   </div>
   <!--模态框显示增加菜单-->
 
   <!-- Modal -->
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
           <div class="modal-content">
               <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="myModalLabel">添加角色</h4>
+                  <button type="button" class="close" data-dismiss="modalAdd" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="modalLabelAdd">添加角色</h4>
+                  <!--------------------------添加角色------------------------------>
               </div>
               <div class="modal-body">
                   <!--角色名-->
                   <div class="layui-form-item">
-                      <label for="username" class="layui-form-label">
+                      <label for="nameAdd" class="layui-form-label">
                           <span class="x-red">*</span>角色名称
                       </label>
                       <div class="layui-input-inline">
-                          <input type="text" id="username" name="username" required="" lay-verify="required"
+                          <input type="text" id="nameAdd" name="nameADd" required="" lay-verify="required"
                                  autocomplete="off" class="layui-input">
                       </div>
                       <div class="layui-form-mid layui-word-aux">
@@ -82,11 +83,11 @@
                   </div>
                   <!--权限添加-->
                   <div class="layui-form-item">
-                      <label for="phone" class="layui-form-label">
+                      <label for="gradeAdd" class="layui-form-label">
                           <span class="x-red">*</span>权限选择
                       </label>
                       <div class="layui-input-inline">
-                          <input type="text" id="phone" name="phone" required="" lay-verify="phone"
+                          <input type="text" id="gradeAdd" name="gradeAdd" required="" lay-verify=""
                                  autocomplete="off" class="layui-input">
                       </div>
                       <div class="layui-form-mid layui-word-aux">
@@ -94,11 +95,11 @@
                       </div>
                   </div>
                   <div class="layui-form-item">
-                      <label for="L_email" class="layui-form-label">
+                      <label for="introAdd" class="layui-form-label">
                           <span class="x-red">*</span>角色详情/介绍
                       </label>
                       <div class="layui-input-inline">
-                          <input type="text" id="L_email" name="email" required="" lay-verify="email"
+                          <input type="text" id="introAdd" name="email" required="" lay-verify=""
                                  autocomplete="off" class="layui-input">
                       </div>
                       <div class="layui-form-mid layui-word-aux">
@@ -110,6 +111,71 @@
               <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                   <button type="button" class="btn layui-btn">确认添加</button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <!--<div style="text-align: center" class="layui-form-item">-->
+      <!--<button class="btn layui-btn" data-toggle="modal" data-target="#odalEdit" style="width: 30%" id="roleEdit" lay-filter="add">-->
+          <!--修改角色-->
+      <!--</button>-->
+  <!--</div>-->
+  <!--模态框显示增加菜单-->
+
+  <!-- Modal -->
+  <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="modalLabelEdit">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="modalLabelEdit">修改角色</h4>
+                  <!--------------------------添加角色------------------------------>
+              </div>
+              <div class="modal-body">
+                  <!--角色名-->
+                  <div class="layui-form-item">
+                      <label for="nameEdit" class="layui-form-label">
+                          <span class="x-red">*</span>角色名称
+                      </label>
+                      <div class="layui-input-inline">
+                          <input type="text" id="nameEdit" name="nameEdit" required="" lay-verify="required"
+                                 autocomplete="off" class="layui-input">
+                      </div>
+                      <div class="layui-form-mid layui-word-aux">
+                          <span class="x-red">*</span>必填
+                      </div>
+                  </div>
+                  <!--权限添加-->
+                  <div class="layui-form-item">
+                      <label for="gradeEdit" class="layui-form-label">
+                          <span class="x-red">*</span>权限选择
+                      </label>
+                      <div class="layui-input-inline">
+                          <input type="text" id="gradeEdit" name="gradeEdit" required="" lay-verify=""
+                                 autocomplete="off" class="layui-input">
+                      </div>
+                      <div class="layui-form-mid layui-word-aux">
+                          <span class="x-red">*</span>请合理分配权限
+                      </div>
+                  </div>
+                  <div class="layui-form-item">
+                      <label for="introEdit" class="layui-form-label">
+                          <span class="x-red">*</span>角色详情/介绍
+                      </label>
+                      <div class="layui-input-inline">
+                          <input type="text" id="introEdit" name="introEdit" required="" lay-verify=""
+                                 autocomplete="off" class="layui-input">
+                      </div>
+                      <div class="layui-form-mid layui-word-aux">
+                          <span class="x-red">*</span>
+                      </div>
+                  </div>
+                  <!---->
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                  <button type="button" class="btn layui-btn">确认修改</button>
               </div>
           </div>
       </div>

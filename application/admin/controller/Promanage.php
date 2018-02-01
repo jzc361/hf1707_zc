@@ -16,6 +16,10 @@ class Promanage extends Controller
     {
         parent::__construct($request);
     }
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 5407e3f18fb9518e9deb4c4e4cc3d48f617d4e5b
     //显示项目列表
     public function index()
     {
