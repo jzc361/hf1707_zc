@@ -86,8 +86,11 @@
                             {elseif $val.statename=='审核成功'}
                             <span>
                                 <span data-toggle="modal" data-target="#starttime" onclick="selectStarttime({$val.projectid})" style="cursor: pointer">选择开始时间</span>
-                                &nbsp;
-                                 <span style="cursor: pointer" onclick="deletePro({$val.projectid})">删除</span>
+                                <br>
+                                <a href="javascript:;"
+                                    onclick='x_admin_show("项目详情","showDetails?id="+{$val.projectid})'>查看详情</a>
+                                <br>
+                                <span style="cursor: pointer" onclick="deletePro({$val.projectid})">删除</span>
                             </span>
                             {elseif $val.statename=='审核失败'}
                             <span>
@@ -95,24 +98,40 @@
                                    onclick='x_admin_show("不合格原因：","showReason?projectid="+{$val.projectid},"450","400")'>
                                     查看原因
                                 </a>
-                                &nbsp;
+                                <br>
+                                 <a href="javascript:;"
+                                    onclick='x_admin_show("项目详情","showDetails?id="+{$val.projectid})'>查看详情</a>
+                                <br>
                                 <span style="cursor: pointer" onclick="deletePro({$val.projectid})">删除</span>
                             </span>
                             {elseif $val.statename=='众筹中'}
-                            <span><a href="javascript:;"
-                                     onclick='x_admin_show("项目详情","showDetails?id="+{$val.projectid})'>查看详情</a></span>
+                            <span>
+                                <a href="">项目日志</a>
+                                <br>
+                                <a href="">支持记录</a>
+                                <br>
+                                <a href="javascript:;"
+                                     onclick='x_admin_show("项目详情","showDetails?id="+{$val.projectid})'>查看详情</a>
+                                <br>
+                                <span style="cursor: pointer" onclick="deletePro({$val.projectid})">删除</span>
+                            </span>
                             {elseif $val.statename=='众筹成功'}
                             <span>
                                 <a href="">项目日志</a>
-                                &nbsp;
+                                <br>
                                 <a href="">支持记录</a>
+                                <br>
+                                <a href="javascript:;"
+                                    onclick='x_admin_show("项目详情","showDetails?id="+{$val.projectid})'>查看详情</a>
+                                <br>
+                                <span style="cursor: pointer" onclick="deletePro({$val.projectid})">删除</span>
                             </span>
                             {elseif $val.statename=='众筹失败'}
                             <span>
                                 <a href="javascript:;"
                                    onclick='x_admin_show("项目详情","showDetails?id="+{$val.projectid})'>查看详情</a>
-                                &nbsp;
-                                 <span style="cursor: pointer" onclick="deletePro({$val.projectid})">删除</span>
+                                <br>
+                                <span style="cursor: pointer" onclick="deletePro({$val.projectid})">删除</span>
                             </span>
                             {/if}
                         </td>
