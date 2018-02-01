@@ -1,3 +1,4 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:74:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\login\index.html";i:1517465750;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -34,7 +35,7 @@
 <body>
     <!-- 顶部开始 -->
     <div class="container">
-        <div class="logo"><a href="{:url('admin/login/adminMain')}">后台管理系统</a></div>
+        <div class="logo"><a href="<?php echo url('admin/login/adminMain'); ?>">后台管理系统</a></div>
         <div class="left_open">
             <i title="展开左侧栏" class="iconfont">&#xe699;</i>
         </div>
@@ -43,7 +44,7 @@
             <a href="javascript:;">+新增</a>
             <dl class="layui-nav-child"> <!-- 二级菜单 -->
                 <!------------------------------------------------------------------------------------------------------------>
-              <dd><a onclick="x_admin_show('资讯','{:url(\'admin/index/index\')}')"><i class="iconfont">&#xe6a2;</i>资讯</a></dd>
+              <dd><a onclick="x_admin_show('资讯','<?php echo url('admin/index/index'); ?>')"><i class="iconfont">&#xe6a2;</i>资讯</a></dd>
               <dd><a onclick="x_admin_show('图片','http://www.baidu.com')"><i class="iconfont">&#xe6a8;</i>图片</a></dd>
                <dd><a onclick="x_admin_show('用户','http://www.baidu.com')"><i class="iconfont">&#xe6b8;</i>用户</a></dd>
             </dl>
@@ -57,13 +58,13 @@
                 <a id="onlineName" href="javascript:;"></a>
                 <dl class="layui-nav-child"> <!-- 二级菜单 -->
                     <!--弹框显示个人信息-->
-                  <dd><a onclick="x_admin_show('个人信息','{:url(\'admin/controll/person\')}')">个人信息</a></dd>
+                  <dd><a onclick="x_admin_show('个人信息','<?php echo url('admin/controll/person'); ?>')">个人信息</a></dd>
                     <!--退出事件-->
                   <dd><a onclick="quit()" href="#">切换帐号</a></dd>
                   <dd><a onclick="quit()" href="#">退出</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item to-index"><a href="{:url('admin/login/toMain')}">前台首页</a></li>
+            <li class="layui-nav-item to-index"><a href="<?php echo url('admin/login/toMain'); ?>">前台首页</a></li>
         </ul>
     </div>
     <!-- 顶部结束 -->
@@ -115,7 +116,7 @@
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
-                    <iframe src="{:url('admin/controll/person')}" frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+                    <iframe src="<?php echo url('admin/controll/person'); ?>" frameborder="0" scrolling="yes" class="x-iframe"></iframe>
                 </div>
             </div>
         </div>
@@ -135,7 +136,7 @@
     //页面一加载就发送ajax到后台获取当前用户的权限内容
 
     $.ajax({
-        url:'{:url("admin/index/menuctrl")}',//ajax访问地址
+        url:'<?php echo url("admin/index/menuctrl"); ?>',//ajax访问地址
         data:'getMenu',
         dataType:'json',//接收返回值json格式
         type:'post',
@@ -175,7 +176,7 @@ function quit(){
     {
         //sessionStorage.clear('adminInfo');
         $.ajax({
-            url: '{:url("admin/controll/quit")}',
+            url: '<?php echo url("admin/controll/quit"); ?>',
             data:[],
             dataType:'json',
             type:'post',
@@ -185,7 +186,7 @@ function quit(){
                 alert(res.msg);
                 if(res.code==90011) {
                     //返回登录页面
-                    window.location.href = "{:url('admin/index/index')}";
+                    window.location.href = "<?php echo url('admin/index/index'); ?>";
                 }
             }
         });
@@ -197,7 +198,7 @@ function quit(){
 }
 
     function showPerson(){
-        $("#showframe").attr('src',"{:url('admin/controll/person')}");
+        $("#showframe").attr('src',"<?php echo url('admin/controll/person'); ?>");
     }
 
 </script>

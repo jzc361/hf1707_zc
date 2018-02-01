@@ -1,3 +1,4 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\index\mainView.html";i:1517467003;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,7 +53,7 @@
 <body>
 <!--后台跳转-------------------------------->
 <div>
-    <a href="{:url('home/ToManager/ToManager')}">
+    <a href="<?php echo url('home/ToManager/ToManager'); ?>">
         <input type="button" value="后台登录">
     </a>
 </div>
@@ -75,10 +76,10 @@
                             <a href="#">首页</a>
                         </li>
                         <li>
-                            <a href="{:url('/home/Project/proindex')}">更多众筹</a>
+                            <a href="<?php echo url('/home/Project/proindex'); ?>">更多众筹</a>
                         </li>
                         <li>
-                            <a href="{:url('/home/Publishpro/jumpToProBaseMsg')}">发起项目</a>
+                            <a href="<?php echo url('/home/Publishpro/jumpToProBaseMsg'); ?>">发起项目</a>
                             <!--<a href="#">联系我们</a>-->
                         </li>
                         <!--<li class="dropdown">-->
@@ -107,7 +108,7 @@
                         <!--</li>-->
                     </ul>
 
-                    <form class="navbar-form navbar-left" id="my_search" action="{:url('project/proindex')}" role="search" method="get">
+                    <form class="navbar-form navbar-left" id="my_search" action="<?php echo url('project/proindex'); ?>" role="search" method="get">
                     <form class="navbar-form navbar-left" role="search">
 
                         <div class="form-group">
@@ -116,22 +117,22 @@
                     </form>
                     <ul class="nav navbar-nav navbar-right">
                         <!--<li>-->
-                            <!--<a href="{:url('/home/Index/index')}"><span class="glyphicon glyphicon-log-in"></span> 登录</a>-->
+                            <!--<a href="<?php echo url('/home/Index/index'); ?>"><span class="glyphicon glyphicon-log-in"></span> 登录</a>-->
                         <!--</li>-->
                         <!--<li>-->
-                            <!--<a href="{:url('/home/Index/index')}"><span class="glyphicon glyphicon-user"></span> 注册</a>-->
+                            <!--<a href="<?php echo url('/home/Index/index'); ?>"><span class="glyphicon glyphicon-user"></span> 注册</a>-->
                         <!--</li>-->
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">admin<strong class="caret"></strong></a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="{:url('/home/User/user')}">个人设置</a>
+                                    <a href="<?php echo url('/home/User/user'); ?>">个人设置</a>
                                 </li>
                                 <li>
-                                    <a href="{:url('/home/User/user')}">项目管理(用户)</a>
+                                    <a href="<?php echo url('/home/User/user'); ?>">项目管理(用户)</a>
                                 </li>
                                 <li>
-                                    <a href="{:url('/home/User/test')}">查看通知(测试)</a>
+                                    <a href="<?php echo url('/home/User/test'); ?>">查看通知(测试)</a>
                                 </li>
                                 <li class="divider">
                                 </li>
@@ -141,7 +142,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="{:url('/home/Index/index')}"><span class="glyphicon glyphicon-log-in"></span> 退出</a>
+                            <a href="<?php echo url('/home/Index/index'); ?>"><span class="glyphicon glyphicon-log-in"></span> 退出</a>
                         <li>
                             <a href="#">Link</a>
                         </li>
@@ -171,25 +172,25 @@
             <div class="banner">
                 <div class="carousel slide" id="carousel-127411">
                     <ol class="carousel-indicators">
-                        {volist name='adList' id='vo' key="k" }
-                        <li {$k==1 ? "class='active'" : ''}  data-slide-to="{$k}" data-target="#carousel-127411">
+                        <?php if(is_array($adList) || $adList instanceof \think\Collection || $adList instanceof \think\Paginator): $k = 0; $__LIST__ = $adList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($k % 2 );++$k;?>
+                        <li <?php echo !empty($k) && $k==1?"class='active'" : ''; ?>  data-slide-to="<?php echo $k; ?>" data-target="#carousel-127411">
                         </li>
-                        {/volist}
+                        <?php endforeach; endif; else: echo "" ;endif; ?>
                     </ol>
                     <div class="carousel-inner">
-                        {volist name='adList' id='vo' key="k"}
-                        <div class="item {$k==1 ? 'active' : ''}">
-                            <img alt="" width="100%" src="{$vo.adimg}" />
+                        <?php if(is_array($adList) || $adList instanceof \think\Collection || $adList instanceof \think\Paginator): $k = 0; $__LIST__ = $adList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($k % 2 );++$k;?>
+                        <div class="item <?php echo !empty($k) && $k==1?'active' : ''; ?>">
+                            <img alt="" width="100%" src="<?php echo $vo['adimg']; ?>" />
                             <div class="carousel-caption">
                                 <h4>
-                                    {$vo.addetails}
+                                    <?php echo $vo['addetails']; ?>
                                 </h4>
                                 <p>
                                     Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
                                 </p>
                             </div>
                         </div>
-                        {/volist}
+                        <?php endforeach; endif; else: echo "" ;endif; ?>
                     </div> <a class="left carousel-control" href="#carousel-127411" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a> <a class="right carousel-control" href="#carousel-127411" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
                 </div>
             </div>
@@ -358,32 +359,32 @@
 
                 <h3>热门众筹</h3>
                 <div class="row">
-                    {volist name='hotList' id='vo' key="k" }
+                    <?php if(is_array($hotList) || $hotList instanceof \think\Collection || $hotList instanceof \think\Paginator): $k = 0; $__LIST__ = $hotList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($k % 2 );++$k;?>
                     <div class="col-sm-6">
                         <div class="thumbnail">
-                            <img alt="300x200" src="{$vo.projectimg}" />
+                            <img alt="300x200" src="<?php echo $vo['projectimg']; ?>" />
                             <div class="caption">
                                 <h3>
-                                    {$vo.projectname}
+                                    <?php echo $vo['projectname']; ?>
                                 </h3>
                                 <p>
-                                    目标：￥{$vo.tolamount} 剩余：{$vo.resttime}天
-                                    <span class="label label-default {$vo.statename=='众筹中' ? 'label-primary' : ''}">{$vo.statename}</span>
+                                    目标：￥<?php echo $vo['tolamount']; ?> 剩余：<?php echo $vo['resttime']; ?>天
+                                    <span class="label label-default <?php echo !empty($vo['statename']) && $vo['statename']=='众筹中'?'label-primary' : ''; ?>"><?php echo $vo['statename']; ?></span>
                                 </p>
                                 <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success" style="width: {$vo.curamount/$vo.tolamount*100}%"></div>
+                                    <div class="progress-bar progress-success" style="width: <?php echo $vo['curamount']/$vo['tolamount']*100; ?>%"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-4">
-                                        <p>{$vo.curamount/$vo.tolamount*100}%</p>
+                                        <p><?php echo $vo['curamount']/$vo['tolamount']*100; ?>%</p>
                                         <p>已达</p>
                                     </div>
                                     <div class="col-xs-4">
-                                        <p>{$vo.curamount}元</p>
+                                        <p><?php echo $vo['curamount']; ?>元</p>
                                         <p>已筹资</p>
                                     </div>
                                     <div class="col-xs-4">
-                                        <p>{$vo.endtime|substr=0,10}</p>
+                                        <p><?php echo substr($vo['endtime'],0,10); ?></p>
                                         <p>结束日期</p>
                                     </div>
 =======
@@ -447,37 +448,37 @@
                             <!--</p>-->
                         </div>
                     </div>
-                    {/volist}
+                    <?php endforeach; endif; else: echo "" ;endif; ?>
                 </div>
 
                 <h3>最新众筹</h3>
                 <div class="row">
-                    {volist name='newList' id='vo' key="k" }
+                    <?php if(is_array($newList) || $newList instanceof \think\Collection || $newList instanceof \think\Paginator): $k = 0; $__LIST__ = $newList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($k % 2 );++$k;?>
                     <div class="col-md-4 col-sm-6">
                         <div class="thumbnail">
-                            <img alt="300x200" src="{$vo.projectimg}" />
+                            <img alt="300x200" src="<?php echo $vo['projectimg']; ?>" />
                             <div class="caption">
                                 <h3>
-                                    {$vo.projectname}
+                                    <?php echo $vo['projectname']; ?>
                                 </h3>
                                 <p>
-                                    目标：￥{$vo.tolamount} 剩余：{$vo.resttime}天
-                                    <span class="label label-default {$vo.statename=='众筹中' ? 'label-primary' : ''}">{$vo.statename}</span>
+                                    目标：￥<?php echo $vo['tolamount']; ?> 剩余：<?php echo $vo['resttime']; ?>天
+                                    <span class="label label-default <?php echo !empty($vo['statename']) && $vo['statename']=='众筹中'?'label-primary' : ''; ?>"><?php echo $vo['statename']; ?></span>
                                 </p>
                                 <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success" style="width: {$vo.curamount/$vo.tolamount*100}%"></div>
+                                    <div class="progress-bar progress-success" style="width: <?php echo $vo['curamount']/$vo['tolamount']*100; ?>%"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-4">
-                                        <p>{$vo.curamount/$vo.tolamount*100}%</p>
+                                        <p><?php echo $vo['curamount']/$vo['tolamount']*100; ?>%</p>
                                         <p>已达</p>
                                     </div>
                                     <div class="col-xs-4">
-                                        <p>{$vo.curamount}元</p>
+                                        <p><?php echo $vo['curamount']; ?>元</p>
                                         <p>已筹资</p>
                                     </div>
                                     <div class="col-xs-4">
-                                        <p>{$vo.endtime|substr=0,10}</p>
+                                        <p><?php echo substr($vo['endtime'],0,10); ?></p>
                                         <p>结束日期</p>
                                     </div>
 
@@ -518,36 +519,36 @@
                         </div>
                     </div>
 
-                    {/volist}
+                    <?php endforeach; endif; else: echo "" ;endif; ?>
                 </div>
                 <h3>即将下架</h3>
                 <div class="row">
-                    {volist name='oldList' id='vo' key="k" }
+                    <?php if(is_array($oldList) || $oldList instanceof \think\Collection || $oldList instanceof \think\Paginator): $k = 0; $__LIST__ = $oldList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($k % 2 );++$k;?>
                     <div class="col-md-4 col-sm-6">
                         <div class="thumbnail">
-                            <img alt="300x200" src="{$vo.projectimg}" />
+                            <img alt="300x200" src="<?php echo $vo['projectimg']; ?>" />
                             <div class="caption">
                                 <h3>
-                                    {$vo.projectname}
+                                    <?php echo $vo['projectname']; ?>
                                 </h3>
                                 <p>
-                                    目标：￥{$vo.tolamount} 剩余：{$vo.resttime}天
-                                    <span class="label label-default {$vo.statename=='众筹中' ? 'label-primary' : ''}">{$vo.statename}</span>
+                                    目标：￥<?php echo $vo['tolamount']; ?> 剩余：<?php echo $vo['resttime']; ?>天
+                                    <span class="label label-default <?php echo !empty($vo['statename']) && $vo['statename']=='众筹中'?'label-primary' : ''; ?>"><?php echo $vo['statename']; ?></span>
                                 </p>
                                 <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success" style="width: {$vo.curamount/$vo.tolamount*100}%"></div>
+                                    <div class="progress-bar progress-success" style="width: <?php echo $vo['curamount']/$vo['tolamount']*100; ?>%"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-4">
-                                        <p>{$vo.curamount/$vo.tolamount*100}%</p>
+                                        <p><?php echo $vo['curamount']/$vo['tolamount']*100; ?>%</p>
                                         <p>已达</p>
                                     </div>
                                     <div class="col-xs-4">
-                                        <p>{$vo.curamount}元</p>
+                                        <p><?php echo $vo['curamount']; ?>元</p>
                                         <p>已筹资</p>
                                     </div>
                                     <div class="col-xs-4">
-                                        <p>{$vo.endtime|substr=0,10}</p>
+                                        <p><?php echo substr($vo['endtime'],0,10); ?></p>
                                         <p>结束日期</p>
                                     </div>
 
@@ -591,37 +592,37 @@
                             <!--</p>-->
                         </div>
                     </div>
-                    {/volist}
+                    <?php endforeach; endif; else: echo "" ;endif; ?>
                 </div>
 
                 <h3>猜你喜欢</h3>
                 <div class="row">
-                    {volist name='hotList' id='vo' key="k" }
+                    <?php if(is_array($hotList) || $hotList instanceof \think\Collection || $hotList instanceof \think\Paginator): $k = 0; $__LIST__ = $hotList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($k % 2 );++$k;?>
                     <div class="col-md-4 col-sm-6">
                         <div class="thumbnail">
-                            <img alt="300x200" src="{$vo.projectimg}" />
+                            <img alt="300x200" src="<?php echo $vo['projectimg']; ?>" />
                             <div class="caption">
                                 <h3>
-                                    {$vo.projectname}
+                                    <?php echo $vo['projectname']; ?>
                                 </h3>
                                 <p>
-                                    目标：￥{$vo.tolamount} 剩余：{$vo.resttime}天
-                                    <span class="label label-default {$vo.statename=='众筹中' ? 'label-primary' : ''}">{$vo.statename}</span>
+                                    目标：￥<?php echo $vo['tolamount']; ?> 剩余：<?php echo $vo['resttime']; ?>天
+                                    <span class="label label-default <?php echo !empty($vo['statename']) && $vo['statename']=='众筹中'?'label-primary' : ''; ?>"><?php echo $vo['statename']; ?></span>
                                 </p>
                                 <div class="progress my_progerss">
-                                    <div class="progress-bar progress-success" style="width: {$vo.curamount/$vo.tolamount*100}%"></div>
+                                    <div class="progress-bar progress-success" style="width: <?php echo $vo['curamount']/$vo['tolamount']*100; ?>%"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-4">
-                                        <p>{$vo.curamount/$vo.tolamount*100}%</p>
+                                        <p><?php echo $vo['curamount']/$vo['tolamount']*100; ?>%</p>
                                         <p>已达</p>
                                     </div>
                                     <div class="col-xs-4">
-                                        <p>{$vo.curamount}元</p>
+                                        <p><?php echo $vo['curamount']; ?>元</p>
                                         <p>已筹资</p>
                                     </div>
                                     <div class="col-xs-4">
-                                        <p>{$vo.endtime|substr=0,10}</p>
+                                        <p><?php echo substr($vo['endtime'],0,10); ?></p>
                                         <p>结束日期</p>
                                     </div>
 
@@ -697,7 +698,7 @@
                             <!--</p>-->
                         </div>
                     </div>
-                    {/volist}
+                    <?php endforeach; endif; else: echo "" ;endif; ?>
                 </div>
             </div>
 

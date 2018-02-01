@@ -40,6 +40,7 @@ class Project extends Controller
         $pageParam['query']['order'] = $order;
         //获取分类
         $sort=db('sort')->select();
+
         //获取状态--众筹中，众筹成功，众筹失败
         $stateType['stateid']=['>',4];
         $state=db('state')->where($stateType)->select();
@@ -112,6 +113,11 @@ class Project extends Controller
         $this->assign('search',cookie('pro_search'));
         $this->assign('sortList',$sort);//分类列表
         $this->assign('stateList',$state);//状态列表
+
+        $pronum=db('project')->count('projectid');
+        $pro=db('project')->select();
+        $this->assign('sortList',$sort);
+
         $this->assign('pronum',$pronum);
         $this->assign('pro',$pro);
         return $this->fetch();
@@ -389,14 +395,12 @@ class Project extends Controller
         $limitstateid=$limitstateid['limitstateid'];
         return $limitstateid;
     }
-
     //获取普通众筹筹集的总金额
     public function gettolamount($proid){
         $tolamount=db('project')->where('projectid',$proid)->field('tolamount')->find();
         $tolamount=$tolamount['tolamount'];
         return $tolamount;
     }
-
     //获取普通众筹当前筹集的金额
     public function getcuramount($proid){
         $curamount=db('project')->where('projectid',$proid)->field('curamount')->find();
@@ -404,7 +408,6 @@ class Project extends Controller
         //var_dump($curamount);
         return $curamount;
     }
-
     //实时更改项目状态
     public function updateProState(){
         $proList=db('project')->select();

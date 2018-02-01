@@ -89,10 +89,9 @@ $(function () {
     //左侧菜单效果
     // $('#content').bind("click",function(event){
     $('.left-nav #nav li').click(function (event) {
-        if($(this).children().children('.sub-menu').length){
 
+        if($(this).children('.sub-menu').length){
             if($(this).hasClass('open')){
-
                 $(this).removeClass('open');
                 $(this).find('.nav_right').html('&#xe697;');
                 $(this).children('.sub-menu').stop().slideUp();
@@ -117,17 +116,17 @@ $(function () {
                     event.stopPropagation();
                     return;
                 }
-            }
-
+            };
+            
             tab.tabAdd(title,url,index+1);
             tab.tabChange(index+1);
         }
-
+        
         event.stopPropagation();
-
+         
     })
     
-});
+})
 
 /*弹出层*/
 /*

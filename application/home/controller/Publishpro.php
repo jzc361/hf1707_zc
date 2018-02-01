@@ -12,9 +12,17 @@ class Publishpro extends Controller
         parent::__construct($request);
     }
 
+    //获取客服信息
+    public function getServiceMsg(){
+        $serviceList=db('emp')->where('roleid','3')->select();
+        //var_dump($serviceList);
+        return ($serviceList);
+    }
     //跳转到众筹发布页
     public function jumpToProBaseMsg()
     {
+        $serviceList=$this->getServiceMsg();
+        $this->assign('serviceList',$serviceList);
         Session::set('current','proBaseMsg');//当前所在页面
         $id=input('?get.id')?input('get.id'):"";
         $proList = [];
@@ -102,7 +110,6 @@ class Publishpro extends Controller
                 echo $file->getError();
             }
         }
-
         $return=input('post.');
         array_push($return,$imgPath);
         //如果存在returnMsg就追加，如果不存在就新建session
@@ -130,13 +137,13 @@ class Publishpro extends Controller
         $returnMsg=Session::has('returnMsg')?Session::get('returnMsg'):'';//回报信息
         $user =Session::has('zc_user')?Session::get('zc_user'):'';
         if(is_array($user)){
-            $userid=$user[0]['userid'];
+            $userid=$user['userid'];
         }
         //插入众筹项目表
         $data = [
             'projectname' =>$proMsg['projectname'],
             'intro' =>$proMsg['proDetails'],
-            'projectimg' =>$proMsg[0],
+            'projectimg' =>$proMsg['projectimg'],
             'tolamount' =>$proMsg['tolamount'],
             'daysnumber' =>$proMsg['daysnumber'],
             'stateid' =>1,
