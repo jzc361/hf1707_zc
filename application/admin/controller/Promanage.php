@@ -16,7 +16,6 @@ class Promanage extends Controller
     {
         parent::__construct($request);
     }
-
     //显示项目列表
     public function index()
     {
@@ -108,7 +107,6 @@ class Promanage extends Controller
 //        var_dump($allProList);exit();
         return $this->fetch('allProView');
     }
-
     //显示项目详情
     public function showDetails(){
         $projectid=input('get.id');
@@ -274,7 +272,7 @@ class Promanage extends Controller
     }
     //限时众筹显示
     public function limitProView(){
-        $this->updateProState();
+        //$this->updateProState();
         $keyword=input('?get.akeyword')?input('get.akeyword'):'';
         session('akeyword',$keyword);
         $this->assign('akeyword',$keyword);
@@ -455,5 +453,7 @@ class Promanage extends Controller
             }
         }
     }
+
+
 
 }

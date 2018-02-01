@@ -92,11 +92,19 @@
             </td>
             <!--<td>{$val.createtime}</td>-->
             <td class="td-manage">
+                {if $val.limitstatename=='未开始'}
+                <span onclick="startnow({$val.projectid})" style="cursor: pointer">马上开始</span>
+                <br>
                 <a href="javascript:;"
                    onclick='x_admin_show("项目详情","limitProDetails?id="+{$val.projectid})'>
                     查看详情
                 </a>
-
+                {else}
+                <a href="javascript:;"
+                   onclick='x_admin_show("项目详情","limitProDetails?id="+{$val.projectid})'>
+                    查看详情
+                </a>
+                {/if}
             </td>
         </tr>
         {/volist}
@@ -116,6 +124,26 @@
 <script src="__JS__/admin/html5.min.js"></script>
 <script src="__JS__/admin/respond.min.js"></script>
 <script>
+    //马上开始
+    function startnow(id){
+        console.log(id);
+        if(confirm("马上开始众筹？")){
+            $.ajax({
+                 type: "post",
+                 url: "{:url('模块名/控制器名/方法名')}",
+                 data: data,
+                 dataType: "json",
+                 success: function (responseData){
+                     console.log(responseData);
+                     alert(responseData.msg);
+                     location.reload(true);
+                 },
+                 error:function(){
+                     alert("error");
+                 }
+            });
+        }
+    }
     new Vue({
         el : '#vueDiv',
         //数据
