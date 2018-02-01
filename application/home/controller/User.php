@@ -36,9 +36,7 @@ class User extends Auth
         return $this->fetch('myProject');
     }
     //关注的项目页面
-    public function focus()
-    {
-
+    public function focus(){
         //获取分页项目
 ////////////////
         $this->zc_user=[];
@@ -57,8 +55,7 @@ class User extends Auth
         return $this->fetch('focus');
     }
     //资金管理页面
-    public function money()
-    {
+    public function money(){
         return $this->fetch('money');
     }
     //个人设置页面
@@ -79,36 +76,100 @@ class User extends Auth
     //收货地址页面
     public function address()
     {
+        ////////////////
+        $this->zc_user=[];
+        $this->zc_user['userid']=10001;//(测试用)
+        //////////////
+        $current=1;
+        $showItem=5;
+        $pageSize=5;
+        $rowCount=db('address')
+            ->where('userid',$this->zc_user['userid'])
+            ->count();
+        $allPage=ceil($rowCount/$pageSize);
+        if($allPage<$current){
+            $current=$allPage;
+        }
+        $pageData=[
+            'current'=>$current,
+            'showItem'=>$showItem,
+            'allPage'=>$allPage
+        ];
         $data=db('address a')
             ->field('a.*,b.name province_name,c.name city_name,d.name county_name')
             ->join('zc_region b','a.province=b.id')
             ->join('zc_region c','a.city=c.id')
             ->join('zc_region d','a.county=d.id')
             ->where('a.userid',$this->zc_user['userid'])
+//            ->paginate(6);
+            ->page("{$current},{$pageSize}")
             ->select();
         $this->assign('addrList',json_encode($data));
+        $this->assign('pageData',json_encode($pageData));
         return $this->fetch('address');
     }
     //获取收货地址列表
     public function getAddrList()
     {
+        $current=input('?get.pageNow')?input('pageNow'):1;
+//        var_dump($current);exit;
         ////////////////
         $this->zc_user=[];
         $this->zc_user['userid']=10001;//(测试用)
         //////////////
+        $showItem=5;
+        $pageSize=5;
+        $rowCount=db('address')
+            ->where('userid',$this->zc_user['userid'])
+            ->count();
+        $allPage=ceil($rowCount/$pageSize);
+        if($allPage<$current){
+            $current=$allPage;
+        }
+        $pageData=[
+            'current'=>$current,
+            'showItem'=>$showItem,
+            'allPage'=>$allPage
+        ];
         $data=db('address a')
             ->field('a.*,b.name province_name,c.name city_name,d.name county_name')
             ->join('zc_region b','a.province=b.id')
             ->join('zc_region c','a.city=c.id')
             ->join('zc_region d','a.county=d.id')
             ->where('a.userid',$this->zc_user['userid'])
+            ->page("{$current},{$pageSize}")
             ->select();
-//        var_dump($data);
         if($data){
             $msgResp=[
                 'code'=>20007,
                 'msg'=>config('msg')['oper']['select'],
-                'data'=>$data
+                'data'=>[$data,$pageData]
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20008,
+                'msg'=>config('msg')['oper']['selectFail'],
+                'data'=>''
+            ];
+        }
+        return json($msgResp);
+    }
+    //收货地址页面-获取省市区
+    public function getCityCounty(){
+
+        $provinceId=input('?post.province')?input('province'):'';
+        $cityId=input('?post.city')?input('city'):'';
+        $cityList=db('region')
+            ->where('pid',$provinceId)
+            ->select();
+        $countyList=db('region')
+            ->where('pid',$cityId)
+            ->select();
+        if($cityList && $countyList){
+            $msgResp=[
+                'code'=>20007,
+                'msg'=>config('msg')['oper']['select'],
+                'data'=>[$cityList,$countyList]
             ];
         }else{
             $msgResp=[
@@ -118,6 +179,7 @@ class User extends Auth
             ];
         }
         return json($msgResp);
+
     }
     //个人设置页面-获取省份
     public function getProvince(){
@@ -347,33 +409,35 @@ class User extends Auth
     }
     //修改地址
     public function updateAddress(){
+        $id=input('?get.id')?input('id'):'';
         $reverName=input('?post.reverName')?input('reverName'):'';
         $province=input('?post.province')?input('province'):'';
         $city=input('?post.city')?input('city'):'';
         $county=input('?post.county')?input('county'):'';
         $detailAddr=input('?post.detailAddr')?input('detailAddr'):'';
-        $Postcode=input('?post.Postcode')?input('Postcode'):'';
+//        $Postcode=input('?post.Postcode')?input('Postcode'):'';
         $telephone=input('?post.telephone')?input('telephone'):'';
         $data=[
             'revername'=>$reverName,
-            'rovince'=>$province,
+            'province'=>$province,
             'city'=>$city,
             'county'=>$county,
-            'detailAddr'=>$detailAddr,
-            'Postcode'=>$Postcode,
-            'telephone'=>$telephone
+            'addressdetails'=>$detailAddr,
+            'revertel'=>$telephone
         ];
-        $res=db('address')->update($data);
+        $res=db('address')
+            ->where('addressid',$id)
+            ->update($data);
         if($res>0){
             $msgResp=[
-                'code'=>20001,
-                'msg'=>config('msg')['oper']['add'],
+                'code'=>20005,
+                'msg'=>config('msg')['oper']['update'],
                 'data'=>''
             ];
         }else{
             $msgResp=[
-                'code'=>20002,
-                'msg'=>config('msg')['oper']['addFail'],
+                'code'=>20006,
+                'msg'=>config('msg')['oper']['updateFail'],
                 'data'=>''
             ];
         }

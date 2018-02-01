@@ -55,7 +55,7 @@
 <div id="app">
     <div class="container-fluid" style="min-height: 880px">
         <div class="page_title">配送地址</div>
-        <button id="addBtn" class="btn btn-primary btn-lg" @click="showModel">添加配送地址</button>
+        <button id="addBtn" class="btn btn-primary btn-lg" @click="addModel">添加配送地址</button>
         <table class="table table-hover table-responsive">
             <thead>
             <tr>
@@ -74,13 +74,14 @@
                 <td>{{vo.revername}}</td>
                 <td>{{vo.revertel}}</td>
                 <td>
-                    <span><a href="javascript:void(0);" style="color: #12adff;" @click="updateAddress(vo.addressid)">修改 </a></span>
-                    <span><a href="javascript:void(0);"  style="color: #12adff;" @click="deleteAddress(vo.addressid)"> 删除 </a></span>
-                    <span class="note_show"><a href="javascript:void(0);"> 默认地址</a></span>
+                    <span><a @click="updateModel(vo)" href="javascript:void(0);" style="color: #12adff;">修改 </a></span>
+                    <span><a @click="deleteAddress(vo.addressid)" href="javascript:void(0);"  style="color: #12adff;"> 删除 </a></span>
+                    <span class="note_show" v-if="vo.default"><a href="javascript:void(0);"> 默认地址</a></span>
                 </td>
             </tr>
             </tbody>
         </table>
+        <page></page>
     </div>
     <!-- 模态框（Modal） -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -102,7 +103,7 @@
                             <label class="col-xs-3 control-label">地区：</label>
                             <div class="col-xs-3">
                                 <select name="province" id="province" v-model="provinceId" @change="getCity" class="form-control">
-                                    <option value="">请选择省份</option>
+                                    <option value="" >请选择省份</option>
                                     <option v-for="x in provinceList" v-bind:value="x.id">{{x.name}}</option>
                                 </select>
                             </div>
@@ -140,7 +141,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary"  id="submitBtn" @click="addAddress">保存</button>
+                    <button type="button" class="btn btn-primary"  id="submitBtn" @click="editAddress">保存</button>
                     <button type="button" class="btn btn-default" id="resetBtn"  @click="resetModel">重置</button>
                 </div>
             </div><!-- /.modal-content -->
@@ -150,11 +151,73 @@
 </div>
 
 </body>
+<script type="text/x-template" id="page">
+    <ul class="pagination" >
+        <li v-show="current != 1" @click="current-- && goto(current--)" ><a href="#">上一页</a></li>
+        <li v-for="index in pages" @click="goto(index)" :class="{'active':current == index}" :key="index">
+            <a href="#" >{{index}}</a>
+        </li>
+        <li v-show="allPage != current && allPage != 0 " @click="current++ && goto(current++)"><a href="#" >下一页</a></li>
+    </ul>
+</script>
 <script>
+
     var $province=$("#province");
     var $county=$("#county");
     var $city=$("#city");
     var addrList={$addrList};
+    var pageData={$pageData};
+    var bus=new Vue();
+    Vue.component("page",{
+        template:"#page",
+//        template:"<h2>分页</h2>",
+        data:function(){
+            return{
+                current:pageData.current,//当前页
+                showItem:pageData.showItem,//显示页码数
+                allPage:pageData.allPage//总页数
+            }
+        },
+        computed:{
+            pages:function(){
+                var pag = [];
+                if( this.current < this.showItem ){ //如果当前激活的项 小于要显示的条数
+                    //总页数和要显示的条数那个大就显示多少条
+                    var i = Math.min(this.showItem,this.allPage);
+                    while(i){
+                        pag.unshift(i--);
+                    }
+                }else{ //当前页数大于显示页数了
+                    var middle = this.current - Math.floor(this.showItem / 2 ),//从哪里开始
+                            i = this.showItem;
+                    if( middle >  (this.allPage - this.showItem)  ){
+                        middle = (this.allPage - this.showItem) + 1
+                    }
+                    while(i--){
+                        pag.push( middle++ );
+                    }
+                }
+                return pag
+            }
+        },
+        methods:{
+            goto:function(index){
+                if(index == this.current) return;
+                this.current = index;
+                //发送ajax请求
+                bus.$emit('go',index);
+            }
+        },
+        mounted:function(){
+            //监听总页数
+            bus.$on('all',function(pageData){
+                this.current=pageData.current;//当前页
+                this.showItem=pageData.showItem;//显示页码数
+                this.allPage=pageData.allPage;//总页数
+            }.bind(this))
+
+        }
+    });
     var app = new Vue({
         el: '#app',
         data: {
@@ -167,7 +230,9 @@
             countyId:'',
             reverName:'',
             detailAddr:'',
-            telephone:''
+            telephone:'',
+            current:1,
+            editId:''
         },
         methods:{
             getAddrList:function(){
@@ -175,13 +240,13 @@
                 $.ajax({
                     url: "{:url('home/User/getAddrList')}",
                     type: "get",
+                    data:{'pageNow':that.current},
                     dataType: "json",
                     success: function(res) {
                         console.log(res);
                         if(res.code==20007){
-//                            that.addrList=res.data;
-                            that.resetModel();
-//                                window.location.reload();
+                            that.addrList=res.data[0];
+                            bus.$emit('all',res.data[1]);
                         }else{
                             alert(res.msg);
                         }
@@ -190,8 +255,45 @@
                     }
                 });
             },
-            showModel: function () {
+            addModel: function () {
+                this.editId='';
+                this.resetModel();
                 $('#myModal').modal('show');
+            },
+            updateModel:function(data){
+                console.log(data);
+                this.editId=data.addressid;
+                this.provinceId=data.province;
+                this.cityId=data.city;
+                this.countyId=data.county;
+                this.reverName=data.revername;
+                this.detailAddr=data.addressdetails;
+                this.telephone=data.revertel;
+                this.getCityCounty();
+//                this.getCityCounty(data.province,data.city,data.county);
+            },
+            getCityCounty:function(){ //provinceId,cityId,countyId
+                var that=this;
+                $.ajax({
+                    type:'post',
+                    url:"{:url('home/User/getCityCounty')}",
+                    data:{province:that.provinceId,city:that.cityId},
+                    dataType:'json',
+                    success:function(res){
+                        console.log(res);
+                        if(res.code==20007){
+                            that.cityList=res.data[0];
+                            that.countyList=res.data[1];
+                            console.log(234,res.data);
+//                            console.log(235,cityId,countyId);
+//                            that.cityId=cityId;
+//                            that.countyId=countyId;
+                            $('#myModal').modal('show');
+                        }else{
+                            alert(res.msg);
+                        }
+                    }
+                });
             },
             resetModel:function(){
                 console.log("重置表单");
@@ -248,6 +350,7 @@
                             console.log(res);
                             if(res.code==20007){
                                 that.countyList=res.data;
+                                $('#myModal').modal('show');
                             }else{
                                 alert(res.msg);
                             }
@@ -256,16 +359,63 @@
 
                 }
             },
+            editAddress:function(){
+                if(this.editId==''){
+                    this.addAddress();
+                }else{
+                    this.updateAddress(this.editId);
+                }
+            },
             updateAddress:function(id){
-
+                var formData =$("#defaultForm").serialize();
+                var that=this;
+                $.ajax({
+                    url: "{:url('home/User/updateAddress')}?id="+id,
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    success: function(res) {
+                        console.log(res);
+                        if(res.code==20005){
+                            that.getAddrList();
+//                                window.location.reload();
+                            $('#myModal').modal('hide');
+                            alert(res.msg);
+                        }else{
+                            alert(res.msg);
+                        }
+                    },
+                    error: function(res) {
+                    }
+                });
+                $('#myModal').modal('show');
             },
             deleteAddress:function(id){
-
+                if(confirm("确认删除？")){
+                    var that=this;
+                    $.ajax({
+                        url: "{:url('home/User/deleteAddress')}",
+                        type: "post",
+                        data:{id:id},
+                        dataType: "json",
+                        success: function(res) {
+                            console.log(res);
+                            if(res.code==20003){
+                                that.getAddrList();
+                                alert(res.msg);
+                            }else{
+                                alert(res.msg);
+                            }
+                        },
+                        error: function(res) {
+                        }
+                    });
+                }
             },
             addAddress:function(){
                 var that=this;
-//                $('#defaultForm').bootstrapValidator('validate');
-                if($('#defaultForm').data('bootstrapValidator').isValid() || 1==1){
+                $('#defaultForm').bootstrapValidator('validate');
+                if($('#defaultForm').data('bootstrapValidator').isValid()){
                     var formData =$("#defaultForm").serialize();
                     $.ajax({
                         url: "{:url('home/User/insertAddress')}",
@@ -275,11 +425,9 @@
                         success: function(res) {
                             console.log(res);
                             if(res.code==20001){
-//                                $('#defaultForm').data('bootstrapValidator').resetForm(true);
                                 that.getAddrList();
 //                                window.location.reload();
-
-//                                $('#myModal').modal('hide');
+                                $('#myModal').modal('hide');
                                 alert(res.msg);
                             }else{
                                 alert(res.msg);
@@ -293,15 +441,22 @@
                     alert('请正确填写表单')
                 }
             }
-
         },
         mounted:function(){
             //获取省份
             this.getProvince();
+            bus.$on('go',function(index){
+                this.current=index;
+                this.getAddrList();
+            }.bind(this))
         }
+
 
     });
 
+
+</script>
+<script>
 
     $(function(){
         //显示添加地址模态框
@@ -482,57 +637,57 @@
 //
 //        });
     });
-    function updateAddress(id){
-//        console.log(this);
-//        console.log(event.target);
-        $.ajax({
-            url: "{:url('home/User/insertAddress')}",
-            type: "POST",
-            data: {'id':id},
-            dataType: "json",
-            success: function(res) {
-                console.log(res);
-                if(res.code==20001){
-                    console.log(res.msg);
-                    $("#reverName").val(res.data['revername']);
-                    $("#province").val(res.data['province']);
-//                    $("#city").children('option').val();
-                    $("#county").val(res.data['county']);
-                    $("#detailAddr").val(res.data['addressdetails']);
-                    $("#telephone").val(res.data['revertel']);
-                }else{
-                    alert(res.msg);
-                }
-            },
-            error: function(res) {
-            }
-        });
-
-        $('#myModal').modal('show');
-
-
-    }
-    function deleteAddress(id){
-        if(confirm("确认删除？")){
-            $.ajax({
-                url: "{:url('home/User/deleteAddress')}",
-                type: "POST",
-                data: {'id':id},
-                dataType: "json",
-                success: function(res) {
-                    console.log(res);
-                    if(res.code==20003){
-                        alert(res.msg);
-                        window.location.reload();
-                    }else{
-                        alert(res.msg);
-                    }
-                },
-                error: function(res) {
-                }
-            });
-        }
-    }
+//    function updateAddress(id){
+////        console.log(this);
+////        console.log(event.target);
+//        $.ajax({
+//            url: "{:url('home/User/insertAddress')}",
+//            type: "POST",
+//            data: {'id':id},
+//            dataType: "json",
+//            success: function(res) {
+//                console.log(res);
+//                if(res.code==20001){
+//                    console.log(res.msg);
+//                    $("#reverName").val(res.data['revername']);
+//                    $("#province").val(res.data['province']);
+////                    $("#city").children('option').val();
+//                    $("#county").val(res.data['county']);
+//                    $("#detailAddr").val(res.data['addressdetails']);
+//                    $("#telephone").val(res.data['revertel']);
+//                }else{
+//                    alert(res.msg);
+//                }
+//            },
+//            error: function(res) {
+//            }
+//        });
+//
+//        $('#myModal').modal('show');
+//
+//
+//    }
+//    function deleteAddress(id){
+//        if(confirm("确认删除？")){
+//            $.ajax({
+//                url: "{:url('home/User/deleteAddress')}",
+//                type: "POST",
+//                data: {'id':id},
+//                dataType: "json",
+//                success: function(res) {
+//                    console.log(res);
+//                    if(res.code==20003){
+//                        alert(res.msg);
+//                        window.location.reload();
+//                    }else{
+//                        alert(res.msg);
+//                    }
+//                },
+//                error: function(res) {
+//                }
+//            });
+//        }
+//    }
 </script>
 
 </html>
