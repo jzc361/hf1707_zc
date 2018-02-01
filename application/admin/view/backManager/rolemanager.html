@@ -42,7 +42,7 @@
                       <td>{{roleInfo.rolename}}</td><td>{{roleInfo.roledetails}}</td><td>权限修改</td><td>删除</td>
                   </tr>
                   <tr v-for="roleInfo in allrole" v-if="roleInfo.roleid!=1">
-                      <td>{{roleInfo.rolename}}</td><td>{{roleInfo.roledetails}}</td><td><a data-toggle="modal" data-target="#odalEdit" onclick="roleEdit" href="">权限修改</a></td>
+                      <td>{{roleInfo.rolename}}</td><td>{{roleInfo.roledetails}}</td><td><a data-toggle="#modalEdit" data-target="#modalEdit" onclick="roleEdit" href="">权限修改</a></td>
                       <a onclick="roleDelete()" href=""><td>删除</td></a>
                   </tr>
                   </tbody>
@@ -52,7 +52,7 @@
       <!--<blockquote class="layui-elem-quote layui-quote-nm"></blockquote>-->
   </div>
   <div style="text-align: center" class="layui-form-item">
-      <button class="btn layui-btn" data-toggle="modalAdd" data-target="#modalAdd" style="width: 30%" id="roleAdd" lay-filter="add">
+      <button class="btn layui-btn" data-toggle="#modalAdd" data-target="#modalAdd" style="width: 30%" id="roleAdd" lay-filter="add">
           添加角色
       </button>
   </div>
