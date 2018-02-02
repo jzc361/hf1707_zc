@@ -123,20 +123,52 @@ class Project extends Controller
         return $this->fetch();
     }
 
-    //限时众筹
+    //限时众筹（列表）
     public function prolimit(){
-        $limitstateid=$this->getlimitstateid('众筹中');
-        //var_dump($limitstateid);exit;
+        cookie( null,'limit_');//清空前缀为pro_的cookie
+        //$limitstateid=$this->getlimitstateid('众筹中');
+        $sortid=input('?get.sortid')?input('get.sortid'):"";//分类id
+        $stateid=input('?get.stateid')?input('get.stateid'):"";//状态id
         $condition=[
             'projecttype'=>'限时众筹',
-            'limitstateid'=>$limitstateid
+            //'a.limitstateid'=>$limitstateid
+        ];
+        //按项目分类搜索
+        if($sortid!=""){
+            cookie('limit_sortid',$sortid,3600);//将查询的分类id存入cookie
+            $condition["sortid"]=$sortid;
+            $pageParam['query']['sortid'] = $sortid;
+        }
+        //按项目状态搜索
+        if($stateid!=""){
+            cookie('limit_stateid',$stateid,3600);//将查询的项目状态id存入cookie
+            $stateType="";
+            $condition["a.limitstateid"]=$stateid;
+            $pageParam['query']['stateid'] = $stateid;
+        }
+        //链表
+        $join=[
+            ['zc_prodetails b','a.projectid=b.projectid'],
+            ['zc_limitstate c','a.limitstateid=c.limitstateid']
         ];
         //获取分类
-        $sort=db('sort')->select();
-        $pro=db('project')->where($condition)->paginate(4);//->whereOr($or)
+        //$sort=db('sort')->select();
+        //获取限时众筹状态
+        $limitstate=db('limitstate')->select();
+        //$pro=db('project')->where($condition)->paginate(4);//->whereOr($or)
+        //获取限时众筹项目信息
+        $pro=Db::table('zc_project')
+            ->alias('a')
+            ->join($join)
+            ->where($condition)
+            ->field('a.*,b.price,b.limitcount,c.*')
+            ->paginate(4);
         //var_dump($pro);exit;
         $this->assign('pro',$pro);
-        $this->assign('sortList',$sort);//分类列表
+        $this->assign('sortid',cookie('limit_sortid'));//给前端返回搜索的分类id
+        $this->assign('limitstateid',cookie('limit_stateid'));//给前端返回搜索的状态id
+        $this->assign('sortList',$this->getsort());//分类列表
+        $this->assign('limstaList',$limitstate);//状态列表
         return $this->fetch();
     }
 
@@ -148,9 +180,18 @@ class Project extends Controller
         //获取项目信息
         $pro=db('project')->where('projectid',$proid)->find() ;
         //var_dump($pro);exit;
+        //获取项目进度信息
+        //$log=db('prolog')->where('projectid',$proid)->order('logtime','desc')->select();
+        $log=Db::table('zc_prolog')
+            ->alias('a')
+            ->join('zc_user b','a.userid=b.userid')
+            ->where('projectid',$proid)
+            ->order('logtime','desc')
+            ->field('a.*,b.userid,b.username')
+            ->select();
+        //var_dump($log);exit;
         //获取项目评论数
         $commentnum=db('comments')->where(['projectid'=>$proid,'commentto'=>0])->count('projectid');
-
         //项目详情
         $prodetails=db('prodetails')->where('projectid',$proid)->select() ;
         if($pro['projecttype']=='普通众筹'){
@@ -160,6 +201,8 @@ class Project extends Controller
             $this->assign("username",$username[0]);//发起人姓名
             $this->assign('headimg',$headimg[0]);//发起人头像
         }
+        //项目进度
+        $this->assign('prolog',$log);
         $this->assign('commentnum',$commentnum);//项目评论数
         $this->assign("pro",$pro);//项目信息
         $this->assign("proList",$prodetails);//项目详情
@@ -172,13 +215,6 @@ class Project extends Controller
 
     //关注项目
     public function proFocus(){
-        $proid=input('?post.proid')?input('post.proid'):"";//关注的项目id
-        $userid=session('zc_user')[0]['userid'];//当前登录用户的id
-        $now_time = date('Y-m-d H:i:s',time());//当前时间
-        $condition=[
-            'projectid'=>$proid,
-            'userid'=>$userid
-        ];
         if(!session('zc_user')){
             //未登录
             $reMsg=[
@@ -188,6 +224,14 @@ class Project extends Controller
             ];
             return json($reMsg);
         }
+        $proid=input('?post.proid')?input('post.proid'):"";//关注的项目id
+        $userid=session('zc_user')['userid'];//当前登录用户的id
+        //$userid=session('zc_user')[0]['userid'];//当前登录用户的id
+        $now_time = date('Y-m-d H:i:s',time());//当前时间
+        $condition=[
+            'projectid'=>$proid,
+            'userid'=>$userid
+        ];
         //查看关注表，用户是否关注过该项目
         $res=db('focuspro')->where($condition)->select();
         if(!empty($res)){
@@ -261,7 +305,7 @@ class Project extends Controller
         $proid=input('?post.proid')?input('post.proid'):"";//被评论的项目id
         $content=input('?post.content')?input('post.content'):"";//评论内容
         $commentto=input('?post.commentto')?input('post.commentto'):0;//回复/评论->0
-        $userid=session('zc_user')[0]['userid'];//发表评论的用户的id
+        $userid=session('zc_user')['userid'];//发表评论的用户的id
         $now_time = date('Y-m-d H:i:s',time());//当前时间
         $condition=['projectid'=>$proid,'userid'=>$userid];
         //未登录
@@ -324,6 +368,12 @@ class Project extends Controller
                 return json($reMsg);
             }
         }
+    }
+
+    //获取分类列表
+    public function getsort(){
+        $sort=db('sort')->select();
+        return $sort;
     }
 
     //获取某普通众筹的状态id

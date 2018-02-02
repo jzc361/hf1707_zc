@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" type="text/css" href="__CSS__/chat.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/font_Icon/iconfont.css">
+
 </head>
 <body>
+<div id="myChat" style="left: 400px;"></div>
 <!--<div class="chatContainer">-->
     <div id="chatlist" ref="chatBox">
         <!--头部-->
@@ -38,11 +41,17 @@
 <script src="__JS__/jquery-2.1.4.js"></script>
 <script>
     var empInfo={$empInfo};
-    var empid=empInfo[0]['empid']
-    $("#headimg").attr("src",empInfo[0]['headimg']);
-    $("#empname").text(empInfo[0]['empname']);
+    var empid=empInfo[0]['empid'];
+    var empheadimg=empInfo[0]['headimg'];
+    var empname=empInfo[0]['empname'];
+    $("#headimg").attr("src",empheadimg);
+    $("#empname").text(empname);
     var staticUrl='__STATIC__';
-
 </script>
+<script src="__JS__/qqface.js"></script>
+<script src="__JS__/myChat.js"></script>
 <script src="__JS__/admin/connectServer.js"></script>
+
+
+
 </html>

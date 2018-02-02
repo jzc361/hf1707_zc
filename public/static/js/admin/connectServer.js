@@ -1,6 +1,11 @@
 /**
  * Created by Administrator on 2018/2/2.
  */
+
+var chatdiv=$("#myChat");
+var $chat=new MyChat(chatdiv,function(message){
+    console.log(message);
+});
 var ws=new WebSocket("ws://localhost:7777");
 ws.onopen=function()
 {
@@ -33,13 +38,13 @@ ws.onmessage=function(msg)
         showUserList(empMsg);
     }
     else  if(msgObj.type=='getHisWithThisResp'){
-        var hisList=[];
+        var chatList=[];
         if(msgObj.content!=false)
         {
-            hisList=msgObj.content;
+            chatList=msgObj.content;
         }
-        console.log(hisList);
-        //showUserList(empMsg);
+        console.log(chatList);
+        showChatMsg(chatList);
     }
 };
 
@@ -63,6 +68,11 @@ function showUserList(empMsg){
             chatBoxList.append($user);
             //点击某用户，获取聊天记录
             $user.click(function(){
+                userSrc=$(this).find("img").attr("src");
+                var name=$(this).find("p").text();
+                $chat.setHead(userSrc,name); //设置头部 （选择的客服的头像与昵称）
+                $chat.show();
+                $chat.sendMsg(empheadimg); //调用发送消息，并传入当前客服的头像
                 var $userid=$(this).attr("value");
                 console.log($userid);
                 var msg={
@@ -77,17 +87,29 @@ function showUserList(empMsg){
                 ws.send(msgString);
 
             });
-            //chatBoxList.append('<div class="chat-list-people">\
-            //<div><img src='+staticUrl+'/'+empMsg[i]["headimg"]+' alt="头像"/></div>\
-            //<div class="chat-name" style="width: auto;">\
-            //<p>'+empMsg[i]['username']+'</p>\
-            //</div>\
-            //<div class="message-num">10</div>\
-            //</div>');
         }
     }
     else if(empMsg.length==0){
         chatBoxList.append("<p style='text-align: center'>暂无</p>");
-
     }
+}
+
+//聊天页面显示
+function showChatMsg(chatList){
+    $("#chatBox-content-demo").empty();
+    if(chatList.length>0){
+        for (var i=0;i<chatList.length;i++){
+            if(chatList[i]['sender']==empid){  //发送者为客服，放右边
+                $chat.sendMsgView(empheadimg,chatList[i]['content']);
+            }
+            else if(chatList[i]['rever']==empid){
+                $chat.getFriendMsg(userSrc,chatList[i]['content']);
+
+            }
+        }
+    }
+    else {
+        //清空
+    }
+
 }
