@@ -5,12 +5,12 @@ use think\Request;
 use think\Db;
 use think\Session;
 use \think\File;
-class Publishpro extends Controller
+class Publishpro extends Auth
 {
-    public function __construct(Request $request)
-    {
-        parent::__construct($request);
-    }
+//    public function __construct(Request $request)
+//    {
+//        parent::__construct($request);
+//    }
 
     //获取客服信息
     public function getServiceMsg(){
@@ -50,6 +50,7 @@ class Publishpro extends Controller
         //获取项目分类
         $proSort=Db::table('zc_sort')->select();
         $this->assign('proSortList',$proSort);
+        $this->assign('do',$this->do);
         return $this->fetch('proBaseMsg');
     }
     //点击下一步，保存项目信息
@@ -89,6 +90,7 @@ class Publishpro extends Controller
         $proMsg=Session::get('proMsg');
         //var_dump($proMsg);
         $this->assign('proTitle',$proMsg['projectname']);
+        $this->assign('do',$this->do);
         return $this->fetch('addReturn');
     }
     //保存回报数据

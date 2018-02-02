@@ -15,6 +15,13 @@ SET 'utf8';
 USE hf1707_zc;
 SET FOREIGN_key_checks=0;
 
+SELECT `a`.*,b.name province_name,c.name city_name,d.name county_name 
+FROM zc_address a 
+INNER JOIN `zc_region` `b` ON `a`.`province`=`b`.`id` 
+INNER JOIN `zc_region` `c` ON `a`.`city`=`c`.`id` 
+INNER JOIN `zc_region` `d` ON `a`.`county`=`d`.`id` 
+WHERE `a`.`userid` = 10001
+
 -- 1.角色表
 DROP TABLE IF EXISTS zc_role;
 CREATE TABLE zc_role(
@@ -129,7 +136,7 @@ INSERT into zc_limit(roleid,menuid) VALUES
 drop table if exists zc_user;
 create table zc_user
 (
-    userid  INT(10) primary key auto_increment,
+    userid  INT(10) not null primary key auto_increment,
 		username       VARCHAR(10),
 		userpsw  VARCHAR(32) NOT NULL DEFAULT '202cb962ac59075b964b07152d234b70', -- 123
 		sex				enum('0','1','2') not null DEFAULT '0',
@@ -138,12 +145,12 @@ create table zc_user
 		city				 				mediumint(6), -- w 市
 		county				 			mediumint(6), -- w 县/区
 		lat float(7,4), -- 经度
-		lng float(7,4),-- 纬度
-		money		FLOAT(10,2) DEFAULT 00000000.00,
+		lng float(7,4),-- 纬度 
+		money		FLOAT(10,2) DEFAULT 00000000.00,	
 		realname	VARCHAR(32),
 		idcard		bigint(20),-- 身份证
 		telephone	bigint(11),
-		headimg	VARCHAR(80),
+		headimg	VARCHAR(80) DEFAULT '__STATIC__/img/home/userView/noavatar_middle.gif',
 		usestate	enum('锁定','使用') DEFAULT '使用', -- 使用状态
 		 FOREIGN KEY (province) REFERENCES zc_region (id) ON DELETE CASCADE ON UPDATE CASCADE,
 		 FOREIGN KEY (city) REFERENCES zc_region (id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -155,9 +162,17 @@ create table zc_user
 -- 		KEYS('province','city','county') -- 省市区建立关联索引
 		key login(`username`,`userpsw`),
 		key address(`province`,`city`,`county`)
-
 );
+
 ALTER TABLE zc_user AUTO_INCREMENT=10001; -- 设置自增长id从10001开始
+INSERT zc_user VALUES
+(DEFAULT,'aaa',DEFAULT,1,NOW(),350000,350100,350104,DEFAULT,DEFAULT,DEFAULT,'小明',350123567890123456,10086,default,default)
+,(DEFAULT,'bbb',DEFAULT,2,NOW(),350000,350100,350104,DEFAULT,DEFAULT,DEFAULT,'小红',350123567890123456,10086,default,default)
+,(DEFAULT,'ccc',DEFAULT,1,NOW(),350000,350100,350104,DEFAULT,DEFAULT,DEFAULT,'小东',350123567890123456,10086,default,default)
+,(DEFAULT,'ddd',DEFAULT,1,NOW(),350000,350100,350104,DEFAULT,DEFAULT,DEFAULT,'小北',350123567890123456,10086,default,default)
+
+
+
 -- SELECT * FROM zc_user a WHERE `a`.`userid` = 10001
 
 -- ALTER  TABLE  `zc_user`  ADD  INDEX login(`username`,`userpsw`);
@@ -170,10 +185,10 @@ CREATE TABLE zc_ad(
 	adimg VARCHAR (80) not null,
 	addetails	text,
 	adhref VARCHAR (80),
-	starttime datetime,
+	starttime datetime, 
 	endtime datetime,
 	projectid int(10) not null,
-	FOREIGN KEY (projectid) REFERENCES zc_project(projectid) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (projectid) REFERENCES zc_project(projectid) ON DELETE CASCADE ON UPDATE CASCADE       
 );
 INSERT zc_ad VALUES
 (DEFAULT,'__STATIC__/img/home/mainView/banner1.jpg','广告一详情描述','#','2018-1-1 00:00:00','2018-5-1 00:00:00',9),
@@ -185,31 +200,31 @@ INSERT zc_ad VALUES
 
 -- 聊天记录：记录id（自动增长—）、发送者、接收者、类型、内容、记录时间等
 DROP TABLE IF EXISTS zc_chats;
-create table if not exists zc_chats
+create table if not exists zc_chats            
 (
-	chatid int(10) primary key auto_increment, --
-	sender VARCHAR(20),      -- int(10)
-	rever VARCHAR(20),    	 -- int(10)
-	type VARCHAR(20) not null default 'text',
-	content text,
+	chatid int(10) primary key auto_increment, -- 
+	sender VARCHAR(20),      -- int(10)  
+	rever VARCHAR(20),    	 -- int(10)  
+	type VARCHAR(20) not null default 'text',         
+	content text,       
 	msgTime datetime
-
+   
 );
 -- 优惠劵
 DROP TABLE IF EXISTS zc_coupon;
-create table if not exists zc_coupon
+create table if not exists zc_coupon            
 (
-	couponid int(10) primary key auto_increment, --
-	discount FLOAT(8,2) not null, -- 减免金额
-	quota  FLOAT(10,2) not null, -- 满额金额
-	starttime datetime not null,
+	couponid int(10) primary key auto_increment, -- 
+	discount FLOAT(8,2) not null, -- 减免金额   
+	quota  FLOAT(10,2) not null, -- 满额金额 
+	starttime datetime not null,  
 	endtime datetime not null
 );
 -- 用户持有优惠劵
 DROP TABLE IF EXISTS zc_usercoupon;
-create table if not exists zc_usercoupon
+create table if not exists zc_usercoupon            
 (
-	id  int(10) primary key auto_increment, --
+	id  int(10) primary key auto_increment, -- 
 	userid  int(10),
 	couponid int(10),
 	FOREIGN KEY (userid) REFERENCES zc_userid (userid) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -218,13 +233,13 @@ create table if not exists zc_usercoupon
 );
 #活动表（后台发布，有数据的话）
 DROP TABLE IF EXISTS zc_activity;
-create table if not exists zc_activity
+create table if not exists zc_activity            
 (
-	actid int(10) primary key auto_increment,
+	actid int(10) primary key auto_increment, 
 	actdetail text,
 	acttime datetime not null,
 	projectid int(10) not null,
-	FOREIGN KEY (projectid) REFERENCES zc_project(projectid) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (projectid) REFERENCES zc_project(projectid) ON DELETE CASCADE ON UPDATE CASCADE    
 );
 
 
@@ -234,7 +249,7 @@ create table zc_focuspro(
 		focusid INT(10) primary key auto_increment,
 		projectid int(10),
 		userid int(10),
-		focustime datetime,
+		focustime datetime, 
 		FOREIGN KEY (userid) REFERENCES zc_user (userid),
 		FOREIGN KEY (projectid) REFERENCES zc_project (projectid),
 -- 		KEY `projectid`(`projectid`), -- 用户id，项目id关联索引
@@ -270,20 +285,27 @@ drop table if exists zc_address;
 create table zc_address
 (
     addressid     		  INT(10) primary key auto_increment,
-		userid        			INT(10), -- w
+		userid        			INT(10) not null, -- w
 		province     				mediumint(6), -- w 省
 		city				 				mediumint(6), -- w 市
 		county				 			mediumint(6), -- w 县/区
 		addressdetails			VARCHAR(80),
 -- 		zipcode							INT,-- 邮编
 		revertel     				BIGINT(11), -- 收货电话
-		revername						VARCHAR(32),
-		isdefault						enum('0','1'),
+		revername						VARCHAR(32), 
+		isdefault						enum('0','1') not null DEFAULT '0',
 		FOREIGN KEY (userid) REFERENCES zc_user (userid) ON DELETE CASCADE ON UPDATE CASCADE,
-		 FOREIGN KEY (province) REFERENCES zc_region (id) ON DELETE CASCADE ON UPDATE CASCADE,
-		 FOREIGN KEY (city) REFERENCES zc_region (id) ON DELETE CASCADE ON UPDATE CASCADE,
-		 FOREIGN KEY (county) REFERENCES zc_region (id) ON DELETE CASCADE ON UPDATE CASCADE
+	  FOREIGN KEY (province) REFERENCES zc_region (id) ON DELETE CASCADE ON UPDATE CASCADE,
+	  FOREIGN KEY (city) REFERENCES zc_region (id) ON DELETE CASCADE ON UPDATE CASCADE,
+	  FOREIGN KEY (county) REFERENCES zc_region (id) ON DELETE CASCADE ON UPDATE CASCADE,
+		key address(`province`,`city`,`county`)
 );
+INSERT zc_address VALUES
+(DEFAULT,10001,350000,350100,350104,'金达路1号',18250100001,'豆豆1','0'),
+(DEFAULT,10001,350000,350100,350104,'金达路2号',18250100001,'豆豆2','0'),
+(DEFAULT,10001,350000,350100,350104,'金达路3号',18250100001,'豆豆3','1'),
+(DEFAULT,10001,350000,350100,350104,'金达路4号',18250100001,'豆豆4','0'),
+(DEFAULT,10001,350000,350100,350104,'金达路5号',18250100001,'豆豆5','0');
 
 -- 9订单表
 drop table if exists zc_orders;
@@ -292,12 +314,12 @@ create table zc_orders
     ordersid      INT(10) primary key auto_increment,
 		userid        INT(10) not NULL, -- w
 		projectid 	 	INT(10) not NULL,
-		addressid     INT(10) not NULL, -- w
-		ordersprice		FLOAT(10,2) not NULL,
+		addressid     INT(10) not NULL, -- w 
+		ordersprice		FLOAT(10,2) not NULL,	
 		orderstype		enum('普通众筹','限时众筹') not NULL,
 		orderstime    datetime not NULL,
 		delivertime		datetime,  -- 发货时间默认为null，点击发货后再改
-    orderstate   enum('已支付','未支付','已发货','交易成功','交易关闭'), --
+    orderstate   enum('已支付','未支付','已发货','交易成功','交易关闭'), -- 
 		FOREIGN KEY (userid) REFERENCES zc_user (userid) ON DELETE CASCADE ON UPDATE CASCADE,
 		FOREIGN KEY (addressid) REFERENCES zc_address (addressid) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -307,7 +329,7 @@ INSERT into zc_orders VALUES
 (DEFAULT,10001,3,1,20.00,'普通众筹','2018-2-1 00:00:00',DEFAULT,'交易成功'),
 (DEFAULT,10001,4,1,20.00,'普通众筹','2018-2-1 00:00:00',DEFAULT,'交易成功'),
 (DEFAULT,10001,5,1,20.00,'普通众筹','2018-2-1 00:00:00',DEFAULT,'交易成功');
---
+-- 
 -- UPDATE `zc_project` SET `imgs`='mainView/goods1.jpg' WHERE (`projectid`<8)
 -- -- 10项目状态表
 -- create table zc_state
@@ -340,8 +362,8 @@ create table zc_project
 	tolamount float(10,2) not NULL,	-- 众筹目标金额
 	curamount float(10,2) not NULL DEFAULT 00000000.00,	-- 当前筹集金额
 	focuscount int(10) DEFAULT 0,									-- 关注人数
-  statename enum('待审核','审核中','审核成功','审核失败','众筹中','众筹成功','众筹失败') not null,	-- 项目状态(众筹中，众筹成功，众筹失败) 对应专门状态表
-
+  statename enum('待审核','审核中','审核成功','审核失败','众筹中','众筹成功','众筹失败') not null,	-- 项目状态(众筹中，众筹成功，众筹失败) 对应专门状态表 
+	
 	sortid SMALLINT(2),											-- 项目类型
 	userid int(10),											-- 发起人id
 -- 	foreign key(stateid) references zc_state(stateid),
@@ -360,7 +382,7 @@ INSERT into zc_project VALUES
 -- SELECT *,datediff(endtime,NOW()) resttime FROM `zc_project` WHERE `begintime` <= '2018-01-27 00:01:11' AND `endtime` > '2018-01-27 00:01:11' ORDER BY `endtime` LIMIT 3
 -- SELECT datediff('2018-4-1  00:01:11',NOW())
 -- SELECT datediff('2018-1-29',NOW()) d1;
--- SELECT TIMESTAMPDIFF(DAY,now(),"2018-1-29") d2
+-- SELECT TIMESTAMPDIFF(DAY,now(),"2018-1-29") d2 
 UPDATE zc_project set projectimg='__STATIC__/img/home/mainView/goods1.jpg'
 
 -- -- 众筹状态表
@@ -385,9 +407,9 @@ create table zc_prodetails
 	foreign key(projectid) references zc_project(projectid) ON DELETE CASCADE ON UPDATE CASCADE
 );
 -- UPDATE zc_prodetails set curcount =0;
---
--- SELECT *,sum(c.curcount) sum_curcount FROM zc_focuspro a
--- INNER JOIN `zc_project` `b` ON `a`.`projectid`=`b`.`projectid`
+-- 
+-- SELECT *,sum(c.curcount) sum_curcount FROM zc_focuspro a 
+-- INNER JOIN `zc_project` `b` ON `a`.`projectid`=`b`.`projectid` 
 -- INNER JOIN `zc_prodetails` `c` ON `a`.`projectid`=`c`.`projectid`
 --  GROUP BY a.projectid ORDER BY a.focustime desc LIMIT 0,5
 
@@ -395,15 +417,15 @@ create table zc_prodetails
 drop table if exists zc_comments;
 #评论表：评论id、用户名、商品编号、订单编号、评价内容、评论时间
 create table if not exists zc_comments(
-commentid int(10) primary key auto_increment,
-content text not null,
-ctime datetime not null,
+commentid int(10) primary key auto_increment, 
+content text not null,       
+ctime datetime not null, 
 
-userid int(10),
-projectid int(10),
-commentto int (10) DEFAULT 0 ,-- 评论对象 ,0时为对产品评论
-
-FOREIGN KEY(userid) REFERENCES zc_user(userid) on DELETE set null on UPDATE CASCADE,
+userid int(10),       
+projectid int(10),  
+commentto int (10) DEFAULT 0 ,-- 评论对象 ,0时为对产品评论  
+      
+FOREIGN KEY(userid) REFERENCES zc_user(userid) on DELETE set null on UPDATE CASCADE,    
 FOREIGN KEY(projectid) REFERENCES zc_project(projectid) on DELETE set null on UPDATE CASCADE,
 KEY comid(`projectid`,`userid`)
 -- KEY(userid),

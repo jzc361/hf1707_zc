@@ -47,7 +47,7 @@
             <td>
                 <div class="media">
                     <a href="#" class="pull-left">
-                        <img class="media-object"  height="45px" width="70px" src="{$vo.projectimg}" alt='' />
+                        <img class="media-object"  height="45px" width="70px" src="__STATIC__/{$vo.projectimg}" alt='' />
                     </a>
                     <div class="media-body">
                         {$vo.projectname}
@@ -57,7 +57,7 @@
             <td>￥{$vo.ordersprice}</td>
             <td>-</td>
             <td>{$vo.orderstate}</td>
-            <td><a href="#">查看详情</a></td>
+            <td><a href="#" onclick="detail()">查看详情</a></td>
         </tr>
         {/volist}
         </tbody>
@@ -158,10 +158,14 @@
 <div class="blank"></div>
 </body>
 <script>
+    function getDetail(){
+        $('#myModel').modal('show')
+    }
     $(function(){
         $("#addBtn").click(function(){
             $('#myModal').modal('show')
         });
+
         //正则校验
         $('#defaultForm').bootstrapValidator({
 //        live: 'disabled',

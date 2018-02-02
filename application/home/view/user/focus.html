@@ -48,7 +48,7 @@
             <td>
                 <div class="media">
                     <a href="#" class="pull-left">
-                        <img class="media-object"  height="45px" width="70px" src="{$vo.projectimg}" alt='' />
+                        <img class="media-object"  height="45px" width="70px" src="__STATIC__/{$vo.projectimg}" alt='' />
                     </a>
                     <div class="media-body">
                         {$vo.projectname}
@@ -56,10 +56,10 @@
                 </div>
             </td>
             <td>￥{$vo.curamount}</td>
-            <td>{$vo.sum_curcount}</td>
+            <td>{$vo.surport_count}</td>
             <td>{$vo.curamount/$vo.tolamount*100|round=2}%</td>
             <td>{$vo.resttime}</td>
-            <td><a href="#">取消关注</a></td>
+            <td><a href="#" onclick="cancelFocus({$vo.focusid})">取消关注</a></td>
         </tr>
         {/volist}
         </tbody>
@@ -71,72 +71,25 @@
 </body>
 <script>
     $(function(){
-        $("#addBtn").click(function(){
-            $('#myModal').modal('show')
-        });
-        //正则校验
-        $('#defaultForm').bootstrapValidator({
-//        live: 'disabled',
-            message: '该值不能为空',
-            feedbackIcons: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-                reverName: {
-                    validators: {
-                        notEmpty: {
-                            message: '收货人不能为空'
-                        }
-                    }
-                },
-                province: {
-                    validators: {
-                        notEmpty: {
-                            message: '省份不能为空'
-                        }
-                    }
-                },
-                city: {
-                    validators: {
-                        notEmpty: {
-                            message: '城市不能为空'
-                        }
-                    }
-                },
-                detailAddr: {
-                    validators: {
-                        notEmpty: {
-                            message: '详细地址不能为空'
-                        }
-                    }
-                },
-                Postcode: {
-                    validators: {
-                        notEmpty: {
-                            message: '邮编地址不能为空'
-                        }
-                    }
-                },
-                telephone: {
-                    validators: {
-                        notEmpty: {
-                            message: '电话号码不能为空'
-                        }
-                    }
-                }
-            }
-        });
-        $('#resetBtn').click(function() {
-            $('#defaultForm').data('bootstrapValidator').resetForm(true);
-        });
-        $('#submitBtn').click(function() {
-            $('#defaultForm').submit();
-        });
 
     });
+    function cancelFocus(id){
+        $.ajax({
+            type:'get',
+            url:"{:url('home/User/cancelFocus')}?id="+id,
+            dataType:'json',
+            success:function(res){
+                console.log(res);
+                if(res.code==20003){
+                    alert(res.msg);
+                    window.location.reload();
+                }else{
+                    alert(res.msg);
+                }
 
+            }
+        });
+    }
 </script>
 
 </html>
