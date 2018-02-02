@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:74:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\login\index.html";i:1517465750;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:74:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\login\index.html";i:1517554623;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -181,7 +181,7 @@ function quit(){
             dataType:'json',
             type:'post',
             success:function (res){
-                console.log(res);
+                //console.log(res);
                 //提示退出情况
                 alert(res.msg);
                 if(res.code==90011) {

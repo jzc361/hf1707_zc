@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:83:"D:\AppServ\www\hf1707_zc\public/../application/home\view\publishpro\proBaseMsg.html";i:1517475794;s:72:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\nav.html";i:1517447918;s:75:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\footer.html";i:1517371150;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:83:"D:\AppServ\www\hf1707_zc\public/../application/home\view\publishpro\proBaseMsg.html";i:1517560887;s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517561623;s:72:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\nav.html";i:1517447918;s:75:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\footer.html";i:1517371150;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
     <link rel="stylesheet" href="__CSS__/proBaseMsg.css">
     <link rel="stylesheet" href="__CSS__/default.css">
-    <link rel="stylesheet" href="__CSS__/zzsc.css">
+
     <style>
         /*--通用-*/
         #moreImg{
@@ -79,8 +79,18 @@
 </head>
 <body>
 <!--聊天客服-->
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+    <!--<meta charset="UTF-8">-->
+    <!--<meta http-equiv="x-ua-compatible" content="IE=edge">-->
+    <!--<meta name="renderer" content="webkit">-->
+    <!--<meta name="viewport" content="width=device-width,initial-scale=1">-->
+    <link rel="stylesheet" href="__CSS__/zzsc.css">
+<!--</head>-->
+<!--<body>-->
 <div>
-    <div class="qqserver" id="service" @click="getService()" >
+    <div style="z-index: 10000000" class="qqserver" id="service" @click="getService()" >
         <div class="qqserver_fold" >
             <div></div>
         </div>
@@ -92,10 +102,15 @@
             </div>
             <div>
                 <ul>
-                    <li  v-for="x in serviceList">
-                        <span>{{x.empname}}</span>
-                        <div v-if="x.loginstate=='在线'" style="color: red">({{x.loginstate}})</div>
-                        <div v-if="x.loginstate=='离线'" style="color: black">({{x.loginstate}})</div>
+                    <li  v-for="x in serviceList" style="cursor: pointer;">
+                        <div onclick="showchat()" value="{{x.empid}}" v-if="x.loginstate=='在线'" style="color: red">
+                            <span>{{x.empname}}</span>
+                            ({{x.loginstate}})
+                        </div>
+                        <div onclick="showchat()" v-if="x.loginstate=='离线'" style="color: black">
+                            <span value="x.empid" >{{x.empname}}</span>
+                            ({{x.loginstate}})
+                        </div>
                         <br>
                     </li>
                 </ul>
@@ -103,6 +118,15 @@
         </div>
     </div>
 </div>
+<!--</body>-->
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/vue.js"></script>
+<script>
+   var getServiceMsgUrl = "<?php echo url('home/publishpro/getServiceMsg'); ?>";
+</script>
+<script src="__JS__/zzsc.js" ></script>
+<!--</html>-->
+<!--nav-->
 <!--公共nav-->
 <!--<link rel="stylesheet" href="__CSS__/bootstrap.min.css">-->
 <link rel="stylesheet" href="__CSS__/home/goTop.css">
@@ -370,10 +394,6 @@
 <script type="text/javascript" src="__STATIC__/ueditor/dist/utf8-php/ueditor.config.js"></script>
 <!-- 编辑器源码文件 -->
 <script type="text/javascript"  src="__STATIC__/ueditor/dist/utf8-php/ueditor.all.js"></script>
-<script>
-    var getServiceMsgUrl = "<?php echo url('home/publishpro/getServiceMsg'); ?>";
-</script>
-<script src="__JS__/zzsc.js" ></script>
 <script>
 
     var ue = UE.getEditor('editor');//富文本

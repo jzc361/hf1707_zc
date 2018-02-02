@@ -12,8 +12,10 @@ use \think\Controller;
 use \think\Request;
 class Chat extends Controller
 {
-
     public function toIframe($htmlName){
+        $empInfo=session('adminEmp');
+        //var_dump($adminEmp);exit();
+        $this->assign('empInfo',json_encode($empInfo));
         return $this->fetch($htmlName);
     }
 }

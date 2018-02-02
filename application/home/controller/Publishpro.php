@@ -64,7 +64,7 @@ class Publishpro extends Controller
             if($info){
                 // 成功上传后 获取上传信息
                 $imgPath=$info->getSaveName();
-                $imgPath='__STATIC__/img/home/project/'.$imgPath;
+                $imgPath='img/home/project/'.$imgPath;
             }else{
                 // 上传失败获取错误信息
                 echo $file->getError();
@@ -161,7 +161,7 @@ class Publishpro extends Controller
             $returnData=[
                 'projectid'=>$maxProId,
                 'introduce'=>$returnMsg[$i]['returnDetails'],
-                'imgs'=>'__STATIC__/img/home/project/'.$returnMsg[$i][0],
+                'imgs'=>'_/img/home/project/'.$returnMsg[$i][0],
                 'price'=>$returnMsg[$i]['price'],
                 'limitcount'=>$returnMsg[$i]['limitpart'],
             ];
@@ -178,7 +178,4 @@ class Publishpro extends Controller
         return json($msgResp);
     }
 
-    public function aa(){
-        var_dump($_POST);
-    }
 }

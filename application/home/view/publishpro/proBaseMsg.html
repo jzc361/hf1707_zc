@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
     <link rel="stylesheet" href="__CSS__/proBaseMsg.css">
     <link rel="stylesheet" href="__CSS__/default.css">
-    <link rel="stylesheet" href="__CSS__/zzsc.css">
+
     <style>
         /*--通用-*/
         #moreImg{
@@ -78,30 +78,8 @@
 </head>
 <body>
 <!--聊天客服-->
-<div>
-    <div class="qqserver" id="service" @click="getService()" >
-        <div class="qqserver_fold" >
-            <div></div>
-        </div>
-        <div class="qqserver-body" style="display: block;">
-            <div class="qqserver-header" >
-                <div></div>
-                <!--<a href="{:url('home/Publishpro/getServiceMsg')}" ></a>-->
-                <span class="qqserver_arrow" ></span>
-            </div>
-            <div>
-                <ul>
-                    <li  v-for="x in serviceList">
-                        <span>{{x.empname}}</span>
-                        <div v-if="x.loginstate=='在线'" style="color: red">({{x.loginstate}})</div>
-                        <div v-if="x.loginstate=='离线'" style="color: black">({{x.loginstate}})</div>
-                        <br>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+{include file="public/chatDiv"}
+<!--nav-->
 {include file="public/nav"}
 <div class="container" id="vueDiv" style="margin-top: 25px;margin-bottom: 25px;">
     <!--<div class="row-fluid">-->
@@ -245,10 +223,6 @@
 <script type="text/javascript" src="__STATIC__/ueditor/dist/utf8-php/ueditor.config.js"></script>
 <!-- 编辑器源码文件 -->
 <script type="text/javascript"  src="__STATIC__/ueditor/dist/utf8-php/ueditor.all.js"></script>
-<script>
-    var getServiceMsgUrl = "{:url('home/publishpro/getServiceMsg')}";
-</script>
-<script src="__JS__/zzsc.js" ></script>
 <script>
 
     var ue = UE.getEditor('editor');//富文本

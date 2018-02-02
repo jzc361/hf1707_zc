@@ -50,6 +50,8 @@
     </style>
 </head>
 <body>
+<!--聊天客服-->
+{include file="public/chatDiv"}
 <!--后台跳转-------------------------------->
 <div>
     <a href="{:url('home/ToManager/ToManager')}">
@@ -179,7 +181,7 @@
                     <div class="carousel-inner">
                         {volist name='adList' id='vo' key="k"}
                         <div class="item {$k==1 ? 'active' : ''}">
-                            <img alt="" width="100%" src="{$vo.adimg}" />
+                            <img alt="" width="100%" src='__STATIC__/{$vo.adimg}' />
                             <div class="carousel-caption">
                                 <h4>
                                     {$vo.addetails}
