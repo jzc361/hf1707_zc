@@ -178,7 +178,4 @@ class Publishpro extends Controller
         return json($msgResp);
     }
 
-    public function aa(){
-        var_dump($_POST);
-    }
 }

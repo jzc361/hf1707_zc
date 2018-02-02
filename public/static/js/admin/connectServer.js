@@ -85,7 +85,6 @@ function showUserList(empMsg){
                 };
                 var msgString=JSON.stringify(msg);
                 ws.send(msgString);
-
             });
         }
     }

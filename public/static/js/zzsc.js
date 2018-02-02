@@ -15,18 +15,15 @@ new Vue({
 				url: getServiceMsgUrl,
 				dataType: "json",
 				success: function (responseData){
-					//console.log(responseData);
 					_this.serviceList=responseData;
-
-					//console.log(_this.serviceList);
-					//console.log(responseData);
-					///alert(responseData.msg);
-					//location.reload(true);
 				},
 				error:function(){
 					alert("error");
 				}
 			});
+		},
+		showchat:function(empname){
+			console.log(empname);
 		}
 
 	},
@@ -36,6 +33,7 @@ new Vue({
 	}
 });
 
+//点击某客服
 $(function(){
 	var $qqServer = $('.qqserver');
 	var $qqserverFold = $('.qqserver_fold');
@@ -55,25 +53,4 @@ $(function(){
 	$(window).bind("load resize",function(){
 		resizeQQserver();
 	});
-});
-
-$(function(){
-	//var $qqServer = $('.qqserver');
-	//var $qqserverFold = $('.qqserver_fold');
-	//var $qqserverUnfold = $('.qqserver_arrow');
-	//$qqserverFold.click(function(){
-	//	$qqserverFold.hide();
-	//	$qqServer.addClass('unfold');
-	//});
-	//$qqserverUnfold.click(function(){
-	//
-    //
-	//});
-	//窗体宽度小鱼1024像素时不显示客服QQ
-	//function resizeQQserver(){
-	//	$qqServer[document.documentElement.clientWidth < 1024 ? 'hide':'show']();
-	//}
-	//$(window).bind("load resize",function(){
-	//	resizeQQserver();
-	//});
 });

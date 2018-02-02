@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:72:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\chat\chat.html";i:1517557442;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:72:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\chat\chat.html";i:1517558113;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" type="text/css" href="__CSS__/chat.css">
     <link rel="stylesheet" type="text/css" href="__STATIC__/font_Icon/iconfont.css">
-
 </head>
 <body>
 <div id="myChat" style="left: 400px;"></div>
@@ -27,13 +26,6 @@
         <!--用户列表-->
         <div class="chatBox-info" style="height: 100%">
             <div class="chatBox-list" ref="chatBoxlist" style="height: 100%">
-                <!--<div class="chat-list-people">-->
-                    <!--<div><img  src="__STATIC__/img/admin/icon01.png" alt="头像"/></div>-->
-                    <!--<div class="chat-name" style="width: auto;">-->
-                        <!--<p>qqq</p>-->
-                    <!--</div>-->
-                    <!--<div class="message-num">10</div>-->
-                <!--</div>-->
             </div>
         </div>
     </div>

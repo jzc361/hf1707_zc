@@ -9,6 +9,12 @@ use \think\Cache;
 
 class Index extends  Auth
 {
+    //获取客服信息
+    public function getServiceMsg(){
+        $serviceList=db('emp')->where('roleid','3')->select();
+        //var_dump($serviceList);
+        return ($serviceList);
+    }
     //跳转首页
     public function index()
     {
