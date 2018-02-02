@@ -30,7 +30,7 @@
         .proList{
             /*width: 21%;*/
             background-color: #fff;
-            margin: 0 5px 20px;
+            margin: 0 5px 10px;
         }
         .proList>div{
             margin: 15px 0;
@@ -42,13 +42,16 @@
             transform: scale(1.03);
         }
         .intro{
-            margin: 0;
             font-size: 12px;
         }
+<<<<<<< HEAD
         .container-fluid{
             padding: 0;
         }
         @media (min-width: 992px) {
+=======
+        @media (min-width: 997px) {
+>>>>>>> parent of 43a3670... 前后台跳转
             .proList{
                 width: 21%;
             }
@@ -59,6 +62,7 @@
                 font-size: 12px;
             }
         }
+<<<<<<< HEAD
         @media (min-width: 768px) {
             .proList{
                 width: 46%;
@@ -71,6 +75,9 @@
             }
         }
     </style>-->
+=======
+    </style>
+>>>>>>> parent of 43a3670... 前后台跳转
 </head>
 <body style="background: #f9f9f9;">
     {include file="public/nav"}
@@ -137,7 +144,7 @@
                 </div>
                 <!--脚-->
                 <div class="intro">
-                    <div class="col-xs-3">
+                    <div class="col-sm-3">
                         <p>{$value.curamount/$value.tolamount*100}%</p>
                         <p>已达</p>
                     </div>
@@ -146,7 +153,7 @@
                         <p>已筹集</p>
                     </div>
                     <div class="col-sm-6">
-                        <p>{$value.endtime|substr=0,10}</p>
+                        <p>{$value.endtime}</p>
                         <p>结束时间</p>
                     </div>
                 </div>
@@ -155,8 +162,11 @@
             {/volist}
         </div>
     </div>
+<<<<<<< HEAD
     <div align="center">{$pro->render()}</div>
     {include file="public/footer"}
+=======
+>>>>>>> parent of 43a3670... 前后台跳转
 </body>
 <!--<script src="__JS__/jquery-2.1.4.js"></script>-->
 <!--<script src="__JS__/bootstrap.min.js"></script>-->

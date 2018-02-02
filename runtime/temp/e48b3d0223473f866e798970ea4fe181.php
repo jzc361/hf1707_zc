@@ -1,0 +1,558 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:86:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\address.html";i:1517575317;}*/ ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge"><!--设置ie内核浏览器下的渲染模式-->
+    <meta name="renderer" content="webkit"><!--设置成网页以webkit(极速模式)来渲染页面-->
+    <meta name="viewport" content="width=device-width,initial-scale=1"><!--设置网页宽度和访问设备宽度保持一致，且显示比例1:1，-->
+    <title>收货地址管理</title>
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <link rel="stylesheet" href="__CSS__/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="__CSS__/home/userView.css">
+    <script src="__JS__/vue.js"></script>
+    <script src="__JS__/jquery-2.1.4.js"></script>
+    <script src="__JS__/bootstrap.min.js"></script>
+    <script src="__JS__/bootstrapValidator.min.js"></script>
+
+</head>
+<style>
+    @media (min-width: 768px) {
+
+    }
+    @media (max-width: 767px) {
+
+    }
+    .note {
+        padding: 2px 5px;
+        border-color: #ff3800;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        background: #ffd6cc;
+        color: #f30;
+    }
+    .note_show{
+        padding: 4px 5px;
+        border-color: #ff3800;
+        border-radius: 3px;
+        background: #ffd6cc;
+        color: #f30;
+
+    }
+    .note_hide {
+        display: none;
+    }
+    tr:hover .note_hide{
+        display: inline;
+        padding: 4px 5px;
+        background: #f60;
+        color: #fff;
+        border-color: #f60;
+        border-radius: 3px;
+        text-decoration: none;
+    }
+
+
+</style>
+<body>
+<div id="app">
+    <div class="container-fluid" style="min-height: 880px">
+        <div class="page_title">配送地址</div>
+        <button id="addBtn" class="btn btn-primary btn-lg" @click="addModel">添加配送地址</button>
+        <table class="table table-hover table-responsive">
+            <thead>
+            <tr>
+                <th>地址</th>
+                <th width="100">邮编</th>
+                <th width="100">收货人</th>
+                <th width="100">电话号码</th>
+                <th width="150">操作</th>
+            </tr>
+            </thead>
+            <tbody id="addrTable">
+
+            <tr v-for="(vo,index) in addrList">
+                <td><span>{{vo.province_name}}{{vo.city_name}}</span><span>{{vo.county_name}}</span><span>{{vo.addressdetails}}</span></td>
+                <td>{{vo.county}}</td>
+                <td>{{vo.revername}}</td>
+                <td>{{vo.revertel}}</td>
+                <td>
+                    <span><a @click="updateModel(vo)" href="javascript:void(0);" style="color: #12adff;">修改 </a></span>
+                    <span><a @click="deleteAddress(vo.addressid)" href="javascript:void(0);"  style="color: #12adff;"> 删除 </a></span>
+                    <span :id="'test'+index" :class="{'note_show':true,'note_hide':vo.isdefault==0}"><a @click="setDefault(vo.addressid,vo.isdefault)" href="javascript:void(0);"> 默认地址</a></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <page></page>
+    </div>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">添加配送地址</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="defaultForm" method="post" class="form-horizontal" action="<?php echo url('/home/User/addAddr'); ?>">
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label">收货人姓名：</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" name="reverName" v-model="reverName"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label">地区：</label>
+                            <div class="col-xs-3">
+                                <select name="province" id="province" v-model="provinceId" @change="getCity" class="form-control">
+                                    <option value="" >请选择省份</option>
+                                    <option v-for="x in provinceList" v-bind:value="x.id">{{x.name}}</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-3">
+                                <select name="city" id="city" v-model="cityId" @change="getCounty" class="form-control">
+                                    <option value="">请选择城市</option>
+                                    <option v-for="x in cityList" v-bind:value="x.id">{{x.name}}</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-3">
+                                <select name="county" id="county" v-model="countyId" class="form-control">
+                                    <option value="">请选择地区</option>
+                                    <option v-for="x in countyList" v-bind:value="x.id">{{x.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label">详细地址：</label>
+                            <div class="col-xs-8">
+                                <textarea name="detailAddr" id="detailAddr" class="form-control" rows="3" v-model="detailAddr"></textarea>
+                            </div>
+                        </div>
+                        <!--<div class="form-group">-->
+                        <!--<label class="col-xs-3 control-label">邮编：</label>-->
+                        <!--<div class="col-xs-4">-->
+                        <!--<input type="text" class="form-control" name="Postcode"/>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label">手机：</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control" name="telephone" v-model="telephone"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary"  id="submitBtn" @click="editAddress">保存</button>
+                    <button type="button" class="btn btn-default" id="resetBtn"  @click="resetModel">重置</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+    <div class="blank"></div>
+</div>
+
+</body>
+<script type="text/x-template" id="page">
+    <ul class="pagination" >
+        <li v-show="current != 1" @click="current-- && goto(current--)" ><a href="#">上一页</a></li>
+        <li v-for="index in pages" @click="goto(index)" :class="{'active':current == index}" :key="index">
+            <a href="#" >{{index}}</a>
+        </li>
+        <li v-show="allPage != current && allPage != 0 " @click="current++ && goto(current++)"><a href="#" >下一页</a></li>
+    </ul>
+</script>
+<script>
+
+    var $province=$("#province");
+    var $county=$("#county");
+    var $city=$("#city");
+    var addrList=<?php echo $addrList; ?>;
+    var pageData=<?php echo $pageData; ?>;
+    var bus=new Vue();
+    Vue.component("page",{
+        template:"#page",
+//        template:"<h2>分页</h2>",
+        data:function(){
+            return{
+                current:pageData.current,//当前页
+                showItem:pageData.showItem,//显示页码数
+                allPage:pageData.allPage//总页数
+            }
+        },
+        computed:{
+            pages:function(){
+                var pag = [];
+                if( this.current < this.showItem ){ //如果当前激活的项 小于要显示的条数
+                    //总页数和要显示的条数那个大就显示多少条
+                    var i = Math.min(this.showItem,this.allPage);
+                    while(i){
+                        pag.unshift(i--);
+                    }
+                }else{ //当前页数大于显示页数了
+                    var middle = this.current - Math.floor(this.showItem / 2 ),//从哪里开始
+                            i = this.showItem;
+                    if( middle >  (this.allPage - this.showItem)  ){
+                        middle = (this.allPage - this.showItem) + 1
+                    }
+                    while(i--){
+                        pag.push( middle++ );
+                    }
+                }
+                return pag
+            }
+        },
+        methods:{
+            goto:function(index){
+                if(index == this.current) return;
+                this.current = index;
+                //发送ajax请求
+                bus.$emit('go',index);
+            }
+        },
+        mounted:function(){
+            //监听总页数
+            bus.$on('all',function(pageData){
+                this.current=pageData.current;//当前页
+                this.showItem=pageData.showItem;//显示页码数
+                this.allPage=pageData.allPage;//总页数
+            }.bind(this))
+
+        }
+    });
+    var app = new Vue({
+        el: '#app',
+        data: {
+            addrList: addrList,
+            provinceList:[],
+            cityList:[],
+            countyList:[],
+            provinceId:'',
+            cityId:'',
+            countyId:'',
+            reverName:'',
+            detailAddr:'',
+            telephone:'',
+            current:1,
+            editId:''
+        },
+        methods:{
+            getAddrList:function(){
+                var that=this;
+                $.ajax({
+                    url: "<?php echo url('home/User/getAddrList'); ?>",
+                    type: "get",
+                    data:{'pageNow':that.current},
+                    dataType: "json",
+                    success: function(res) {
+                        console.log(res);
+                        if(res.code==20007){
+                            that.addrList=res.data[0];
+                            bus.$emit('all',res.data[1]);
+                        }else{
+                            alert(res.msg);
+                        }
+                    },
+                    error: function(res) {
+                    }
+                });
+            },
+            addModel: function () {
+                this.editId='';
+                this.resetModel();
+                $('#myModal').modal('show');
+            },
+            updateModel:function(data){
+                console.log(data);
+                this.resetModel();
+                this.editId=data.addressid;
+                this.provinceId=data.province;
+                this.cityId=data.city;
+                this.countyId=data.county;
+                this.reverName=data.revername;
+                this.detailAddr=data.addressdetails;
+                this.telephone=data.revertel;
+                this.getCityCounty();
+//                this.getCityCounty(data.province,data.city,data.county);
+            },
+            getCityCounty:function(){ //provinceId,cityId,countyId
+                var that=this;
+                $.ajax({
+                    type:'post',
+                    url:"<?php echo url('home/User/getCityCounty'); ?>",
+                    data:{province:that.provinceId,city:that.cityId},
+                    dataType:'json',
+                    success:function(res){
+                        console.log(res);
+                        if(res.code==20007){
+                            that.cityList=res.data[0];
+                            that.countyList=res.data[1];
+                            console.log(234,res.data);
+//                            console.log(235,cityId,countyId);
+//                            that.cityId=cityId;
+//                            that.countyId=countyId;
+                            $('#myModal').modal('show');
+                        }else{
+                            alert(res.msg);
+                        }
+                    }
+                });
+            },
+            resetModel:function(){
+                console.log("重置表单");
+                $('#defaultForm').data('bootstrapValidator').resetForm(true);
+            },
+            getProvince:function(){
+                console.log('获取省份');
+                var that=this;
+                $.ajax({
+                    type:'get',
+                    url:"<?php echo url('home/User/getProvince'); ?>",
+                    dataType:'json',
+                    success:function(res){
+                        console.log(res);
+                        if(res.code==20007){
+                            that.provinceList=res.data;
+                        }else{
+                            alert(res.msg);
+                        }
+                    }
+                });
+            },
+            getCity:function(){
+                var that=this;
+                console.log('获取城市',that.provinceId);
+                if (that.provinceId!=''){
+                    $.ajax({
+                        type:'get',
+//                    url:'index.php?type=Question&do=createQuestionnaire',
+                        url:"<?php echo url('home/User/getCity'); ?>?province="+that.provinceId,
+                        dataType:'json',
+//            data:{'q_title':$("#q_title").val()},
+                        success:function(res){
+                            console.log(res);
+                            if(res.code==20007){
+                                that.cityList=res.data;
+                            }else{
+                                alert(res.msg);
+                            }
+                        }
+                    });
+                }
+            },
+            getCounty:function(){
+                var that=this;
+                console.log('获取地区',that.cityId);
+                if (that.cityId!=''){
+                    $.ajax({
+                        type:'get',
+                        url:"<?php echo url('home/User/getCounty'); ?>?city="+that.cityId,
+                        dataType:'json',
+//            data:{'q_title':$("#q_title").val()},
+                        success:function(res){
+                            console.log(res);
+                            if(res.code==20007){
+                                that.countyList=res.data;
+                                $('#myModal').modal('show');
+                            }else{
+                                alert(res.msg);
+                            }
+                        }
+                    });
+
+                }
+            },
+            editAddress:function(){
+                $('#defaultForm').bootstrapValidator('validate');
+                if($('#defaultForm').data('bootstrapValidator').isValid()){
+                    if(this.editId==''){
+                        this.addAddress();
+                    }else{
+                        this.updateAddress(this.editId);
+                    }
+                }
+                else{
+                    alert('请正确填写表单')
+                }
+            },
+            updateAddress:function(id){
+                var formData =$("#defaultForm").serialize();
+                var that=this;
+                $.ajax({
+                    url: "<?php echo url('home/User/updateAddress'); ?>?id="+id,
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    success: function(res) {
+                        console.log(res);
+                        if(res.code==20005){
+                            that.getAddrList();
+//                                window.location.reload();
+                            $('#myModal').modal('hide');
+                            alert(res.msg);
+                        }else{
+                            alert(res.msg);
+                        }
+                    },
+                    error: function(res) {
+                    }
+                });
+                $('#myModal').modal('show');
+            },
+            deleteAddress:function(id){
+                if(confirm("确认删除？")){
+                    var that=this;
+                    $.ajax({
+                        url: "<?php echo url('home/User/deleteAddress'); ?>",
+                        type: "post",
+                        data:{id:id},
+                        dataType: "json",
+                        success: function(res) {
+                            console.log(res);
+                            if(res.code==20003){
+                                that.getAddrList();
+                                alert(res.msg);
+                            }else{
+                                alert(res.msg);
+                            }
+                        },
+                        error: function(res) {
+                        }
+                    });
+                }
+            },
+            addAddress:function(){
+                var that=this;
+                var formData =$("#defaultForm").serialize();
+                console.log(263,formData);
+                $.ajax({
+                    url: "<?php echo url('home/User/insertAddress'); ?>",
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    success: function(res) {
+                        console.log(res);
+                        if(res.code==20001){
+                            that.getAddrList();
+//                                window.location.reload();
+                            $('#myModal').modal('hide');
+                            alert(res.msg);
+                        }else{
+                            alert(res.msg);
+                        }
+                    },
+                    error: function(res) {
+                    }
+                });
+
+            },
+            setDefault:function(id,isDefault){
+                console.log(333,id,isDefault);
+                var that=this;
+                if(isDefault==0){
+                    $.ajax({
+                        url: "<?php echo url('home/User/setDefaultAddress'); ?>",
+                        type: "POST",
+                        data: {id:id},
+                        dataType: "json",
+                        success: function(res) {
+                            console.log(res);
+                            if(res.code==20005){
+                                that.getAddrList();
+                                alert(res.msg);
+                            }else{
+                                alert(res.msg);
+                            }
+                        },
+                        error: function(res) {
+                        }
+                    });
+                }
+            }
+
+        },
+        mounted:function(){
+            //获取省份
+            this.getProvince();
+            bus.$on('go',function(index){
+                this.current=index;
+                this.getAddrList();
+            }.bind(this))
+        },
+        updated: function(){
+            //正则校验
+            $('#defaultForm').bootstrapValidator({
+//        live: 'disabled',
+                message: '该值不能为空',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    reverName: {
+                        validators: {
+                            notEmpty: {
+                                message: '收货人不能为空'
+                            }
+                        }
+                    },
+                    province: {
+                        validators: {
+                            notEmpty: {
+                                message: '省份不能为空'
+                            }
+                        }
+                    },
+                    city: {
+                        validators: {
+                            notEmpty: {
+                                message: '城市不能为空'
+                            }
+                        }
+                    },
+                    county: {
+                        validators: {
+                            notEmpty: {
+                                message: '地区不能为空'
+                            }
+                        }
+                    },
+                    detailAddr: {
+                        validators: {
+                            notEmpty: {
+                                message: '详细地址不能为空'
+                            }
+                        }
+                    },
+//                Postcode: {
+//                    validators: {
+//                        notEmpty: {
+//                            message: '邮编地址不能为空'
+//                        }
+//                    }
+//                },
+                    telephone: {
+                        validators: {
+                            notEmpty: {
+                                message: '电话号码不能为空'
+                            },
+                            regexp: {
+//                            regexp: /^[a-zA-Z0-9_\.]+$/,
+                                regexp:/^1[3|4|5|8][0-9]\d{4,8}$/,
+                                message: '电话号码格式不正确'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+
+    });
+
+
+</script>
+</html>

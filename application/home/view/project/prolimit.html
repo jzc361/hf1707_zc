@@ -78,10 +78,19 @@
     <div style="background-color: #fff;margin-bottom: 30px">
         <div class="list sortList">
             <!--分类列表-->
-            <ul class="nav nav-pills">
-                <li role="presentation" class="active"><a href="proindex">全部</a></li>
+            <!--<span class="col-xs-1">分类：</span>-->
+            <ul class="nav nav-pills col-xs-11">
+                <!--<li role="presentation" class="active"><a href="prolimit">全部</a></li>-->
                 {volist name="sortList" id="sort"}
-                <li role="presentation" class="{if cookie('pro_sortid')==$sort.sortid}active{/if}"><a href="proindex?sortid={$sort.sortid}{if cookie('pro_search')}&search={$search}{/if}" class="{$sort.sortid}">{$sort.sortname}</a></li>
+                <li role="presentation" class="{if cookie('limit_sortid')==$sort.sortid}active{/if}"><a href="prolimit?sortid={$sort.sortid}" class="{$sort.sortid}">{$sort.sortname}</a></li>
+                {/volist}
+            </ul>
+        </div>
+        <div class="list stateList">
+            <ul class="nav nav-pills col-xs-4" style="font-size: 12px">
+                <li role="presentation" class="{if !cookie('limit_stateid')}active{/if}"><a href="prolimit">所有项目</a></li>
+                {volist name="limstaList" id="state"}
+                <li role="presentation" {if cookie('limit_stateid')==$state.limitstateid}class="active"{/if}><a href="prolimit?stateid={$state.limitstateid}{if cookie('limit_sortid')}&sortid={$sortid}{/if}">{$state.limitstatename}</a></li>
                 {/volist}
             </ul>
         </div>
@@ -98,13 +107,21 @@
             <!--项目名-->
             <div class="proname">
                 <h4><a href="prodetails?proid={$value.projectid}">{$value.projectname}</a></h4>
+                <!--显示众筹状态-->
+                <div style="display: block">
+                    <div>
+                        {if $value.limitstatename=='众筹中'}<span class="common-sprite">众筹中</span>{/if}
+                        {if $value.limitstatename=='未开始'}<span class="common-fail">未开始</span>{/if}
+                        {if $value.limitstatename=='已结束'}<span class="common-fail">已结束</span> {/if}
+                    </div>
+                </div>
             </div>
             <!--脚-->
-            <div class="intro">
-
+            <div class="intro" style="font-size: 14px">
+                <div class="col-sm-3"></div>
                 <div class="col-sm-3">
-                    <p>{$value.curamount}</p>
-                    <p>已筹集</p>
+                    <p>￥{$value.price}</p>
+                    <p>支持金额</p>
                 </div>
                 <div class="col-sm-6">
                     <p>{$value.endtime}</p>

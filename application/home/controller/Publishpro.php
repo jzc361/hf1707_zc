@@ -12,9 +12,17 @@ class Publishpro extends Auth
 //        parent::__construct($request);
 //    }
 
+    //获取客服信息
+    public function getServiceMsg(){
+        $serviceList=db('emp')->where('roleid','3')->select();
+        //var_dump($serviceList);
+        return ($serviceList);
+    }
     //跳转到众筹发布页
     public function jumpToProBaseMsg()
     {
+        $serviceList=$this->getServiceMsg();
+        $this->assign('serviceList',$serviceList);
         Session::set('current','proBaseMsg');//当前所在页面
         $id=input('?get.id')?input('get.id'):"";
         $proList = [];
@@ -57,7 +65,7 @@ class Publishpro extends Auth
             if($info){
                 // 成功上传后 获取上传信息
                 $imgPath=$info->getSaveName();
-                $imgPath='__STATIC__/img/home/project/'.$imgPath;
+                $imgPath='img/home/project/'.$imgPath;
             }else{
                 // 上传失败获取错误信息
                 echo $file->getError();
@@ -104,7 +112,6 @@ class Publishpro extends Auth
                 echo $file->getError();
             }
         }
-
         $return=input('post.');
         array_push($return,$imgPath);
         //如果存在returnMsg就追加，如果不存在就新建session
@@ -132,13 +139,13 @@ class Publishpro extends Auth
         $returnMsg=Session::has('returnMsg')?Session::get('returnMsg'):'';//回报信息
         $user =Session::has('zc_user')?Session::get('zc_user'):'';
         if(is_array($user)){
-            $userid=$user[0]['userid'];
+            $userid=$user['userid'];
         }
         //插入众筹项目表
         $data = [
             'projectname' =>$proMsg['projectname'],
             'intro' =>$proMsg['proDetails'],
-            'projectimg' =>$proMsg[0],
+            'projectimg' =>$proMsg['projectimg'],
             'tolamount' =>$proMsg['tolamount'],
             'daysnumber' =>$proMsg['daysnumber'],
             'stateid' =>1,
@@ -156,7 +163,7 @@ class Publishpro extends Auth
             $returnData=[
                 'projectid'=>$maxProId,
                 'introduce'=>$returnMsg[$i]['returnDetails'],
-                'imgs'=>'__STATIC__/img/home/project/'.$returnMsg[$i][0],
+                'imgs'=>'_/img/home/project/'.$returnMsg[$i][0],
                 'price'=>$returnMsg[$i]['price'],
                 'limitcount'=>$returnMsg[$i]['limitpart'],
             ];
@@ -173,7 +180,4 @@ class Publishpro extends Auth
         return json($msgResp);
     }
 
-    public function aa(){
-        var_dump($_POST);
-    }
 }

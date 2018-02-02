@@ -96,7 +96,6 @@
                    onclick='x_admin_show("项目详情","showDetails?id="+{$val.projectid})'>
                     查看详情
                 </a>
-
             </td>
         </tr>
         {/volist}
@@ -116,6 +115,9 @@
 <script src="__JS__/admin/html5.min.js"></script>
 <script src="__JS__/admin/respond.min.js"></script>
 <script>
+    function startnow(){
+        alert("111");
+    }
     new Vue({
         el : '#vueDiv',
         //数据
@@ -157,7 +159,6 @@
             location.href="{:url('admin/Promanage/index')}?keyword="+key;
         }
     }
-
     //选择项目分类
     $("#selectProSort").change(function(){
         console.log($(this).val());
@@ -181,19 +182,6 @@
         var selectstateid=$("#searchState").val();
 //        console.log(selectstateid);
         search(selectstateid,selectsortid,keyword);
-    });
-    layui.use('laydate', function(){
-        var laydate = layui.laydate;
-
-        //执行一个laydate实例
-        laydate.render({
-            elem: '#start' //指定元素
-        });
-
-        //执行一个laydate实例
-        laydate.render({
-            elem: '#end' //指定元素
-        });
     });
 
 

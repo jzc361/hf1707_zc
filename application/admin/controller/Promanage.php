@@ -20,7 +20,7 @@ class Promanage extends Controller
     //显示项目列表
     public function index()
     {
-        $this->updateProState();
+         $this->updateProState();
 //        session('sortid', null);
 //        session('stateid', null);
 //        session('keyword', null);
@@ -108,7 +108,6 @@ class Promanage extends Controller
 //        var_dump($allProList);exit();
         return $this->fetch('allProView');
     }
-
     //显示项目详情
     public function showDetails(){
         $projectid=input('get.id');
@@ -241,7 +240,7 @@ class Promanage extends Controller
                 $data = [
                     'projectname' =>$proMsg['proTitle'],
                     'intro' =>$proMsg['proDetails'],
-                    'projectimg' =>'__STATIC__/img/home/project/'.$imgPath,
+                    'projectimg' =>'img/home/project/'.$imgPath,
                     'limitstateid' =>$stateid,
                     'sortid' =>$proMsg['proSort'],
                     'createtime'=>date("Y-m-d H:i:s",time()),
@@ -455,5 +454,7 @@ class Promanage extends Controller
             }
         }
     }
+
+
 
 }
