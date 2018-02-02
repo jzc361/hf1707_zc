@@ -19,7 +19,7 @@ class Project extends Controller
     //产品项目（更多众筹）
     public function proindex(){
         $this->updateProState();//更新商品状态
-        Session::set('current','proindex');//当前所在页面
+        //Session::set('current','proindex');//当前所在页面
         cookie( null,'pro_');//清空前缀为pro_的cookie
         $condition=[];
         $condition['projecttype']='普通众筹';
@@ -114,9 +114,9 @@ class Project extends Controller
         $this->assign('sortList',$sort);//分类列表
         $this->assign('stateList',$state);//状态列表
 
-        $pronum=db('project')->count('projectid');
-        $pro=db('project')->select();
-        $this->assign('sortList',$sort);
+        //$pronum=db('project')->count('projectid');
+        //$pro=db('project')->select();
+        //$this->assign('sortList',$sort);
 
         $this->assign('pronum',$pronum);
         $this->assign('pro',$pro);

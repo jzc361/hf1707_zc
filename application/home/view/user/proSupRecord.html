@@ -5,7 +5,7 @@
     <title>支持记录</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <!--<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />-->
     <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
     <link rel="stylesheet" href="__CSS__/proSupRecord.css">
 </head>
@@ -19,12 +19,13 @@
                 <div class="deal_name_title">
                     {$projectname.projectname}的支持记录
                 </div>
+
                 {volist name="order" id="order"}
                 {if $order.orderstate!="未支付"&&$order.orderstate!="交易关闭"}
                 <table class="data-table">
                     <tr>
                         <td class="data-title">支持者</td>
-                        <td width=193 class="tl"><a href="" class="linkgreen" target="_blank">{$order.address['username']}</a></td>
+                        <td width=193 class="tl"><a href="#" class="linkgreen">{$order.address['username']}</a></td><!-- target="_blank"-->
                         <td class="data-title">支持金额</td>
                         <td width=193 class="tl">
                             ￥{$order.prodetails['price']}

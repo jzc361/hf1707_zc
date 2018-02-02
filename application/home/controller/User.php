@@ -250,7 +250,7 @@ class User extends Auth
             ->where($condition)
             //->paginate(2);
             ->select();
-        //var_dump($orderList);exit;
+        //var_dump($orderList);//exit;
         foreach($orderList as $key=>$value){
             $supUserid=$value['userid'];//订单内的用户id
             $supUseraddid=$value['addressid'];
@@ -292,6 +292,7 @@ class User extends Auth
         $this->assign('projectname',$projectname);//项目名
         //$this->assign('prodetails',$prodetails);//回报信息
         $this->assign('order',$order);//订单信息
+        $this->assign('orderList',$orderList);
         return $this->fetch('proSupRecord');
     }
 
