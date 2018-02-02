@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:88:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\index\mainView.html";i:1517556549;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517471035;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:88:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\index\mainView.html";i:1517587401;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517471035;s:88:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517581102;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="__CSS__/home/mainView.css">
     <!--<link href="http://cdn.staticfile.org/twitter-bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">-->
     <!--<link href="__CSS__/bootstrap-combined.min.css" rel="stylesheet">-->
+<<<<<<< HEAD
     <!--<script src="__JS__/jquery-2.1.4.js"></script>-->
     <!--<script src="__JS__/bootstrap.min.js"></script>-->
 
@@ -132,9 +133,9 @@
                     <?php endforeach; endif; else: echo "" ;endif; ?>
                 </ol>
                 <div class="carousel-inner">
-                    <?php if(is_array($adList) || $adList instanceof \think\Collection || $adList instanceof \think\Paginator): $k = 0; $__LIST__ = $adList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($k % 2 );++$k;?>
+                    {volist name='adList' id='vo' key="k"}
                     <div class="item <?php echo !empty($k) && $k==1?'active' : ''; ?>">
-                        <img alt="" width="100%" src="__STATIC__/<?php echo $vo['adimg']; ?>" />
+                        <img alt="" width="100%" src="<?php echo $vo['adimg']; ?>" />
                         <div class="carousel-caption">
                             <h4>
                                 <?php echo $vo['addetails']; ?>
@@ -142,6 +143,237 @@
                             <p>
                                 Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
                             </p>
+=======
+    <script src="__JS__/jquery-2.1.4.js"></script>
+    <script src="__JS__/bootstrap.min.js"></script>
+    <script src="__JS__/home/gotop.js"></script>
+    <!--<link rel="stylesheet" href="__CSS__/bootstrap.min.css">-->
+    <!--<link rel="stylesheet" href="http://www.bootcss.com/p/layoutit/css/bootstrap-combined.min.css">-->
+    <link href="http://cdn.staticfile.org/twitter-bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="__CSS__/bootstrap-combined.min.css" rel="stylesheet">-->
+    <script src="__JS__/jquery-2.1.4.js"></script>
+    <script src="__JS__/bootstrap.min.js"></script>
+    <style>
+        @media (min-width: 980px){
+            .my_nav>li {
+                line-height: 40px;
+                font-size: 16px;
+            }
+            .my_logo{
+
+                /*height: 40px;*/
+                /*line-height: 40px;*/
+            }
+            .my_content{
+                margin: 0 120px;
+
+            }
+            .my_progerss{
+                height: 12px;
+                margin: 10px 0;
+            }
+        }
+        @media (max-width: 979px){
+            .my_content{
+                margin: 0 80px;
+
+            }
+        }
+
+    </style>
+</head>
+<body>
+<!--聊天客服-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="__CSS__/zzsc.css">
+</head>
+<body>
+<div>
+    <div style="z-index: 10000000" class="qqserver" id="service" @click="getService">
+        <div class="qqserver_fold" >
+            <div></div>
+        </div>
+        <div class="qqserver-body" style="display: block;">
+            <div class="qqserver-header" >
+                <div></div>
+                <!--<a href="<?php echo url('home/Publishpro/getServiceMsg'); ?>" ></a>-->
+                <span class="qqserver_arrow" ></span>
+            </div>
+            <div>
+                <ul>
+                    <li v-for="x in serviceList" style="cursor: pointer;">
+                        <div v-if="x.loginstate=='在线'" style="color: red">
+                            <div value="x.empname">
+                                <span>{{x.empname}}</span>
+                                ({{x.loginstate}})
+                            </div>
+                        </div>
+                        <div  v-if="x.loginstate=='离线'" style="color: black">
+                            <div @click="showchat(x.empname)">
+                                <span>{{x.empname}}</span>
+                                ({{x.loginstate}})
+                            </div>
+                        </div>
+                        <br>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/vue.js"></script>
+<script>
+   var getServiceMsgUrl = "<?php echo url('home/publishpro/getServiceMsg'); ?>";
+</script>
+<script src="__JS__/zzsc.js" ></script>
+</html>
+<!--后台跳转-------------------------------->
+<div>
+    <a href="<?php echo url('home/ToManager/ToManager'); ?>">
+        <input type="button" value="后台登录">
+    </a>
+</div>
+<!--=---------------------------------------------->
+<div class="container-fluid">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand my_logo" href="#">众筹网</a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav my_nav">
+                        <li class="active">
+                            <a href="#">首页</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo url('/home/Project/proindex'); ?>">更多众筹</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo url('/home/Publishpro/jumpToProBaseMsg'); ?>">发起项目</a>
+                            <!--<a href="#">联系我们</a>-->
+                        </li>
+                        <!--<li class="dropdown">-->
+                            <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>-->
+                            <!--<ul class="dropdown-menu">-->
+                                <!--<li>-->
+                                    <!--<a href="#">Action</a>-->
+                                <!--</li>-->
+                                <!--<li>-->
+                                    <!--<a href="#">Another action</a>-->
+                                <!--</li>-->
+                                <!--<li>-->
+                                    <!--<a href="#">Something else here</a>-->
+                                <!--</li>-->
+                                <!--<li class="divider">-->
+                                <!--</li>-->
+                                <!--<li>-->
+                                    <!--<a href="#">Separated link</a>-->
+                                <!--</li>-->
+                                <!--<li class="divider">-->
+                                <!--</li>-->
+                                <!--<li>-->
+                                    <!--<a href="#">One more separated link</a>-->
+                                <!--</li>-->
+                            <!--</ul>-->
+                        <!--</li>-->
+                    </ul>
+
+                    <form class="navbar-form navbar-left" id="my_search" action="<?php echo url('project/proindex'); ?>" role="search" method="get">
+                    <form class="navbar-form navbar-left" role="search">
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="search" />
+                        </div> <button type="submit" class="btn btn-default">搜索</button>
+                    </form>
+                    <ul class="nav navbar-nav navbar-right">
+                        <!--<li>-->
+                            <!--<a href="<?php echo url('/home/Index/index'); ?>"><span class="glyphicon glyphicon-log-in"></span> 登录</a>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<a href="<?php echo url('/home/Index/index'); ?>"><span class="glyphicon glyphicon-user"></span> 注册</a>-->
+                        <!--</li>-->
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">admin<strong class="caret"></strong></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="<?php echo url('/home/User/user'); ?>">个人设置</a>
+                                </li>
+                                <li>
+                                    <a href="<?php echo url('/home/User/user'); ?>">项目管理(用户)</a>
+                                </li>
+                                <li>
+                                    <a href="<?php echo url('/home/User/test'); ?>">查看通知(测试)</a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="#">Separated link</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="<?php echo url('/home/Index/index'); ?>"><span class="glyphicon glyphicon-log-in"></span> 退出</a>
+                        <li>
+                            <a href="#">Link</a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#">Action</a>
+                                </li>
+                                <li>
+                                    <a href="#">Another action</a>
+                                </li>
+                                <li>
+                                    <a href="#">Something else here</a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                    <a href="#">Separated link</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+            </nav>
+            <div class="banner">
+                <div class="carousel slide" id="carousel-127411">
+                    <ol class="carousel-indicators">
+                        <?php if(is_array($adList) || $adList instanceof \think\Collection || $adList instanceof \think\Paginator): $k = 0; $__LIST__ = $adList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($k % 2 );++$k;?>
+                        <li <?php echo !empty($k) && $k==1?"class='active'" : ''; ?>  data-slide-to="<?php echo $k; ?>" data-target="#carousel-127411">
+                        </li>
+                        <?php endforeach; endif; else: echo "" ;endif; ?>
+                    </ol>
+                    <div class="carousel-inner">
+                        <?php if(is_array($adList) || $adList instanceof \think\Collection || $adList instanceof \think\Paginator): $k = 0; $__LIST__ = $adList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($k % 2 );++$k;?>
+                        <div class="item <?php echo !empty($k) && $k==1?'active' : ''; ?>">
+                            <img alt="" width="100%" src='__STATIC__/<?php echo $vo['adimg']; ?>' />
+                            <div class="carousel-caption">
+                                <h4>
+                                    <?php echo $vo['addetails']; ?>
+                                </h4>
+                                <p>
+                                    Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
+                                </p>
+                            </div>
+>>>>>>> 2f7ab36beb11a7e4334d342515dc189749f414b5
                         </div>
                     </div>
                     <?php endforeach; endif; else: echo "" ;endif; ?>
@@ -179,11 +411,108 @@
                             <p>
                                 Yolanda智能体质管理方案，您的家庭健康管理第一站。她由市场价599元的Yo…
                             </p>
+
+            <div class="carousel slide" id="carousel-127411">
+                <ol class="carousel-indicators">
+                    <li class="active" data-slide-to="0" data-target="#carousel-127411">
+                    </li>
+                    <li data-slide-to="1" data-target="#carousel-127411">
+                    </li>
+                    <li data-slide-to="2" data-target="#carousel-127411">
+                    </li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <img alt="" src="http://www.runoob.com/try/bootstrap/layoutit/v3/default2.jpg" />
+                        <div class="carousel-caption">
+                            <h4>
+                                First Thumbnail label
+                            </h4>
+                            <p>
+                                Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <img alt="" src="http://www.runoob.com/try/bootstrap/layoutit/v3/default1.jpg" />
+                        <div class="carousel-caption">
+                            <h4>
+                                Second Thumbnail label
+                            </h4>
+                            <p>
+                                Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <img alt="" src="http://www.runoob.com/try/bootstrap/layoutit/v3/default2.jpg" />
+                        <div class="carousel-caption">
+                            <h4>
+                                Third Thumbnail label
+                            </h4>
+                            <p>
+                                Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
+                            </p>
+                        </div>
+                    </div>
+                </div> <a class="left carousel-control" href="#carousel-127411" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a> <a class="right carousel-control" href="#carousel-127411" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix my_content">
+        <div class="col-md-12 column">
+            <h3>热门众筹</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="thumbnail">
+                        <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
+                        <div class="caption">
+                            <h3>
+                                短片电影
+                            </h3>
                             <p>
                                 目标：756天￥3000000
                                 <span class="label label-default">筹资失败</span>
                             </p>
                             <div class="progress my_progerss">
+                                <div class="progress-bar progress-success">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p>9%</p>
+                                    <p>已达</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>299999元</p>
+                                    <p>已筹资</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>18/01/10</p>
+                                    <p>日期</p>
+                                </div>
+                            </div>
+
+                            <!--<p>-->
+                            <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
+                            <!--</p>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="thumbnail">
+                        <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
+                        <div class="caption">
+                            <h3>
+                                短片电影
+                            </h3>
+
+                            <p>
+                                目标：756天￥3000000
+                                <span class="label label-default">筹资失败</span>
+                            </p>
+                            <div class="progress my_progerss">
+
                                 <div class="progress-bar progress-success" style="width: 60%">
                                 </div>
                             </div>
@@ -220,7 +549,7 @@
                     <div class="col-sm-6">
                         <a href="<?php echo url('home/Project/prodetails'); ?>?proid=<?php echo $vo['projectid']; ?>">
                             <div class="thumbnail hotList">
-                                <img alt="300x200" src="__STATIC__/<?php echo $vo['projectimg']; ?>" />
+                                <img alt="300x200" src="<?php echo $vo['projectimg']; ?>" />
                                 <div class="caption">
                                     <h3>
                                         <?php echo $vo['projectname']; ?>
@@ -246,6 +575,7 @@
                                             <p>结束日期</p>
                                         </div>
                                     </div>
+<<<<<<< HEAD
 
                                     <!--<p>-->
                                     <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
@@ -253,16 +583,79 @@
                                 </div>
                             </div>
                         </a>
+=======
+=======
+                                <div class="progress-bar progress-success">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p>9%</p>
+                                    <p>已达</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>299999元</p>
+                                    <p>已筹资</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>18/01/10</p>
+                                    <p>日期</p>
+                                </div>
+                            </div>
+
+                            <!--<p>-->
+                            <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
+                            <!--</p>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="thumbnail">
+                        <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
+                        <div class="caption">
+                            <h3>
+                                短片电影
+                            </h3>
+                            <p>
+                                目标：756天￥3000000
+                                <span class="label label-default">筹资失败</span>
+                            </p>
+                            <div class="progress my_progerss">
+                                <div class="progress-bar progress-success">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p>9%</p>
+                                    <p>已达</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>299999元</p>
+                                    <p>已筹资</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>18/01/10</p>
+                                    <p>日期</p>
+
+                                </div>
+                            </div>
+
+                            <!--<p>-->
+                            <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
+                            <!--</p>-->
+                        </div>
+>>>>>>> 2f7ab36beb11a7e4334d342515dc189749f414b5
                     </div>
                     <?php endforeach; endif; else: echo "" ;endif; ?>
                 </div>
+
                 <h3>最新众筹</h3>
                 <div class="row">
                     <?php if(is_array($newList) || $newList instanceof \think\Collection || $newList instanceof \think\Paginator): $k = 0; $__LIST__ = $newList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($k % 2 );++$k;?>
                     <div class="col-md-4 col-sm-6">
                         <a href="<?php echo url('home/Project/prodetails'); ?>?proid=<?php echo $vo['projectid']; ?>">
                             <div class="thumbnail newList">
-                                <img alt="300x200" src="__STATIC__/<?php echo $vo['projectimg']; ?>" />
+                                <img alt="300x200" src="<?php echo $vo['projectimg']; ?>" />
                                 <div class="caption">
                                     <h3>
                                         <?php echo $vo['projectname']; ?>
@@ -288,6 +681,7 @@
                                             <p>结束日期</p>
                                         </div>
                                     </div>
+<<<<<<< HEAD
 
                                     <!--<p>-->
                                     <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
@@ -296,7 +690,50 @@
                             </div>
                         </a>
 
+=======
+                                    <div class="col-xs-4">
+                                        <p><?php echo substr($vo['endtime'],0,10); ?></p>
+                                        <p>结束日期</p>
+                                    </div>
+
+                <div class="col-md-6">
+                    <div class="thumbnail">
+                        <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
+                        <div class="caption">
+                            <h3>
+                                短片电影
+                            </h3>
+                            <p>
+                                目标：756天￥3000000
+                                <span class="label label-default">筹资失败</span>
+                            </p>
+                            <div class="progress my_progerss">
+                                <div class="progress-bar progress-success">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p>9%</p>
+                                    <p>已达</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>299999元</p>
+                                    <p>已筹资</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>18/01/10</p>
+                                    <p>日期</p>
+
+                                </div>
+                            </div>
+
+                            <!--<p>-->
+                            <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
+                            <!--</p>-->
+                        </div>
+>>>>>>> 2f7ab36beb11a7e4334d342515dc189749f414b5
                     </div>
+
                     <?php endforeach; endif; else: echo "" ;endif; ?>
                 </div>
                 <h3>即将下架</h3>
@@ -305,7 +742,7 @@
                     <div class="col-md-4 col-sm-6">
                         <a href="<?php echo url('home/Project/prodetails'); ?>?proid=<?php echo $vo['projectid']; ?>">
                             <div class="thumbnail oldList">
-                                <img alt="300x200" src="__STATIC__/<?php echo $vo['projectimg']; ?>" />
+                                <img alt="300x200" src="<?php echo $vo['projectimg']; ?>" />
                                 <div class="caption">
                                     <h3>
                                         <?php echo $vo['projectname']; ?>
@@ -332,6 +769,7 @@
                                         </div>
                                     </div>
 
+<<<<<<< HEAD
                                     <!--<p>-->
                                     <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
                                     <!--</p>-->
@@ -339,16 +777,58 @@
                             </div>
                         </a>
 
+=======
+                </div>
+            </div>
+            <h3>最新众筹</h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
+                        <div class="caption">
+                            <h3>
+                                短片电影
+                            </h3>
+                            <p>
+                                目标：756天￥3000000
+                                <span class="label label-default">筹资失败</span>
+                            </p>
+                            <div class="progress my_progerss">
+                                <div class="progress-bar progress-success">
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p>9%</p>
+                                    <p>已达</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>299999元</p>
+                                    <p>已筹资</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>18/01/10</p>
+                                    <p>日期</p>
+                                </div>
+                            </div>
+
+                            <!--<p>-->
+                            <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
+                            <!--</p>-->
+                        </div>
+>>>>>>> 2f7ab36beb11a7e4334d342515dc189749f414b5
                     </div>
                     <?php endforeach; endif; else: echo "" ;endif; ?>
                 </div>
+
                 <h3>猜你喜欢</h3>
                 <div class="row">
                     <?php if(is_array($hotList) || $hotList instanceof \think\Collection || $hotList instanceof \think\Paginator): $k = 0; $__LIST__ = $hotList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($k % 2 );++$k;?>
                     <div class="col-md-4 col-sm-6">
                         <a href="<?php echo url('home/Project/prodetails'); ?>?proid=<?php echo $vo['projectid']; ?>">
                             <div class="thumbnail likeList">
-                                <img alt="300x200" src="__STATIC__/<?php echo $vo['projectimg']; ?>" />
+                                <img alt="300x200" src="<?php echo $vo['projectimg']; ?>" />
                                 <div class="caption">
                                     <h3>
                                         <?php echo $vo['projectname']; ?>
@@ -374,6 +854,7 @@
                                             <p>结束日期</p>
                                         </div>
                                     </div>
+<<<<<<< HEAD
 
                                     <!--<p>-->
                                     <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
@@ -382,10 +863,85 @@
                             </div>
                         </a>
 
+=======
+
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
+                        <div class="caption">
+                            <h3>
+                                短片电影
+                            </h3>
+                            <p>
+                                目标：756天￥3000000
+                                <span class="label label-default">筹资失败</span>
+                            </p>
+                            <div class="progress my_progerss">
+                                <div class="progress-bar progress-success">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p>9%</p>
+                                    <p>已达</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>299999元</p>
+                                    <p>已筹资</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>18/01/10</p>
+                                    <p>日期</p>
+                                </div>
+                            </div>
+
+                            <!--<p>-->
+                            <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
+                            <!--</p>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
+                        <div class="caption">
+                            <h3>
+                                短片电影
+                            </h3>
+                            <p>
+                                目标：756天￥3000000
+                                <span class="label label-default">筹资失败</span>
+                            </p>
+                            <div class="progress my_progerss">
+                                <div class="progress-bar progress-success">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p>9%</p>
+                                    <p>已达</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>299999元</p>
+                                    <p>已筹资</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>18/01/10</p>
+                                    <p>日期</p>
+
+                                </div>
+                            </div>
+
+                            <!--<p>-->
+                            <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
+                            <!--</p>-->
+                        </div>
+>>>>>>> 2f7ab36beb11a7e4334d342515dc189749f414b5
                     </div>
                     <?php endforeach; endif; else: echo "" ;endif; ?>
                 </div>
             </div>
+
         </div>
         <div class="content_sup">
             <div class="support">
@@ -432,8 +988,81 @@
                                 <h4 class="media-heading">
                                     项目总数
                                 </h4> 32个
+
+            <h3>猜你喜欢</h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
+                        <div class="caption">
+                            <h3>
+                                短片电影
+                            </h3>
+                            <p>
+                                目标：756天￥3000000
+                                <span class="label label-default">筹资失败</span>
+                            </p>
+                            <div class="progress my_progerss">
+                                <div class="progress-bar progress-success">
+                                </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p>9%</p>
+                                    <p>已达</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>299999元</p>
+                                    <p>已筹资</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>18/01/10</p>
+                                    <p>日期</p>
+                                </div>
+                            </div>
+
+                            <!--<p>-->
+                            <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
+                            <!--</p>-->
                         </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
+                        <div class="caption">
+                            <h3>
+                                短片电影
+                            </h3>
+                            <p>
+                                目标：756天￥3000000
+                                <span class="label label-default">筹资失败</span>
+                            </p>
+                            <div class="progress my_progerss">
+                                <div class="progress-bar progress-success">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p>9%</p>
+                                    <p>已达</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>299999元</p>
+                                    <p>已筹资</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>18/01/10</p>
+                                    <p>日期</p>
+                                </div>
+
+                            </div>
+
+                            <!--<p>-->
+                            <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
+                            <!--</p>-->
+                        </div>
+
                         <div class="col-sm-12 col-xs-3 media">
                             <a href="#" class="pull-left"><span class="mxr_3"></span></a>
                             <div class="media-body">
@@ -441,12 +1070,61 @@
                                     项目总数
                                 </h4> 32个
                             </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img alt="300x200" src="__STATIC__/img/home/mainView/goods1.jpg" />
+                        <div class="caption">
+                            <h3>
+                                短片电影
+                            </h3>
+                            <p>
+                                目标：756天￥3000000
+                                <span class="label label-default">筹资失败</span>
+                            </p>
+                            <div class="progress my_progerss">
+                                <div class="progress-bar progress-success">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p>9%</p>
+                                    <p>已达</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>299999元</p>
+                                    <p>已筹资</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>18/01/10</p>
+                                    <p>日期</p>
+                                </div>
+                            </div>
+
+                            <!--<p>-->
+                            <!--<a class="btn btn-primary" href="#">Action</a> <a class="btn" href="#">Action</a>-->
+                            <!--</p>-->
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+<<<<<<< HEAD
+=======
+
+
+    <!-- GOTOP -->
+    <div>
+        <div id="code"></div>
+        <div id="code_img"></div>
+        <a id="gotop" href="javascript:void(0)"></a>
+    </div>
+    <!-- GOTOP -->
+>>>>>>> 2f7ab36beb11a7e4334d342515dc189749f414b5
     <!--<div id="gotop" style="display: block; z-index: 99;">-->
         <!--<a href="#top"></a>-->
     <!--</div>-->
@@ -491,6 +1169,7 @@
     </div>
 </div>
 </body>
+<<<<<<< HEAD
 <script>
     $(function(){
 
@@ -517,4 +1196,15 @@
 
     })
 </script>
+=======
+
+</div>
+
+</body>
+
+<script>
+
+</script>
+
+>>>>>>> 2f7ab36beb11a7e4334d342515dc189749f414b5
 </html>

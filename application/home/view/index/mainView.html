@@ -30,7 +30,7 @@
                 <div class="carousel-inner">
                     {volist name='adList' id='vo' key="k"}
                     <div class="item {$k==1 ? 'active' : ''}">
-                        <img alt="" width="100%" src="{$vo.adimg}" />
+                        <img alt="" width="100%" src="__STATIC__/{$vo.adimg}" />
                         <div class="carousel-caption">
                             <h4>
                                 {$vo.addetails}
@@ -392,7 +392,7 @@
                     <div class="col-sm-6">
                         <a href="{:url('home/Project/prodetails')}?proid={$vo.projectid}">
                             <div class="thumbnail hotList">
-                                <img alt="300x200" src="{$vo.projectimg}" />
+                                <img alt="300x200" src="__STATIC__/{$vo.projectimg}" />
                                 <div class="caption">
                                     <h3>
                                         {$vo.projectname}
@@ -498,7 +498,7 @@
                     <div class="col-md-4 col-sm-6">
                         <a href="{:url('home/Project/prodetails')}?proid={$vo.projectid}">
                             <div class="thumbnail newList">
-                                <img alt="300x200" src="{$vo.projectimg}" />
+                                <img alt="300x200" src="__STATIC__/{$vo.projectimg}" />
                                 <div class="caption">
                                     <h3>
                                         {$vo.projectname}
@@ -585,7 +585,7 @@
                     <div class="col-md-4 col-sm-6">
                         <a href="{:url('home/Project/prodetails')}?proid={$vo.projectid}">
                             <div class="thumbnail oldList">
-                                <img alt="300x200" src="{$vo.projectimg}" />
+                                <img alt="300x200" src="__STATIC__/{$vo.projectimg}" />
                                 <div class="caption">
                                     <h3>
                                         {$vo.projectname}
@@ -671,7 +671,7 @@
                     <div class="col-md-4 col-sm-6">
                         <a href="{:url('home/Project/prodetails')}?proid={$vo.projectid}">
                             <div class="thumbnail likeList">
-                                <img alt="300x200" src="{$vo.projectimg}" />
+                                <img alt="300x200" src="__STATIC__/{$vo.projectimg}" />
                                 <div class="caption">
                                     <h3>
                                         {$vo.projectname}

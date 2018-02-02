@@ -1,0 +1,197 @@
+[ 2018-02-03T00:03:59+08:00 ] ::1 ::1 GET /hf170724_zc/hf1707_zc/public/home/index/index.html
+[ log ] localhost/hf170724_zc/hf1707_zc/public/home/index/index.html [运行时间：1.682096s][吞吐率：0.59req/s] [内存消耗：3,032.00kb] [文件加载：58]
+[ info ] [ LANG ] D:\AppServ\www\hf170724_zc\hf1707_zc\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'home',
+    1 => 'index',
+    2 => 'index',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'host' => 'localhost',
+  'connection' => 'keep-alive',
+  'pragma' => 'no-cache',
+  'cache-control' => 'no-cache',
+  'upgrade-insecure-requests' => '1',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+  'referer' => 'http://localhost/hf170724_zc/hf1707_zc/public/home/user/user.html',
+  'accept-encoding' => 'gzip, deflate, br',
+  'accept-language' => 'zh-CN,zh;q=0.8',
+  'cookie' => 'thinkphp_show_page_trace=0|0; pgv_pvi=3237811200; ECS[visit_times]=2; ECS[username]=aaa; ECS[user_id]=3; ECS[password]=4cc569d34c5492d78073b3bc366f03c3; email=97697176%40qq.com; user_pwd=8d738b62880ee126bc862606524ce831; think_template=default; PHPSESSID=5p2khsurc8csim94jacsjkgtb6',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ RUN ] app\home\controller\Index->index[ D:\AppServ\www\hf170724_zc\hf1707_zc\application\home\controller\Index.php ]
+[ info ] [ DB ] INIT mysql
+[ info ] [ DB ] INIT mysql
+[ info ] [ DB ] INIT mysql
+[ info ] [ DB ] INIT mysql
+[ info ] [ VIEW ] D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\index\mainView.html [ array (
+  0 => 'adList',
+  1 => 'hotList',
+  2 => 'newList',
+  3 => 'oldList',
+  4 => 'do',
+  5 => 'today',
+) ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.118007s ] mysql:dbname=hf1707_zc;host=39.106.138.89;port=3306;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `zc_ad` [ RunTime:0.084005s ]
+[ sql ] [ SQL ] SELECT * FROM `zc_ad` WHERE  `starttime` <= '2018-02-03 00:03:58'  AND `endtime` > '2018-02-03 00:03:58' [ RunTime:0.084004s ]
+[ sql ] [ DB ] CONNECT:[ UseTime:0.150009s ] mysql:dbname=hf1707_zc;host=39.106.138.89;port=3306;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `zc_project` [ RunTime:0.091005s ]
+[ sql ] [ SQL ] SELECT *,datediff(a.endtime,NOW()) resttime FROM zc_project a INNER JOIN `zc_state` `b` ON `a`.`stateid`=`b`.`stateid` WHERE  `a`.`begintime` <= '2018-02-03 00:03:58'  AND `a`.`endtime` > '2018-02-03 00:03:58' ORDER BY a.focuscount desc LIMIT 4 [ RunTime:0.089005s ]
+[ sql ] [ DB ] CONNECT:[ UseTime:0.136008s ] mysql:dbname=hf1707_zc;host=39.106.138.89;port=3306;charset=utf8
+[ sql ] [ SQL ] SELECT *,datediff(a.endtime,NOW()) resttime FROM zc_project a INNER JOIN `zc_state` `b` ON `a`.`stateid`=`b`.`stateid` WHERE  `a`.`begintime` <= '2018-02-03 00:03:59'  AND `a`.`endtime` > '2018-02-03 00:03:59' ORDER BY a.createtime desc LIMIT 3 [ RunTime:0.092005s ]
+[ sql ] [ DB ] CONNECT:[ UseTime:0.137008s ] mysql:dbname=hf1707_zc;host=39.106.138.89;port=3306;charset=utf8
+[ sql ] [ SQL ] SELECT *,datediff(a.endtime,NOW()) resttime FROM zc_project a INNER JOIN `zc_state` `b` ON `a`.`stateid`=`b`.`stateid` WHERE  `a`.`begintime` <= '2018-02-03 00:03:59'  AND `a`.`endtime` > '2018-02-03 00:03:59' ORDER BY `a`.`endtime` LIMIT 3 [ RunTime:0.101006s ]
+
+---------------------------------------------------------------
+[ 2018-02-03T00:04:00+08:00 ] ::1 ::1 GET /hf170724_zc/hf1707_zc/public/home/index/img/home/mainView/goods1.jpg
+[ log ] localhost/hf170724_zc/hf1707_zc/public/home/index/img/home/mainView/goods1.jpg [运行时间：0.202012s][吞吐率：4.95req/s] [内存消耗：1,813.44kb] [文件加载：52]
+[ info ] [ LANG ] D:\AppServ\www\hf170724_zc\hf1707_zc\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'home',
+    1 => 'index',
+    2 => 'img',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'host' => 'localhost',
+  'connection' => 'keep-alive',
+  'pragma' => 'no-cache',
+  'cache-control' => 'no-cache',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36',
+  'accept' => 'image/webp,image/apng,image/*,*/*;q=0.8',
+  'referer' => 'http://localhost/hf170724_zc/hf1707_zc/public/home/index/index.html',
+  'accept-encoding' => 'gzip, deflate, br',
+  'accept-language' => 'zh-CN,zh;q=0.8',
+  'cookie' => 'thinkphp_show_page_trace=0|0; pgv_pvi=3237811200; ECS[visit_times]=2; ECS[username]=aaa; ECS[user_id]=3; ECS[password]=4cc569d34c5492d78073b3bc366f03c3; email=97697176%40qq.com; user_pwd=8d738b62880ee126bc862606524ce831; think_template=default; PHPSESSID=5p2khsurc8csim94jacsjkgtb6',
+)
+[ info ] [ PARAM ] array (
+  'home' => 'mainView',
+)
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ LOG ] INIT File
+
+---------------------------------------------------------------
+[ 2018-02-03T00:04:00+08:00 ] ::1 ::1 GET /hf170724_zc/hf1707_zc/public/home/index/img/home/mainView/banner1.jpg
+[ log ] localhost/hf170724_zc/hf1707_zc/public/home/index/img/home/mainView/banner1.jpg [运行时间：0.172009s][吞吐率：5.81req/s] [内存消耗：1,813.56kb] [文件加载：52]
+[ info ] [ LANG ] D:\AppServ\www\hf170724_zc\hf1707_zc\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'home',
+    1 => 'index',
+    2 => 'img',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'host' => 'localhost',
+  'connection' => 'keep-alive',
+  'pragma' => 'no-cache',
+  'cache-control' => 'no-cache',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36',
+  'accept' => 'image/webp,image/apng,image/*,*/*;q=0.8',
+  'referer' => 'http://localhost/hf170724_zc/hf1707_zc/public/home/index/index.html',
+  'accept-encoding' => 'gzip, deflate, br',
+  'accept-language' => 'zh-CN,zh;q=0.8',
+  'cookie' => 'thinkphp_show_page_trace=0|0; pgv_pvi=3237811200; ECS[visit_times]=2; ECS[username]=aaa; ECS[user_id]=3; ECS[password]=4cc569d34c5492d78073b3bc366f03c3; email=97697176%40qq.com; user_pwd=8d738b62880ee126bc862606524ce831; think_template=default; PHPSESSID=5p2khsurc8csim94jacsjkgtb6',
+)
+[ info ] [ PARAM ] array (
+  'home' => 'mainView',
+)
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ LOG ] INIT File
+
+---------------------------------------------------------------
+[ 2018-02-03T00:04:01+08:00 ] ::1 ::1 GET /hf170724_zc/hf1707_zc/public/static/css/bootstrap.min.css.map
+[ log ] localhost/hf170724_zc/hf1707_zc/public/static/css/bootstrap.min.css.map [运行时间：0.263016s][吞吐率：3.80req/s] [内存消耗：1,501.27kb] [文件加载：44]
+[ info ] [ LANG ] D:\AppServ\www\hf170724_zc\hf1707_zc\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'static',
+    1 => 'css',
+    2 => 'bootstrap.min.css.map',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'host' => 'localhost',
+  'connection' => 'keep-alive',
+  'cache-control' => 'no-cache',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36',
+  'accept-encoding' => 'gzip, deflate, br',
+  'accept-language' => 'zh-CN,zh;q=0.8',
+  'cookie' => 'pgv_pvi=3237811200; ECS[visit_times]=2; ECS[username]=aaa; ECS[user_id]=3; ECS[password]=4cc569d34c5492d78073b3bc366f03c3; email=97697176%40qq.com; user_pwd=8d738b62880ee126bc862606524ce831; think_template=default; PHPSESSID=5p2khsurc8csim94jacsjkgtb6',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LOG ] INIT File
+
+---------------------------------------------------------------
+[ 2018-02-03T00:04:02+08:00 ] ::1 ::1 GET /hf170724_zc/hf1707_zc/public/home/index/img/home/mainView/goods1.jpg
+[ log ] localhost/hf170724_zc/hf1707_zc/public/home/index/img/home/mainView/goods1.jpg [运行时间：0.098006s][吞吐率：10.20req/s] [内存消耗：1,813.46kb] [文件加载：52]
+[ info ] [ LANG ] D:\AppServ\www\hf170724_zc\hf1707_zc\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'home',
+    1 => 'index',
+    2 => 'img',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'host' => 'localhost',
+  'connection' => 'keep-alive',
+  'pragma' => 'no-cache',
+  'cache-control' => 'no-cache',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36',
+  'accept' => 'image/webp,image/apng,image/*,*/*;q=0.8',
+  'referer' => 'http://localhost/hf170724_zc/hf1707_zc/public/home/index/index.html',
+  'accept-encoding' => 'gzip, deflate, br',
+  'accept-language' => 'zh-CN,zh;q=0.8',
+  'cookie' => 'thinkphp_show_page_trace=0|0; pgv_pvi=3237811200; ECS[visit_times]=2; ECS[username]=aaa; ECS[user_id]=3; ECS[password]=4cc569d34c5492d78073b3bc366f03c3; email=97697176%40qq.com; user_pwd=8d738b62880ee126bc862606524ce831; think_template=default; PHPSESSID=5p2khsurc8csim94jacsjkgtb6',
+)
+[ info ] [ PARAM ] array (
+  'home' => 'mainView',
+)
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ LOG ] INIT File
+
+---------------------------------------------------------------

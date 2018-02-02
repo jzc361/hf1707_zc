@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:88:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\myProject.html";i:1517448844;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:88:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\myProject.html";i:1517581102;}*/ ?>
 
 
 <!DOCTYPE html>
@@ -87,8 +87,11 @@
                             <?php elseif($val['statename']=='审核成功'): ?>
                             <span>
                                 <span data-toggle="modal" data-target="#starttime" onclick="selectStarttime(<?php echo $val['projectid']; ?>)" style="cursor: pointer">选择开始时间</span>
-                                &nbsp;
-                                 <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
+                                <br>
+                                <a href="javascript:;"
+                                    onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
+                                <br>
+                                <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
                             </span>
                             <?php elseif($val['statename']=='审核失败'): ?>
                             <span>
@@ -96,24 +99,42 @@
                                    onclick='x_admin_show("不合格原因：","showReason?projectid="+<?php echo $val['projectid']; ?>,"450","400")'>
                                     查看原因
                                 </a>
-                                &nbsp;
+                                <br>
+                                 <a href="javascript:;"
+                                    onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
+                                <br>
                                 <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
                             </span>
                             <?php elseif($val['statename']=='众筹中'): ?>
-                            <span><a href="javascript:;"
-                                     onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a></span>
+                            <span>
+                                <a href="javascript:;"
+                                   onclick='x_admin_show("项目日志","showLog?id="+<?php echo $val['projectid']; ?>)'>项目日志</a>
+                                <br>
+                                <a href="">支持记录</a>
+                                <br>
+                                <a href="javascript:;"
+                                     onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
+                                <br>
+                                <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
+                            </span>
                             <?php elseif($val['statename']=='众筹成功'): ?>
                             <span>
-                                <a href="">项目日志</a>
-                                &nbsp;
+                                <a href="javascript:;"
+                                   onclick='x_admin_show("项目日志","showLog?id="+<?php echo $val['projectid']; ?>)'>项目日志</a>
+                                <br>
                                 <a href="">支持记录</a>
+                                <br>
+                                <a href="javascript:;"
+                                    onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
+                                <br>
+                                <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
                             </span>
                             <?php elseif($val['statename']=='众筹失败'): ?>
                             <span>
                                 <a href="javascript:;"
                                    onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
-                                &nbsp;
-                                 <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
+                                <br>
+                                <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
                             </span>
                             <?php endif; ?>
                         </td>

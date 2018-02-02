@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:86:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\support.html";i:1517575425;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:86:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\support.html";i:1517577730;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,7 +58,7 @@
             <td>￥<?php echo $vo['ordersprice']; ?></td>
             <td>-</td>
             <td><?php echo $vo['orderstate']; ?></td>
-            <td><a href="#">查看详情</a></td>
+            <td><a href="#" onclick="detail()">查看详情</a></td>
         </tr>
         <?php endforeach; endif; else: echo "" ;endif; ?>
         </tbody>
@@ -159,10 +159,14 @@
 <div class="blank"></div>
 </body>
 <script>
+    function getDetail(){
+        $('#myModel').modal('show')
+    }
     $(function(){
         $("#addBtn").click(function(){
             $('#myModal').modal('show')
         });
+
         //正则校验
         $('#defaultForm').bootstrapValidator({
 //        live: 'disabled',
