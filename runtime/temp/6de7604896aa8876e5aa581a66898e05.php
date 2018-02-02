@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:74:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\login\index.html";i:1517465750;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:74:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\login\index.html";i:1517540074;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,8 +8,8 @@
     <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <title>XX众筹管理系统</title>
-    <meta name="keywords" content="简洁大气,实用,多功能,通用,后台管理系统,网站模板" />
-    <meta name="description" content="简洁大气实用多功能通用后台管理系统网站模板下载。" /> 
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
     <meta name="author" content="js代码" />
     <meta name="copyright" content="js代码" />
     <!--加载css-->
@@ -181,7 +181,7 @@ function quit(){
             dataType:'json',
             type:'post',
             success:function (res){
-                console.log(res);
+                //console.log(res);
                 //提示退出情况
                 alert(res.msg);
                 if(res.code==90011) {

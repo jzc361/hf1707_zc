@@ -1,3 +1,4 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:85:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\backmanager\empmanager.html";i:1517473165;}*/ ?>
 <!DOCTYPE html>
 <html>
   
@@ -13,16 +14,12 @@
       <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
       <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
       <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+
       <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
       <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
       <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
               integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-      <!--Ztree插件-->
-      <link rel="stylesheet" href="__CSS__/admin/demo.css" type="text/css">
-      <link rel="stylesheet" href="__CSS__/admin/zTreeStyle.css" type="text/css">
-
   </head>
-
   <style>
       .layui-form-label{
           float: left;
@@ -43,15 +40,15 @@
 
                   <!--角色管理操作-->
                   <tr v-for="roleInfo in allrole" v-if="roleInfo.roleid==1">
-                      <td>{{roleInfo.rolename}}</td><td>{{roleInfo.roledetails}}</td><td>--</td><td>--</td>
+                      <td>{{roleInfo.empid}}</td><td>{{roleInfo.empname}}</td><td>{{roleInfo.rolename}}</td><td>--</td><td>--</td>
                   </tr>
                   <tr v-for="roleInfo in allrole" v-if="roleInfo.roleid!=1">
-                      <td>{{roleInfo.rolename}}</td><td>{{roleInfo.roledetails}}</td>
+                      <td>{{roleInfo.empid}}</td><td>{{roleInfo.empname}}</td><td>{{roleInfo.rolename}}</td>
                       <td>
-                        <a :rid="roleInfo.roleid" data-toggle="modal" data-target="#modalEdit" onclick="roleEdit(this)" href="#">权限修改</a>
+                        <a :rid="roleInfo.empid" data-toggle="modal" data-target="#modalEdit" onclick="empEdit(this)" href="#">权限修改</a>
                       </td>
                      <td>
-                         <a :rid="roleInfo.roleid" onclick="roleDel(this)" href="#">删除</a>
+                         <a :rid="roleInfo.empid" onclick="empDel(this)" href="#">删除</a>
                      </td>
                   </tr>
                   </tbody>
@@ -129,13 +126,12 @@
   <!--模态框显示菜单-->
 
   <!-- Modal -->
-  <!--权限修改-->
   <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="modalLabelEdit">
       <div class="modal-dialog" role="document">
           <div class="modal-content">
               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="modalLabelEdit">权限修改</h4>
+                  <h4 class="modal-title" id="modalLabelEdit">修改角色</h4>
                   <!--------------------------添加角色------------------------------>
               </div>
               <div class="modal-body">
@@ -154,16 +150,13 @@
                   </div>
                   <!--权限添加-->
                   <div class="layui-form-item">
-                      <label class="layui-form-label">
+                      <label for="gradeEdit" class="layui-form-label">
                           <span class="x-red">*</span>权限选择
                       </label>
-
-                      <div class="content_wrap layui-input-inline">
-                          <div class="zTreeDemoBackground left">
-                              <ul id="treeDemo" class="ztree"  style="background-color: whitesmoke;width: 192px;height: 100%;border-color: #e6e6e6"></ul>
-                          </div>
+                      <div class="layui-input-inline">
+                          <input type="text" id="gradeEdit" name="gradeEdit" required="" lay-verify=""
+                                 autocomplete="off" class="layui-input">
                       </div>
-
                       <div class="layui-form-mid layui-word-aux">
                           <span class="x-red">*</span>请合理分配权限
                       </div>
@@ -173,11 +166,8 @@
                           <span class="x-red">*</span>角色详情/介绍
                       </label>
                       <div class="layui-input-inline">
-
-                          <textarea style="overflow-y:visible" id="introEdit" lay-verify="" autocomplete="off" class="layui-input">
-
-                          </textarea>
-
+                          <input type="text" id="introEdit" name="introEdit" required="" lay-verify=""
+                                 autocomplete="off" class="layui-input">
                       </div>
                       <div class="layui-form-mid layui-word-aux">
                           <span class="x-red">*</span>
@@ -192,8 +182,6 @@
           </div>
       </div>
   </div>
-  <!--权限修改-->
-
 
   <!---->
   </body>
@@ -210,25 +198,16 @@
   <script src="__JS__/vue.js"></script>
 
   <!--引用jq文件-->
-    <!--依赖JQ的文件在对应的放在依赖版本下引用-->
   <script src="__JS__/jquery-2.1.4.js"></script>
   <script src="__JS__/bootstrap.min.js"></script>
-
-  <script type="text/javascript" src="__JS__/admin/jquery-1.4.4.min.js"></script>
-  <script type="text/javascript" src="__JS__/admin/jquery.ztree.core-3.5.js"></script>
-  <script type="text/javascript" src="__JS__/admin/jquery.ztree.excheck-3.5.js"></script>
-
-
-
-
 
   <script>
       $(
               $.ajax({
-                  url:"{:url('admin/backmanager/allRole')}",
-                  data:'',
+                  url:"<?php echo url('admin/backmanager/allEmp'); ?>",
                   type:'post',
                   dataType:'json',
+                  data:'',
                   success:function($res){
                       var roleVue = new Vue({
                           el:"#allrole",
@@ -243,57 +222,25 @@
               })
       );
 
-
-      function zTree($treeData){
-          var setting = {
-              check: {
-                  enable: true
-              },
-              data: {
-                  simpleData: {
-                      enable: true
-                  }
-              }
-          };
-          //点击权限修改后绑定该角色所有权限数据
-
-          var code;
-
-          function setCheck() {
-              showCode('setting.check.chkboxType = { "Y" : "ps ", "N" : "px" };');
-          }
-          function showCode(str) {
-              if (!code) code = $("#code");
-              code.empty();
-              code.append("<li>"+str+"</li>");
-          }
-
-          $(document).ready(function(){
-              $.fn.zTree.init($("#treeDemo"), setting,$treeData);
-              setCheck();
-              $("#py").bind("change", setCheck);
-              $("#sy").bind("change", setCheck);
-              $("#pn").bind("change", setCheck);
-              $("#sn").bind("change", setCheck);
-          });
+      //修改角色
+      function roleEdit(){
 
       }
-
       //添加角色
       $("#roleAdd").click(function (){
 
       });
 
       //删除角色
-      function roleDel(obj){
+      function empDel(obj){
         $rid = $(obj).attr('rid');
-          $checkDel = confirm('您确定要删除该角色吗？');
+          $checkDel = confirm('您确定要删除该员工吗？');
           if($checkDel){
               $.ajax({
-                  url:"{:url('admin/backmanager/roleDel')}",
+                  url:"<?php echo url('admin/backmanager/empDel'); ?>",
                   data:'rid='+$rid,
-                  type:'post',
                   dataType:'json',
+                  type:'post',
                   success:function(res){
                       alert(res.msg);
                       window.location.reload();
@@ -301,55 +248,11 @@
               })
           }
       }
-//角色权限修改
-      function roleEdit(obj){
-          $rid = $(obj).attr('rid');//获取角色ID
-          $.ajax({
-              url:"{:url('admin/backmanager/roleEditData')}" ,
-              data:'rid='+$rid,
-              type:'post',
-              dataType:'json',
-              success:function(res){
 
-                    if(res!=''){
-                        var zNodes =[
-                            { id:1, pId:0, name:"随意勾选 1", open:true},//open展开//checked//勾选
-                            { id:11, pId:1, name:"随意勾选 1-1", open:true},
-                            { id:111, pId:11, name:"随意勾选 1-1-1"},
-                            { id:112, pId:11, name:"随意勾选 1-1-2"},
-                            { id:12, pId:1, name:"随意勾选 1-2", open:true},
-                            { id:121, pId:12, name:"随意勾选 1-2-1"},
-                            { id:122, pId:12, name:"随意勾选 1-2-2"},
-                            { id:2, pId:0, name:"随意勾选 2", checked:true, open:true},
-                            { id:21, pId:2, name:"随意勾选 2-1"},
-                            { id:22, pId:2, name:"随意勾选 2-2", open:true},
-                            { id:221, pId:22, name:"随意勾选 2-2-1", checked:true},
-                            { id:222, pId:22, name:"随意勾选 2-2-2"},
-                            { id:23, pId:2, name:"随意勾选 2-3"}
-                        ];
+      function empEdit(){
 
-
-                        console.log(JSON.stringify(zNodes));
-                        for(var $j = 0;$j<zNodes.length;$j++){
-                            console.log(zNodes[$j]);
-                        }
-                        var zNodes = [];
-                        var str = '';
-                        console.log(res.data[0]);
-                        for(var $i = 0;$i<res.data[0].length;$i++){
-                            console.log(res.data[0][$i]);
-                            console.log(res.data[0][$i]['menuname']);
-                        }
-                        //zTree(zNodes);
-                        console.log(zNodes);
-                    }
-
-                //zTree(res);
-              }
-          });
       }
   </script>
   <script>
-
   </script>
 </html>
