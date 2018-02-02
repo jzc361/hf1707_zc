@@ -269,7 +269,17 @@ return [
     //提示信息
     'msg'=>[
         'whiteList' => [
-            'home/Index/index'
+            'home/',
+            'home/index',
+            'index/index/index',
+            'home/index/index',
+            'home/project/prolimit',
+            'home/project/proindex',
+            'home/user/showlogin',
+            'home/user/showregister',
+            'home/user/userlogin',
+            'home/user/userregister',
+            'home/user/exitlogin'
         ],
         'login'=>[
             'error'=>'登录失败，请从稍后再试',  //10000
@@ -310,7 +320,12 @@ return [
             'already'=>'已关注'//40003
         ],
 
-        'nologin'=>['nologin'=>'请先登录']//00000
+        'nologin'=>['nologin'=>'请先登录'],//00000
+
+        'signOut'=>[
+            'signOut'=>'已退出',//90011
+            'outFail'=>'注销失败'//90010
+        ]
     ]
 
 ];

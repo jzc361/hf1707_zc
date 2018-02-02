@@ -14,21 +14,24 @@ use \think\Db;
 use \think\Cookie;
 use \think\Session;
 
-class Project extends Controller
+class Project extends Auth
 {
     //产品项目（更多众筹）
     public function proindex(){
+        $this->updateProState();//更新商品状态
         Session::set('current','proindex');//当前所在页面
         cookie( null,'pro_');//清空前缀为pro_的cookie
         $condition=[];
         $condition['projecttype']='普通众筹';
+        $or=[];
         $ord="";
         $ordertype="";
         $sortid=input('?get.sortid')?input('get.sortid'):"";//分类id
         $stateid=input('?get.stateid')?input('get.stateid'):"";//状态id
         //$statename=input('?get.staname')?input('get.staname'):"";
         $order=input('?get.order')?input('get.order'):"";
-        //$search=input('?get.search')?input('get.search'):"";//搜索
+        $search=input('?get.search')?input('get.search'):"";//搜索
+        //echo $search;
         /*if($search!=""){
             cookie('search',$search,3600);
         }*/
@@ -55,6 +58,12 @@ class Project extends Controller
             $pageParam['query']['stateid'] = $stateid;
         }
         //条件搜索
+        if($search!=""){
+            cookie('pro_search',$search,3600);//将查询的条件存入cookie
+            $condition["projectname"]=['like','%'.$search.'%'];
+            $pageParam['query']['search'] = $search;
+            $or["intro"]=['like','%'.$search.'%'];
+        }
         /*if(cookie('search')!=""){
             $condition["projectname"]=['like','%'.cookie('search').'%'];
             $pageParam['query']['projectname'] = ['like','%'.cookie('search').'%'];
@@ -95,36 +104,62 @@ class Project extends Controller
             ->order($ord,$ordertype)
             ->paginate(4, false, $pageParam);
         var_dump($pro);exit;*/
-        $pro=db('project')->where($condition)->where($stateType)->order($ord,$ordertype)->paginate(4, false, $pageParam);//->whereOr('intro','like','%'.$search.'%')
+        $pro=db('project')->where($condition)->where($stateType)->order($ord,$ordertype)->paginate(4, false, $pageParam);//->whereOr($or)
         //var_dump($pro);exit;
-        $pronum=db('project')->where($condition)->where($stateType)->count('projectid');//->whereOr('intro','like','%'.$search.'%')
+        $pronum=db('project')->where($condition)->where($stateType)->count('projectid');//->whereOr($or)
         $this->assign('sortid',cookie('pro_sortid'));//给前端返回搜索的分类id
         $this->assign('stateid',cookie('pro_stateid'));//给前端返回搜索的状态id
+        $this->assign('search',cookie('pro_search'));
         $this->assign('sortList',$sort);//分类列表
         $this->assign('stateList',$state);//状态列表
         $this->assign('pronum',$pronum);
         $this->assign('pro',$pro);
+        $this->assign('do',$this->do);
+        return $this->fetch();
+    }
+
+    //限时众筹
+    public function prolimit(){
+        $limitstateid=$this->getlimitstateid('众筹中');
+        //var_dump($limitstateid);exit;
+        $condition=[
+            'projecttype'=>'限时众筹',
+            'limitstateid'=>$limitstateid
+        ];
+        //获取分类
+        $sort=db('sort')->select();
+        $pro=db('project')->where($condition)->paginate(4);//->whereOr($or)
+        //var_dump($pro);exit;
+        $this->assign('pro',$pro);
+        $this->assign('sortList',$sort);//分类列表
+        $this->assign('do',$this->do);
         return $this->fetch();
     }
 
     //项目详情（页面）
     public function prodetails(){
+        //Session::set('current','proindex');
         //项目id
         $proid=input('?get.proid')?input('get.proid'):"";
         //获取项目信息
         $pro=db('project')->where('projectid',$proid)->find() ;
+        //var_dump($pro);exit;
         //获取项目评论数
         $commentnum=db('comments')->where(['projectid'=>$proid,'commentto'=>0])->count('projectid');
-        //项目发起人信息
-        $username=db('user')->where('userid',$pro['userid'])->column('username,username');
-        $headimg=db('user')->where('userid',$pro['userid'])->column('headimg,headimg');
+
         //项目详情
         $prodetails=db('prodetails')->where('projectid',$proid)->select() ;
-        $this->assign("username",$username[0]);//发起人姓名
-        $this->assign('headimg',$headimg[0]);//发起人头像
+        if($pro['projecttype']=='普通众筹'){
+            //项目发起人信息
+            $username=db('user')->where('userid',$pro['userid'])->column('username,username');
+            $headimg=db('user')->where('userid',$pro['userid'])->column('headimg,headimg');
+            $this->assign("username",$username[0]);//发起人姓名
+            $this->assign('headimg',$headimg[0]);//发起人头像
+        }
         $this->assign('commentnum',$commentnum);//项目评论数
         $this->assign("pro",$pro);//项目信息
         $this->assign("proList",$prodetails);//项目详情
+        $this->assign('do',$this->do);
         return $this->fetch();
     }
 
@@ -205,6 +240,19 @@ class Project extends Controller
         return $this->fetch('prodetails_comment');
     }
 
+    //评论信息
+/*    public function getComment(){
+        $proid=input('?get.proid')?input('get.proid'):"";//项目id
+        $data=Db::table('zc_comments')
+            ->alias('a')
+            ->join('zc_user b','a.userid = b.userid')
+            ->where('a.projectid',$proid)
+            ->order('a.ctime','desc')
+            ->field('a.*,b.userid,b.username,b.headimg')
+            ->select();
+        var_dump($data);
+    }*/
+
     //评论
     public function comToPro(){
         $proid=input('?post.proid')?input('post.proid'):"";//被评论的项目id
@@ -272,6 +320,128 @@ class Project extends Controller
                 ];
                 return json($reMsg);
             }
+        }
+    }
+
+    //获取某普通众筹的状态id
+    public function getstateid($statename){
+        $stateid=Db::table('zc_state')
+            ->where('statename',$statename)
+            ->field('stateid')
+            ->find();
+        $stateid=$stateid['stateid'];
+        return $stateid;
+    }
+
+    //获取限时众筹的状态id
+    public function getlimitstateid($limitstatename){
+        $limitstateid=db('limitstate')
+            ->where('limitstatename',$limitstatename)
+            ->field('limitstateid')
+            ->find();
+        $limitstateid=$limitstateid['limitstateid'];
+        return $limitstateid;
+    }
+
+    //获取普通众筹筹集的总金额
+    public function gettolamount($proid){
+        $tolamount=db('project')->where('projectid',$proid)->field('tolamount')->find();
+        $tolamount=$tolamount['tolamount'];
+        return $tolamount;
+    }
+
+    //获取普通众筹当前筹集的金额
+    public function getcuramount($proid){
+        $curamount=db('project')->where('projectid',$proid)->field('curamount')->find();
+        $curamount=$curamount['curamount'];
+        //var_dump($curamount);
+        return $curamount;
+    }
+
+    //实时更改项目状态
+    public function updateProState(){
+        $proList=db('project')->select();
+        //var_dump($proList);exit;
+        for($i=0;$i<count($proList);$i++)
+        {
+            //更改普通众筹的状态
+            if($proList[$i]['projecttype']=='普通众筹'){
+                $projectid=$proList[$i]['projectid'];//项目id
+                //var_dump($projectid);
+                if($proList[$i]['begintime']!=NULL){
+//                var_dump($proList[$i]['begintime']);
+//                var_dump($proList[$i]['endtime']);
+                    $begintimeStamp=strtotime($proList[$i]['begintime']);//开始时间
+                    $endtimeStamp=strtotime($proList[$i]['endtime']);//结束时间
+                    $tolamount=$this->gettolamount($projectid);//众筹总金额
+                    $curamount=$this->getcuramount($projectid);//当前众筹金额
+                    $stateid=$proList[$i]['stateid'];//状态id
+//                var_dump($begintimeStamp);
+//                var_dump($endtimeStamp);
+                    //->众筹中     --时间范围内，当前金额小于总金额
+                    if(time()>$begintimeStamp && time()< $endtimeStamp && $tolamount>$curamount){
+                        //获取状态名为众筹中的stateid
+                        $stateid=$this->getstateid('众筹中');
+                        //var_dump($stateid) ;exit();
+                        if($stateid!=null){
+                            //把项目状态改成众筹中
+                            //$projectid= $proList[$i]['projectid'];
+                            $res=db('project')->where('projectid',$projectid)->update(['stateid'=>$stateid]);
+                            //var_dump($res);
+                        }
+//                    var_dump($stateid) ;
+                    } //->众筹失败      --超过结束时间且仍在众筹中的项目
+                    else if(time()>$endtimeStamp&&$this->getstateid('众筹中')==$stateid){
+                        //获取状态名为众筹失败的stateid
+                        $stateid=$this->getstateid('众筹失败');
+                        //var_dump($projectid);
+                        //把项目状态改成众筹失败
+                        $res=db('project')->where('projectid',$projectid)->update(['stateid'=>$stateid]);
+                        //var_dump($res);
+                    }//->众筹成功       --状态为众筹中，且当前金额大于总金额
+                    else if($tolamount<=$curamount&&$this->getstateid('众筹中')==$stateid){
+                        //获取状态名为众筹成功的stateid
+                        $stateid=$this->getstateid('众筹成功');
+                        //把项目状态改成众筹成功
+                        $res=db('project')->where('projectid',$projectid)->update(['stateid'=>$stateid]);
+                        //var_dump($res);
+                    }
+                }
+            }
+            //更改限时众筹的状态
+           /* else if($proList[$i]['projecttype']=='限时众筹'){
+                if($proList[$i]['begintime']!=NULL){
+                    $begintimeStamp=strtotime($proList[$i]['begintime']);
+                    $endtimeStamp=strtotime($proList[$i]['endtime']);
+                    //众筹中
+                    if(time()>$begintimeStamp && time()< $endtimeStamp){
+                        //获取状态名为众筹中的stateid
+                        $stateid=$this->getlimitstateid('众筹中');
+                        // var_dump($stateid) ;exit();
+                        if($stateid!=null){
+                            //把项目状态改成众筹中
+                            $projectid= $proList[$i]['projectid'];
+                            Db::table('zc_project')->where('projectid',$projectid)->setField('limitstateid', $stateid);
+                        }
+                    }
+                    //未开始
+                    else if(time()<$begintimeStamp){
+                        $stateid=$this->getlimitstateid('未开始');
+                        if($stateid!=null){
+                            $projectid= $proList[$i]['projectid'];
+                            Db::table('zc_project')->where('projectid',$projectid)->setField('limitstateid', $stateid);
+                        }
+                    }
+                    //已结束
+                    else if(time()> $endtimeStamp){
+                        $stateid=$this->getlimitstateid('已结束');
+                        if($stateid!=null){
+                            $projectid= $proList[$i]['projectid'];
+                            Db::table('zc_project')->where('projectid',$projectid)->setField('limitstateid', $stateid);
+                        }
+                    }
+                }
+            }*/
         }
     }
 }

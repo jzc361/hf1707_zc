@@ -7,11 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{$pro.projectname}</title>
     <link rel="stylesheet" href="__CSS__/layui.css">
+    <link rel="stylesheet" href="__CSS__/layer.css">
     <!--<link rel="stylesheet" href="__STATIC__/layui/css/layui.css">-->
-    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="__CSS__/bootstrap.min.css">-->
+    <link rel="stylesheet" href="__CSS__/project.css">
     <style>
         .center{
-            margin-top: 50px;
+            margin: 50px auto;
             /*width: 1200px;*/
         }
         .showpro{
@@ -196,6 +198,7 @@
                 <p class="pro-title">{$pro.projectname}</p>
                 <p class="pro-have">已筹到</p>
                 <p class="pro-amount"><span style="font-size: 24px">￥</span>{$pro.curamount}</p>
+                {if $pro.projecttype=="普通众筹"}
                 <div class="progress progress-striped active" style="width: 85%">
                     <div class="progress-bar progress-bar-success" role="progressbar"aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:{$pro.curamount/$pro.tolamount*100}%;">
                         <span class="sr-only">{$pro.curamount/$pro.tolamount*100}% 完成</span>
@@ -203,8 +206,17 @@
                 </div>
                 <p>当前进度：{$pro.curamount/$pro.tolamount*100}%</p>
                 <p>目标：￥{$pro.tolamount}</p>
-                <p>项目截止时间：{$pro.endtime|substr=0,10}</p>
-                <button type="button" id="focus" style="width: 85%" class="btn btn-info" onclick="profocus({$pro.projectid})">关注({$pro.focuscount})</button>
+                {/if}
+                <p>截止时间：{$pro.endtime}</p>
+                <p class="state">
+                    {if $pro.stateid==5}<span class="common-sprite">众筹中</span>{/if}
+                    {if $pro.stateid==6}<span class="common-success">众筹成功</span>{/if}
+                    {if $pro.stateid==7}<span class="common-fail">众筹失败</span> {/if}
+                </p>
+                <button type="button" style="width: 85%" class="btn btn-info" onclick="profocus({$pro.projectid})">关注({$pro.focuscount})</button>
+                {if $pro.projecttype=="限时众筹"}
+                <button type="button" style="width: 85%;margin-top: 5%" class="btn btn-info" onclick="">立即支持</button>
+                {/if}
             </div>
         </div>
         <div class="showdetails">
@@ -244,6 +256,7 @@
                 </div>
             </div>
 
+            {if $pro.projecttype=="普通众筹"}
             <div class="details-right">
                 <!--发起人信息-->
                 <div class="initiator">
@@ -269,18 +282,19 @@
                         <div class="grade-img"><img src="{$value.imgs}" alt="" width="50px" height="50px"></div>
                         <p>配送费用： 免运费</p>
                         <p>预计回报发送时间：项目众筹成功后30天内</p>
-                        <div class="grade-btn"><button type="button" class="btn btn-info" style="width: 100%">支持￥{$value.price}</button></div>
+                        <div class="grade-btn"><button {if $pro.stateid==7}disabled{/if} type="button" class="btn btn-info" style="width: 100%" onclick="suppro({$value.prodetailsid},{$pro.projectid})">支持￥{$value.price}</button></div>
                     </div>
                 </div>
                 {/volist}
             </div>
+            {/if}
         </div>
     </div>
     {include file="public/footer"}
 </body>
-<script src="__JS__/jquery-2.1.4.js"></script>
-<script src="__JS__/bootstrap.min.js"></script>
-<script src="__JS__/layui.js"></script>
+<!--<script src="__JS__/jquery-2.1.4.js"></script>-->
+<!--<script src="__JS__/bootstrap.min.js"></script>-->
+<script src="__JS__/lay/modules/layer.js"></script>
 <!--<script>
     !function(){
         //无需再执行layui.use()方法加载模块，直接使用即可
@@ -300,9 +314,24 @@
             data:{proid:projectid},
             dataType:'json',
             success:function(res){
-                alert(res.msg);
+                //alert(res.msg);
+                showPrompt(res.msg);
             }
         });
+    }
+
+    //提示
+    function showPrompt(content){
+        layer.open({
+            title: '提示'
+            ,content: content
+        });
+    }
+
+    //支持
+    function suppro(prodetailsid,proid){
+        //$res=confirm();
+        console.log(prodetailsid,proid);
     }
 </script>
 </html>

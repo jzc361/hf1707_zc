@@ -48,13 +48,13 @@
                 <option value="all">全部</option>
                 {volist name="stateList" id="val"}
                 {if session('astateid')}
-                <option  v-if="{$astateid}=={$val.stateid}" selected  value="{$val.stateid}">{$val.statename}</option>
+                <option  v-if="{$astateid}=={$val.limitstateid}" selected  value="{$val.limitstateid}">{$val.limitstatename}</option>
                 {/if}
                 {if session('astateid')}
-                <option  v-if="{$astateid}!={$val.stateid}"  value="{$val.stateid}">{$val.statename}</option>
+                <option  v-if="{$astateid}!={$val.limitstateid}"  value="{$val.limitstateid}">{$val.limitstatename}</option>
                 {/if}
                 {if !session('astateid')}
-                <option  value="{$val.stateid}">{$val.statename}</option>
+                <option  value="{$val.limitstateid}">{$val.limitstatename}</option>
                 {/if}
 
                 {/volist}
@@ -88,7 +88,7 @@
             <td>￥{$val.price}元</td>
             <td>{$val.limitcount}份</td>
             <td class="td-status">
-                <span class="layui-btn layui-btn-normal layui-btn-mini">{$val.statename}</span>
+                <span class="layui-btn layui-btn-normal layui-btn-mini">{$val.limitstatename}</span>
             </td>
             <!--<td>{$val.createtime}</td>-->
             <td class="td-manage">

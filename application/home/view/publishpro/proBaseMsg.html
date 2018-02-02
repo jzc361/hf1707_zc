@@ -6,7 +6,7 @@
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>众筹发布页</title>
-    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="__CSS__/bootstrap.min.css">-->
     <link rel="stylesheet" href="__CSS__/proBaseMsg.css">
     <link rel="stylesheet" href="__CSS__/default.css">
     <style>
@@ -76,8 +76,8 @@
     </style>
 </head>
 <body>
-
-<div class="container" id="vueDiv">
+{include file="public/nav"}
+<div class="container" id="vueDiv" style="margin-top: 25px;margin-bottom: 25px;">
     <!--<div class="row-fluid">-->
     <!--左边-->
     <div class="col-md-7 col-sm-12 col-xs-12 agreementlf f_l">
@@ -86,13 +86,13 @@
             <!--项目标题-->
             <div class="setlist">
                 <label class="setmid">项目标题</label>
-                <input type="text" class="pro_lf textbox" id="proTitle" name="proTitle" v-model="proTitle">
+                <input type="text" class="pro_lf textbox" id="proTitle" name="projectname" v-model="proTitle">
             </div>
             <!--众筹天数-->
             <div class="blank0"></div>
             <div class="setlist">
                 <label class="setmid">众筹天数</label>
-                <input name="daysNumber" id="daysNumber" v-model='daysNumber' @keyup="limitInt()" class="pro_lf textbox">
+                <input name="daysnumber" id="daysNumber" v-model='daysNumber' @keyup="limitInt()" class="pro_lf textbox">
                 <span class="setmid">天</span>
             </div>
             <!--众筹金额-->
@@ -126,13 +126,12 @@
             <div class="blank0"></div>
             <div class="setlist">
                 <label class="setmid">项目详情</label>
-
                 <!--<textarea name="probrief" id="probrief" class="textareabox textbox w350"></textarea>-->
             </div>
             <div class="blank0"></div>
-            <div>
-                <script id="editor" name="proDetails" type="text/plain"></script>
-            </div>
+            <!--<div>-->
+                <div id="editor"  name="proDetails"></div>
+            <!--</div>-->
             <!---->
             <!--保存-->
             <div class="blank5"></div>
@@ -148,7 +147,7 @@
             <!--图片 名称-->
             <div class="deal_content_box">
                 <a href="#" title="">
-                    <img id="imagePreview"  src="__STATIC__/img/home/publishPro/empty_thumb.gif" />
+                    <img id="imagePreview"  :src="projectimg" />
                     <!--<img id="imagePreview"  src="__STATIC__/img/home/publishPro/empty_thumb.gif" />-->
                 </a>
                 <div class="blank"></div>
@@ -211,8 +210,9 @@
         <!--右边end-->
     <!--</div>-->
 </div>
+{include file="public/footer"}
 </body>
-<script src="__JS__/jquery-2.1.4.js"></script>
+<!--<script src="__JS__/jquery-2.1.4.js"></script>-->
 <script src="__JS__/vue.js"></script>
 <!-- 配置文件 -->
 <script type="text/javascript" src="__STATIC__/ueditor/dist/utf8-php/ueditor.config.js"></script>
@@ -220,13 +220,17 @@
 <script type="text/javascript"  src="__STATIC__/ueditor/dist/utf8-php/ueditor.all.js"></script>
 <script>
     var ue = UE.getEditor('editor');//富文本
+    var proList = {$proList};
+    console.log(proList);
     new Vue({
         el : '#vueDiv',
         //数据
         data:{
-            proTitle:'',
-            daysNumber:'',
-            tolamount:'',
+            proTitle:proList.projectname?proList.projectname : '',
+            daysNumber:proList.daysnumber?proList.daysnumber : '',
+            tolamount:proList.tolamount?proList.tolamount:'',
+//            proDetails:proList?proList.intro : '',
+            projectimg:proList.projectimg? proList.projectimg: '__STATIC__/img/home/publishPro/empty_thumb.gif',
             isAddImg:false//是否添加图片
         },
         //方法

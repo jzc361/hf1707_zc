@@ -83,7 +83,7 @@
                     //        本地页面跳转
                     //前台session存值供前台使用/从后台获取的数据转换未JSON格式
                     sessionStorage.setItem('adminInfo',JSON.stringify(res.data[0][0]));
-                    //console.log(JSON.stringify(res.data[0][0]));
+//                    console.log(JSON.stringify(res.data[0][0]));
                     window.location.href = "{:url('admin/login/adminMain')}";
                 }
 

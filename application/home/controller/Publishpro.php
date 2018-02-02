@@ -5,26 +5,29 @@ use think\Request;
 use think\Db;
 use think\Session;
 use \think\File;
-class Publishpro extends Controller
+class Publishpro extends Auth
 {
-    public function __construct(Request $request)
-    {
-        parent::__construct($request);
-    }
+//    public function __construct(Request $request)
+//    {
+//        parent::__construct($request);
+//    }
 
     //跳转到众筹发布页
     public function jumpToProBaseMsg()
     {
         Session::set('current','proBaseMsg');//当前所在页面
-        //获取项目分类
-        $proSort=Db::table('zc_sort')->select();
-        $this->assign('proSortList',$proSort);
+        $id=input('?get.id')?input('get.id'):"";
+        $proList = [];
+        if(!empty($id)){
+            $proList=db('project')->where('projectid',$id)->find();
+        }
+
         //判断是否是回报页面点回来的
-//        if(isset($_GET['isReturn'])){
-//            //echo Session::has('proMsg');
-//            if(Session::has('proMsg')){
-//                //echo "shi";
-//                $proMsg=Session::get('proMsg');
+        if(isset($_GET['isReturn'])){
+            //echo Session::has('proMsg');
+            if(Session::has('proMsg')){
+                //echo "shi";
+                $proList=Session::get('proMsg');
 //                $this->assign([
 //                    'proTitle'  => $proMsg['proTitle'],
 //                    'daysNumber'  => $proMsg['daysNumber'],
@@ -32,16 +35,20 @@ class Publishpro extends Controller
 //                    'proSort'  => $proMsg['proSort'],
 //                    'probrief'  => $proMsg['probrief']
 //                ]);
-//
-////                $proMsgStr=json_encode($proMsg);
-////                $this->assign('proMsgStr',$proMsgStr);
-//            }
-//        }
+
+            }
+        }
+        $this->assign('proList',json_encode($proList));
+        //获取项目分类
+        $proSort=Db::table('zc_sort')->select();
+        $this->assign('proSortList',$proSort);
+        $this->assign('do',$this->do);
         return $this->fetch('proBaseMsg');
     }
     //点击下一步，保存项目信息
     public function saveProMsg(){
         //上传预览图
+        $imgPath='';
         $file = request()->file('imgFile');
         // 移动到框架应用根目录/public/uploads/ 目录下
         if($file){
@@ -50,14 +57,16 @@ class Publishpro extends Controller
             if($info){
                 // 成功上传后 获取上传信息
                 $imgPath=$info->getSaveName();
-                $promsg=input('post.');
-                array_push($promsg,$imgPath);
-                Session::set('proMsg',$promsg);
+                $imgPath='__STATIC__/img/home/project/'.$imgPath;
             }else{
                 // 上传失败获取错误信息
                 echo $file->getError();
             }
         }
+        $promsg=input('post.');
+        $promsg['projectimg']=$imgPath;
+       // array_push($promsg,$imgPath);
+        Session::set('proMsg',$promsg);
         //var_dump($imgFile);
 
        // Session::set('proImg',$imgFile);
@@ -72,12 +81,14 @@ class Publishpro extends Controller
     public function jumpToAddReturn(){
         $proMsg=Session::get('proMsg');
         //var_dump($proMsg);
-        $this->assign('proTitle',$proMsg['proTitle']);
+        $this->assign('proTitle',$proMsg['projectname']);
+        $this->assign('do',$this->do);
         return $this->fetch('addReturn');
     }
     //保存回报数据
     public function saveReturnMsg(){
        // $imgFile=$_FILES['imgFile'];
+        $imgPath='';
         //上传回报图片
         $file = request()->file('imgFile');
         // 移动到框架应用根目录/public/uploads/ 目录下
@@ -87,21 +98,23 @@ class Publishpro extends Controller
             if($info){
                 // 成功上传后 获取上传信息
                 $imgPath=$info->getSaveName();
-                $return=input('post.');
-                array_push($return,$imgPath);
-                //如果存在returnMsg就追加，如果不存在就新建session
-                if(Session::has('returnMsg')){
-                    $returnMsg=Session::get('returnMsg');
-                    array_push($returnMsg,$return);
-                    Session::set('returnMsg',$returnMsg); //追加完重新定义
-                }
-                else{
-                    Session::set('returnMsg',[$return]);
-                }
+
             }else{
                 // 上传失败获取错误信息
                 echo $file->getError();
             }
+        }
+
+        $return=input('post.');
+        array_push($return,$imgPath);
+        //如果存在returnMsg就追加，如果不存在就新建session
+        if(Session::has('returnMsg')){
+            $returnMsg=Session::get('returnMsg');
+            array_push($returnMsg,$return);
+            Session::set('returnMsg',$returnMsg); //追加完重新定义
+        }
+        else{
+            Session::set('returnMsg',[$return]);
         }
 
         //$returnMsg1=Session::get('returnMsg');
@@ -123,11 +136,11 @@ class Publishpro extends Controller
         }
         //插入众筹项目表
         $data = [
-            'projectname' =>$proMsg['proTitle'],
+            'projectname' =>$proMsg['projectname'],
             'intro' =>$proMsg['proDetails'],
-            'projectimg' =>'__STATIC__/img/home/project/'.$proMsg[0],
+            'projectimg' =>$proMsg[0],
             'tolamount' =>$proMsg['tolamount'],
-            'daysnumber' =>$proMsg['daysNumber'],
+            'daysnumber' =>$proMsg['daysnumber'],
             'stateid' =>1,
             'sortid' =>$proMsg['proSort'],
             'createtime'=>date("Y-m-d H:i:s",time()),
@@ -158,5 +171,9 @@ class Publishpro extends Controller
             'data'=>[]
         ];
         return json($msgResp);
+    }
+
+    public function aa(){
+        var_dump($_POST);
     }
 }

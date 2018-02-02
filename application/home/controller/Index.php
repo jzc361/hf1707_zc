@@ -51,7 +51,7 @@ class Index extends  Auth
         $this->assign('hotList',$hotList);
         $this->assign('newList',$newList);
         $this->assign('oldList',$oldList);
-
+        $this->assign('do',$this->do);
         $this->assign('today',time());
         return $this->fetch('mainView');
     }

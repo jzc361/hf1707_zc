@@ -6,22 +6,124 @@ use \think\Db;
 use \think\Request;
 use \think\Session;
 use \think\Cache;
-
+use \think\Validate;
 class User extends Auth
 {
+    public function __construct(Request $request)
+    {
+        parent::__construct($request);
+    }
+
+    //登录页
+    public function showLogin(){
+        return $this->fetch('userLogin');
+    }
+    //注册页
+    public function showRegister(){
+        return $this->fetch('userRegister');
+    }
+    //登录
+    public function userLogin(){
+        $username=input('?post.username')?input('post.username'):"";
+        $userpsd=input('?post.userpsd')?md5(input('post.userpsd')):"";
+        $code=input('?post.code')?input('code'):"";
+        //验证码
+        if(!captcha_check($code)){
+            //验证失败
+            $reMsg=[
+                'code'=>10002,
+                'msg'=>config('Msg')['login']['codeFail'],
+                'data'=>[]
+            ];
+            return json($reMsg);
+        }
+        $condition=['username'=>$username,'userpsw'=>$userpsd];
+        $data=db('user')->where($condition)->find();
+        if(empty($data)){
+            //登录失败
+            $reMsg=[
+                'code'=>10000,
+                'msg'=>config('Msg')['login']['fail'],
+                'data'=>[]
+            ];
+            return json($reMsg);
+        }else{
+            if($data['usestate']=='锁定'){
+                //账号被锁定
+                $reMsg=[
+                    'code'=>10005,
+                    'msg'=>config('Msg')['login']['usestateFail'],
+                    'data'=>[]
+                ];
+                return json($reMsg);
+            }
+            //登录成功
+            Session::set('zc_user',$data);
+            $reMsg=[
+                'code'=>10001,
+                'msg'=>config('Msg')['login']['success'],
+                'data'=>[]
+            ];
+            return json($reMsg);
+        }
+    }
+    //注册
+    public function userRegister(){
+        $username=input('?post.username')?input('post.username'):"";
+        $userpsd=input('?post.userpsd')?md5(input('post.userpsd')):"";
+        $code=input('?post.code')?input('code'):"";
+        //验证码
+        if(!captcha_check($code)){
+            //验证失败
+            $reMsg=[
+                'code'=>10002,
+                'msg'=>config('Msg')['register']['codeFail'],
+                'data'=>[]
+            ];
+            return json($reMsg);
+        }
+        if($username&&$userpsd){
+            $condition=['username'=>$username,'userpsw'=>$userpsd];
+            $data=db('user')->where('username',$username)->select();
+            if(!empty($data)){
+                //账号存在，注册失败
+                $reMsg=[
+                    'code'=>10014,
+                    'msg'=>config('Msg')['register']['fail'],
+                    'data'=>[]
+                ];
+                return json($reMsg);
+            }else{
+                $res=db('user')->insert($condition);
+                if($res){
+                    //注册成功
+                    $reMsg=[
+                        'code'=>10011,
+                        'msg'=>config('Msg')['register']['success'],
+                        'data'=>[]
+                    ];
+                    return json($reMsg);
+                }
+            }
+        }
+    }
+    //退出登录
+    public function exitLogin(){
+        Session::delete('zc_user');
+        return $this->fetch('userLogin');
+    }
+
+
     //跳转用户中心
     public function user()
     {
+        $this->assign('do',$this->do);
         return $this->fetch('userView');
     }
     //支持的项目页面
     public function support()
     {
         //获取分页项目
-////////////////
-        $this->zc_user=[];
-        $this->zc_user['userid']=10001;//(测试用)
-//////////////
         $supportList=db('orders a,zc_project b')
             ->where('a.projectid=b.projectid')
             ->where('a.userid',$this->zc_user['userid'])
@@ -33,15 +135,124 @@ class User extends Auth
     //我的项目页面
     public function myProject()
     {
+
+        $keyword=input('?get.keyword')?input('get.keyword'):'';
+        session('keyword',$keyword);
+        $this->assign('keyword',$keyword);
+        //获取当前用户发布的项目
+        $usermsg=session("zc_user");
+        $userid=$usermsg['userid'];
+        $proList=db('project a')
+            ->join('state b','a.stateid=b.stateid')
+            ->field('a.projectid,a.projectname,a.projectimg,b.statename,a.failreason')
+            ->where('userid',$userid)
+            ->where('a.projectname','like','%'.$keyword.'%')
+            ->order('a.createtime desc')
+            ->paginate(2,false,$config = ['query'=>array('keyword'=>$keyword)]);
+        //var_dump($proList);
+        $this->assign('proList',$proList);
         return $this->fetch('myProject');
+    }
+
+    //查看审核失败理由
+    public function showReason(){
+        $reason='';
+        $projectid=input('?get.projectid')?input('get.projectid'):'';
+       // var_dump($projectid) ;
+        if(!empty($projectid)){
+            $reason=db('project')->field('failreason')->where('projectid',$projectid)->find();
+            $reason=$reason['failreason'];
+        }
+        echo $reason;
+        //var_dump($reason);
+        //$this->assign('failreason',$reason);
+        //return $this->fetch('failReason');
+
+    }
+    //删除项目
+    public function deletePro(){
+        $projectid=input('?get.projectid')?input('get.projectid'):'';
+        $res=db('project')->field('projectname')->where('projectid',$projectid)->find();
+        if($res!=NULL){
+            //删除项目
+            $isdel=db('project')->where('projectid',$projectid)->delete();
+            if($isdel){
+                $msgResp=[
+                    'code'=>20003, //删除成功
+                    'msg'=>config('msg')['oper']['del'],
+                    'data'=>[]
+                ];
+            }
+            else{
+                $msgResp=[
+                    'code'=>20004,//删除失败
+                    'msg'=>config('msg')['oper']['delFail'],
+                    'data'=>[]
+                ];
+            }
+        }
+
+        return json($msgResp);
+       // var_dump($res);
+    }
+    //查看详情
+    public function showDetails(){
+        $projectid=input('get.id');
+        //echo $projectid;
+        $promsg=Db::table('zc_project')
+            ->alias('a')
+            ->join('zc_state c','a.stateid=c.stateid')
+            ->join('zc_user d','a.userid=d.userid')
+            ->where('projectid',$projectid)
+            ->select();
+//        $promsg=Db::name('project')->where('projectid',$projectid)->select();
+        $returnmsg=Db::name('prodetails')->where('projectid',$projectid)->select();
+        // echo "<pre>";
+        //  var_dump($promsg);exit();
+        // var_dump($returnmsg);exit();
+        $this->assign([
+            'promsg'=>$promsg,
+            'returnmsg'=>$returnmsg
+        ]);
+        return $this->fetch('proDetails');
+    }
+    //修改开始时间与结束时间
+    public function updateStartTime(){
+        $projectid=input('?post.projectid')?input('post.projectid'):'';
+        $starttime=input('?post.starttime')?input('post.starttime'):'';
+        //获取该项目的众筹天数
+        $daysnumber=db('project')->field('daysnumber')->where('projectid',$projectid)->find();
+        $daysnumber=$daysnumber['daysnumber'];
+        //转换时间获取结束时间
+        $startStamp=strtotime($starttime);
+        $endStamp=$startStamp+86400*$daysnumber;
+        $endtime=date("Y-m-d H:i:s",$endStamp);
+        //更新数据库
+        $res=db('project')
+            ->where('projectid',$projectid)
+            ->update(['begintime'=> $starttime,'endtime'=>$endtime]);
+
+        if($res){
+            //更改成功
+            $msgResp=[
+                'code'=>20005, //更新成功
+                'msg'=>config('msg')['oper']['update'],
+                'data'=>[]
+            ];
+        }
+        else{
+            //更改失败
+            $msgResp=[
+                'code'=>20006, //更新失败
+                'msg'=>config('msg')['oper']['updateFail'],
+                'data'=>[]
+            ];
+        }
+        return json($msgResp);
     }
     //关注的项目页面
     public function focus(){
         //获取分页项目
-////////////////
-        $this->zc_user=[];
-        $this->zc_user['userid']=10001;//(测试用)
-//////////////
         $focusList=db('focuspro a')
             ->field('*,count(d.ordersid) surport_count,datediff(b.endtime,NOW()) resttime')
             ->join('zc_project b','a.projectid=b.projectid','left')
@@ -56,15 +267,41 @@ class User extends Auth
     }
     //资金管理页面
     public function money(){
+        $this->assign('money',$this->zc_user['money']);
         return $this->fetch('money');
+    }
+    public function charge(){
+        $chargeNum=input('?post.chargeNum')?input('chargeNum'):'';
+        $res=Validate::regex($chargeNum,'/^(-)?(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/');
+
+//        $data=db('user')
+//            ->where('userid',$this->zc_user['userid'])
+//            ->find();
+//        Session::set('zc_user',$data);
+//        $this->zc_user=$data;
+        $res=db("user")
+            ->where('userid',$this->zc_user['userid'])
+            ->setInc('money', $chargeNum);
+        if($res>0){
+            $this->zc_user['money']+=$chargeNum;
+            Session::set('zc_user',$this->zc_user);
+            $msgResp=[
+                'code'=>20007,
+                'msg'=>config('msg')['oper']['update'],
+                'data'=>$this->zc_user['money']
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20006, //更新失败
+                'msg'=>config('msg')['oper']['updateFail'],
+                'data'=>[]
+            ];
+        }
+        return json($msgResp);
     }
     //个人设置页面
     public function settings()
     {
-////////////////
-        $this->zc_user=[];
-        $this->zc_user['userid']=10001;//(测试用)
-//////////////
         $data=db('user')
             ->where('userid',$this->zc_user['userid'])
             ->find();
@@ -76,10 +313,6 @@ class User extends Auth
     //收货地址页面
     public function address()
     {
-        ////////////////
-        $this->zc_user=[];
-        $this->zc_user['userid']=10001;//(测试用)
-        //////////////
         $current=1;
         $showItem=5;
         $pageSize=5;
@@ -101,9 +334,10 @@ class User extends Auth
             ->join('zc_region c','a.city=c.id')
             ->join('zc_region d','a.county=d.id')
             ->where('a.userid',$this->zc_user['userid'])
-//            ->paginate(6);
+            ->order('a.isdefault desc,a.addressid')
             ->page("{$current},{$pageSize}")
             ->select();
+
         $this->assign('addrList',json_encode($data));
         $this->assign('pageData',json_encode($pageData));
         return $this->fetch('address');
@@ -113,10 +347,6 @@ class User extends Auth
     {
         $current=input('?get.pageNow')?input('pageNow'):1;
 //        var_dump($current);exit;
-        ////////////////
-        $this->zc_user=[];
-        $this->zc_user['userid']=10001;//(测试用)
-        //////////////
         $showItem=5;
         $pageSize=5;
         $rowCount=db('address')
@@ -137,6 +367,7 @@ class User extends Auth
             ->join('zc_region c','a.city=c.id')
             ->join('zc_region d','a.county=d.id')
             ->where('a.userid',$this->zc_user['userid'])
+            ->order('a.isdefault desc,a.addressid')
             ->page("{$current},{$pageSize}")
             ->select();
         if($data){
@@ -175,7 +406,7 @@ class User extends Auth
             $msgResp=[
                 'code'=>20008,
                 'msg'=>config('msg')['oper']['selectFail'],
-                'data'=>$data
+                'data'=>''
             ];
         }
         return json($msgResp);
@@ -204,18 +435,6 @@ class User extends Auth
     }
     //个人设置页面-获取省市区
     public function getAddr(){
-////////////////
-//        $this->zc_user=Session::get('zc_user');
-
-        $this->zc_user=[];
-        $this->zc_user['userid']=10001;//(测试用)
-        $this->zc_user=db('user')
-            ->where('userid',10001)
-            ->find();//(测试用)
-//        $this->zc_user['province']=350000;//(测试用)
-//        $this->zc_user['city']=350100;//(测试用)
-//        $this->zc_user['county']=350102;//(测试用)
- //////////////
         $data=db('region')
             ->where('type',0)
             ->whereOr('pid',$this->zc_user['province'])
@@ -286,10 +505,6 @@ class User extends Auth
     }
     //个人设置页面-头像上传
     public function headImg(){
-////////////////
-        $this->zc_user=[];
-        $this->zc_user['userid']=10001;//(测试用)
-//////////////
         //上传预览图
         $file = request()->file('headImg');
         // 移动到框架应用根目录/public/static/img/home/headImg/ 目录下
@@ -318,12 +533,8 @@ class User extends Auth
             return json($msgResp);
         }
     }
-    //更新用户信息
+    //个人设置更新用户信息
     public function updateInfo(){
-        ////////////////
-        $this->zc_user=[];
-        $this->zc_user['userid']=10001;//(测试用)
-//////////////
         $sex=input('?post.sex')?input('sex'):'';
         $province=input('?post.province')?input('province'):'';
         $city=input('?post.city')?input('city'):'';
@@ -332,7 +543,17 @@ class User extends Auth
             ->where('userid',$this->zc_user['userid'])
             ->update(['sex' => $sex,'province'=>$province,'city'=>$city,'county'=>$county]);
         if($res>0){
-
+            //更新session
+            $data=db('user')
+                ->where('userid',$this->zc_user['userid'])
+                ->find();
+            $this->zc_user=$data;
+            Session::set('zc_user',$data);
+            $msgResp=[
+                'code'=>20005,
+                'msg'=>config('msg')['oper']['updateFail'],
+                'data'=>''
+            ];
         }else{
             $msgResp=[
                 'code'=>20006,
@@ -342,13 +563,8 @@ class User extends Auth
         }
         return json($msgResp);
     }
-    //添加地址
+    //收货地址页面-添加地址
     public function insertAddress(){
-        ////////////////
-        $this->zc_user=[];
-        $this->zc_user['userid']=10001;//(测试用)
-        //////////////
-
         $reverName=input('?post.reverName')?input('reverName'):'';
         $province=input('?post.province')?input('province'):'';
         $city=input('?post.city')?input('city'):'';
@@ -381,12 +597,8 @@ class User extends Auth
         }
         return json($msgResp);
     }
-    //删除地址
+    //收货地址页面-删除地址
     public function deleteAddress(){
-////////////////
-        $this->zc_user=[];
-        $this->zc_user['userid']=10001;//(测试用)
-//////////////
         $id=input('?post.id')?input('id'):'';
         $res=db('address')
             ->where('addressid',$id)
@@ -407,7 +619,7 @@ class User extends Auth
         }
         return json($msgResp);
     }
-    //修改地址
+    //收货地址页面-修改地址
     public function updateAddress(){
         $id=input('?get.id')?input('id'):'';
         $reverName=input('?post.reverName')?input('reverName'):'';
@@ -443,53 +655,44 @@ class User extends Auth
         }
         return json($msgResp);
     }
-    //获取收货地址
-    public function selectAddress(){
-////////////////
-//        $this->zc_user=Session::get('zc_user');
+    //收货地址页面-设置默认地址
+    public function setDefaultAddress(){
         $id=input('?post.id')?input('id'):'';
-        $this->zc_user=[];
-        $this->zc_user['userid']=10001;//(测试用)
-        $addrData=db('address')
-            ->where('userid',10001)
+        $data1=[
+            'isdefault'=>0
+        ];
+        $data2=[
+            'isdefault'=>1
+        ];
+        //修改原默认地址
+        db('address')
+            ->where('isdefault',1)
+            ->where('userid',$this->zc_user['userid'])
+            ->update($data1);
+        //设置新默认地址
+        $res=db('address')
             ->where('addressid',$id)
-            ->find();//(测试用)
-//        $this->zc_user['province']=350000;//(测试用)
-//        $this->zc_user['city']=350100;//(测试用)
-//        $this->zc_user['county']=350102;//(测试用)
-        //////////////
-        $regionData=db('region')
-            ->where('type',0)
-            ->whereOr('pid',$addrData['province'])
-            ->whereOr('pid',$addrData['city'])
-            ->select();
-        if($regionData && $addrData){
-
+            ->where('userid',$this->zc_user['userid'])
+            ->update($data2);
+        if($res>0){
             $msgResp=[
-                'code'=>20007,
-                'msg'=>config('msg')['oper']['select'],
-                'data'=>[$regionData,$addrData]
+                'code'=>20005,
+                'msg'=>config('msg')['oper']['update'],
+                'data'=>''
             ];
         }else{
             $msgResp=[
-                'code'=>20008,
-                'msg'=>config('msg')['oper']['selectFail'],
+                'code'=>20006,
+                'msg'=>config('msg')['oper']['updateFail'],
                 'data'=>''
             ];
         }
-
         return json($msgResp);
-
     }
-
-
-
 
     //关注的项目页面-取消关注
     public function cancelFocus()
     {
-        $this->zc_user=[];
-        $this->zc_user['userid']=10001;//(测试用)
         $focusId=input('?get.id')?input('id'):'';
         $res=db('focuspro')
             ->where('userid', $this->zc_user['userid'])

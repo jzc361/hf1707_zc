@@ -18,12 +18,6 @@ class Login extends Controller
 
         $checkVali = captcha_check($vali);//验证码校验
 
-//        $res = [
-//            'account'=>$account,
-//            'password'=>$pwd,
-//            'validate'=>$vali,
-//        ];
-
 //      登录判断(含验证码)
 
         $md5pwd =md5($pwd); //  加密字符校验
@@ -42,8 +36,11 @@ class Login extends Controller
                 ->select();
             if ($sel!==NULL) {//有结果
                 //session存值
-                Session::set('adminEmp',$sel);
 
+                //登陆状态问题暂时滞留-----------------------------------------------------------------
+                //Db::name('emp')->where($sel[0]['empid'],1)->update(['loginstate' => '在线']);
+                //$sel[0]['loginstate'] = '在线';
+                Session::set('adminEmp',$sel);
                 $res = [
                     'code' => 10001,
                     'msg' => config('msg')['login']['success'],

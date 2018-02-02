@@ -31,24 +31,27 @@
         background: #ffd6cc;
         color: #f30;
     }
-    .note_show {
-        display: none;
-        /*padding: 4px 5px;*/
-        /*background: #f60;*/
-        /*color: #fff;*/
-        /*border: 1px solid #f60;*/
-        /*border-radius: 3px;*/
-        /*text-decoration: none;*/
+    .note_show{
+        padding: 4px 5px;
+        border-color: #ff3800;
+        border-radius: 3px;
+        background: #ffd6cc;
+        color: #f30;
+
     }
-    tr .note_show:hover{
-        display: inline-block;
+    .note_hide {
+        display: none;
+    }
+    tr:hover .note_hide{
+        display: inline;
         padding: 4px 5px;
         background: #f60;
         color: #fff;
-        border: 1px solid #f60;
+        border-color: #f60;
         border-radius: 3px;
         text-decoration: none;
     }
+
 
 </style>
 <body>
@@ -60,15 +63,15 @@
             <thead>
             <tr>
                 <th>地址</th>
-                <th>邮编</th>
-                <th>收货人</th>
-                <th>电话号码</th>
-                <th>操作</th>
+                <th width="100">邮编</th>
+                <th width="100">收货人</th>
+                <th width="100">电话号码</th>
+                <th width="150">操作</th>
             </tr>
             </thead>
             <tbody id="addrTable">
 
-            <tr v-for="vo in addrList">
+            <tr v-for="(vo,index) in addrList">
                 <td><span>{{vo.province_name}}{{vo.city_name}}</span><span>{{vo.county_name}}</span><span>{{vo.addressdetails}}</span></td>
                 <td>{{vo.county}}</td>
                 <td>{{vo.revername}}</td>
@@ -76,7 +79,7 @@
                 <td>
                     <span><a @click="updateModel(vo)" href="javascript:void(0);" style="color: #12adff;">修改 </a></span>
                     <span><a @click="deleteAddress(vo.addressid)" href="javascript:void(0);"  style="color: #12adff;"> 删除 </a></span>
-                    <span class="note_show" v-if="vo.default"><a href="javascript:void(0);"> 默认地址</a></span>
+                    <span :id="'test'+index" :class="{'note_show':true,'note_hide':vo.isdefault==0}"><a @click="setDefault(vo.addressid,vo.isdefault)" href="javascript:void(0);"> 默认地址</a></span>
                 </td>
             </tr>
             </tbody>
@@ -440,7 +443,31 @@
                 else{
                     alert('请正确填写表单')
                 }
+            },
+            setDefault:function(id,isDefault){
+                console.log(333,id,isDefault);
+                var that=this;
+                if(isDefault==0){
+                    $.ajax({
+                        url: "{:url('home/User/setDefaultAddress')}",
+                        type: "POST",
+                        data: {id:id},
+                        dataType: "json",
+                        success: function(res) {
+                            console.log(res);
+                            if(res.code==20005){
+                                that.getAddrList();
+                                alert(res.msg);
+                            }else{
+                                alert(res.msg);
+                            }
+                        },
+                        error: function(res) {
+                        }
+                    });
+                }
             }
+
         },
         mounted:function(){
             //获取省份
@@ -459,82 +486,6 @@
 <script>
 
     $(function(){
-        //显示添加地址模态框
-//        $("#addBtn").click(function(){
-//            $('#myModal').modal('show');
-//        });
-        //获取省份
-//        $.ajax({
-//            type:'get',
-//            url:"{:url('home/User/getProvince')}",
-//            dataType:'json',
-//            success:function(res){
-//                console.log(res);
-//                if(res.code==20007){
-//                    $province.children('option :lt(0)').remove();
-//                    for(var i=0;i<res.data.length;i++){
-//                        //省
-//                        if(res.data[i].type==0){
-//                            $province.append("<option value='"+res.data[i].id+"'>"+res.data[i].name+"</option>");
-//                        }
-//                    }
-//                }else{
-//                    alert(res.msg);
-//                }
-//
-//            }
-//        });
-        //获取城市
-//        $province.change(function(){
-//            if ($province.val()!=0){
-//                $.ajax({
-//                    type:'get',
-////                    url:'index.php?type=Question&do=createQuestionnaire',
-//                    url:"{:url('home/User/getCity')}?province="+$province.val(),
-//                    dataType:'json',
-////            data:{'q_title':$("#q_title").val()},
-//                    success:function(res){
-//                        console.log(res);
-//                        if(res.code==20007){
-//                            $city.children('option:gt(0)').remove();
-//                            $county.children("option:gt(0)").remove();
-//                            for(var i=0;i<res.data.length;i++){
-//                                $city.append("<option value='"+res.data[i].id+"'>"+res.data[i].name+"</option>");
-//                            }
-//                        }else{
-//                            alert(res.msg);
-//                        }
-//                    }
-//                });
-//
-//            }
-//
-//        });
-        //获取地区
-//        $city.change(function(){
-//            if ($city.val()!=0){
-//                $.ajax({
-//                    type:'get',
-//                    url:"{:url('home/User/getCounty')}?city="+$city.val(),
-//                    dataType:'json',
-////            data:{'q_title':$("#q_title").val()},
-//                    success:function(res){
-//                        console.log(res);
-//                        if(res.code==20007){
-//                            $county.children("option:gt(0)").remove();
-//                            for(var i=0;i<res.data.length;i++){
-//                                $county.append("<option value='"+res.data[i].id+"'>"+res.data[i].name+"</option>");
-//                            }
-//                        }else{
-//                            alert(res.msg);
-//                        }
-//                    }
-//                });
-//
-//            }
-//
-//        });
-
         //正则校验
         $('#defaultForm').bootstrapValidator({
 //        live: 'disabled',
@@ -601,93 +552,8 @@
                 }
             }
         });
-        //模态框重置
-//        $('#resetBtn').click(function() {
-//            $('#defaultForm').data('bootstrapValidator').resetForm(true);
-//        });
-        //模态框提交
-        //存入数据库
-//        $('#submitBtn').click(function(){
-//            $('#defaultForm').bootstrapValidator('validate');
-//            if($('#defaultForm').data('bootstrapValidator').isValid()){
-////                console.log(1111,$res);
-//                var formData =$("#defaultForm").serialize();
-//                $.ajax({
-//                    url: "{:url('home/User/insertAddress')}",
-//                    type: "POST",
-//                    data: formData,
-//                    dataType: "json",
-//                    success: function(res) {
-//                        console.log(res);
-//                        if(res.code==20001){
-//                            window.location.reload();
-//                            alert(res.msg);
-//                        }else{
-//                            alert(res.msg);
-//                        }
-//                    },
-//                    error: function(res) {
-//                    }
-//                });
-//            }
-//            else{
-//                alert('不合法')
-//            }
-//
-//
-//        });
     });
-//    function updateAddress(id){
-////        console.log(this);
-////        console.log(event.target);
-//        $.ajax({
-//            url: "{:url('home/User/insertAddress')}",
-//            type: "POST",
-//            data: {'id':id},
-//            dataType: "json",
-//            success: function(res) {
-//                console.log(res);
-//                if(res.code==20001){
-//                    console.log(res.msg);
-//                    $("#reverName").val(res.data['revername']);
-//                    $("#province").val(res.data['province']);
-////                    $("#city").children('option').val();
-//                    $("#county").val(res.data['county']);
-//                    $("#detailAddr").val(res.data['addressdetails']);
-//                    $("#telephone").val(res.data['revertel']);
-//                }else{
-//                    alert(res.msg);
-//                }
-//            },
-//            error: function(res) {
-//            }
-//        });
-//
-//        $('#myModal').modal('show');
-//
-//
-//    }
-//    function deleteAddress(id){
-//        if(confirm("确认删除？")){
-//            $.ajax({
-//                url: "{:url('home/User/deleteAddress')}",
-//                type: "POST",
-//                data: {'id':id},
-//                dataType: "json",
-//                success: function(res) {
-//                    console.log(res);
-//                    if(res.code==20003){
-//                        alert(res.msg);
-//                        window.location.reload();
-//                    }else{
-//                        alert(res.msg);
-//                    }
-//                },
-//                error: function(res) {
-//                }
-//            });
-//        }
-//    }
+
 </script>
 
 </html>

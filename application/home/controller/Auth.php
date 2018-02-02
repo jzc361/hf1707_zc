@@ -10,6 +10,7 @@ use \think\Cache;
 class Auth extends  Controller
 {
     protected $zc_user;
+    protected $do;
     //判断权限，跳转首页
     public function __construct()
     {
@@ -20,14 +21,14 @@ class Auth extends  Controller
          *  跟配制文件的数组比对，在里面，
          * */
         $request = Request::instance();
-        $do=$request->path();
-//        var_dump($do);
-//        if(!in_array($do,config('msg')['whiteList'])){
-//            if(empty($zc_user)){
-//                    $this->error('非法闯入，跳转到首页。。。','index/Index/index','',3);
-//                    exit;
-//            }
-//        }
+        $this->do=$request->path();
+
+        if(!in_array(strtolower($this->do),config('msg')['whiteList'])){
+            if(empty($this->zc_user)){
+                    $this->error("非法闯入{$this->do}，跳转到首页。。。",'home/Index/index','',3);
+                    exit;
+            }
+        }
     }
 }
 
