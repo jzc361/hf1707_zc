@@ -270,30 +270,132 @@ class User extends Auth
         $this->assign('money',$this->zc_user['money']);
         return $this->fetch('money');
     }
-    public function charge(){
-        $chargeNum=input('?post.chargeNum')?input('chargeNum'):'';
-        $res=Validate::regex($chargeNum,'/^(-)?(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/');
-
-//        $data=db('user')
-//            ->where('userid',$this->zc_user['userid'])
-//            ->find();
-//        Session::set('zc_user',$data);
-//        $this->zc_user=$data;
-        $res=db("user")
-            ->where('userid',$this->zc_user['userid'])
-            ->setInc('money', $chargeNum);
-        if($res>0){
-            $this->zc_user['money']+=$chargeNum;
-            Session::set('zc_user',$this->zc_user);
-            $msgResp=[
-                'code'=>20007,
-                'msg'=>config('msg')['oper']['update'],
-                'data'=>$this->zc_user['money']
-            ];
+    //资金管理页面-充值
+    public function recharge(){
+        $rechargeNum=input('?post.rechargeNum')?input('rechargeNum'):'';
+//        var_dump($rechargeNum);
+        $validate=Validate::regex($rechargeNum,'/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/');
+//        var_dump($rechargeNum,$validate);exit;
+        if($validate) {
+            // 启动事务
+            Db::startTrans();
+            try {
+                //更新用户信息
+                db("user")
+                    ->where('userid', $this->zc_user['userid'])
+                    ->setInc('money', $rechargeNum);
+                //添加充值记录
+                $data = [
+                    'r_time' => date('Y-m-d H:i:s'),
+                    'r_amount' => "{$rechargeNum}",
+                    'r_method' => '微信支付',
+                    'r_state' => '1',
+                    'userid' => "{$this->zc_user['userid']}",
+                ];
+                db("recharge")
+                    ->insert($data);
+                // 提交事务
+                Db::commit();
+                $this->zc_user['money'] += $rechargeNum;
+                Session::set('zc_user', $this->zc_user);
+                $msgResp = [
+                    'code' => 20005,
+                    'msg' => config('msg')['oper']['update'],
+                    'data' => $this->zc_user['money']
+                ];
+            } catch (\Exception $e) {
+                // 回滚事务
+                Db::rollback();
+                $msgResp = [
+                    'code' => 20006, //更新失败
+                    'msg' => config('msg')['oper']['updateFail'],
+                    'data' => []
+                ];
+            }
         }else{
             $msgResp=[
                 'code'=>20006, //更新失败
                 'msg'=>config('msg')['oper']['updateFail'],
+                'data'=>[]
+            ];
+        }
+        return json($msgResp);
+
+//            $res=db("user")
+//                ->where('userid',$this->zc_user['userid'])
+//                ->setInc('money', $rechargeNum);
+//
+//            if($res>0){
+//                $data=[
+//                    'r_time'=>'now()',
+//                    'r_amount'=>"{$rechargeNum}",
+//                    'r_method'=>'微信支付',
+//                    'r_state'=>'1',
+//                    'userid'=>"{$this->zc_user['userid']}",
+//                ];
+//                $res2=db("recharge")
+//                    ->where('userid',$this->zc_user['userid'])
+//                    ->insert($data);
+//                if($res2>0){
+//
+//                }
+//
+//                $this->zc_user['money']+=$rechargeNum;
+//                Session::set('zc_user',$this->zc_user);
+//                $msgResp=[
+//                    'code'=>20005,
+//                    'msg'=>config('msg')['oper']['update'],
+//                    'data'=>$this->zc_user['money']
+//                ];
+//            }else{
+//                $msgResp=[
+//                    'code'=>20006, //更新失败
+//                    'msg'=>config('msg')['oper']['updateFail'],
+//                    'data'=>[]
+//                ];
+//            }
+//        }else{
+//            $msgResp=[
+//                'code'=>20006, //更新失败
+//                'msg'=>config('msg')['oper']['updateFail'],
+//                'data'=>[]
+//            ];
+//        }
+
+//        return json($msgResp);
+    }
+    //资金管理页面-获取充值记录表
+    public function getRechargeList(){
+        $current=input('?get.pageNow')?input('pageNow'):1;
+        $showItem=5;
+        $pageSize=5;
+        $rowCount=db('recharge')
+            ->where('userid',$this->zc_user['userid'])
+            ->count();
+        $allPage=ceil($rowCount/$pageSize);
+        if($allPage<$current){
+            $current=$allPage;
+        }
+        $pageData=[
+            'current'=>$current,
+            'showItem'=>$showItem,
+            'allPage'=>$allPage
+        ];
+        $data=db('recharge')
+            ->where('userid',$this->zc_user['userid'])
+            ->order('r_id desc')
+            ->page("{$current},{$pageSize}")
+            ->select();
+        if($data){
+            $msgResp=[
+                'code'=>20007,
+                'msg'=>config('msg')['oper']['select'],
+                'data'=>[$data,$pageData]
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20008,
+                'msg'=>config('msg')['oper']['selectFail'],
                 'data'=>[]
             ];
         }
@@ -714,6 +816,11 @@ class User extends Auth
         return json($msgResp);
     }
     //
+    public function test()
+    {
+        return $this->fetch('test');
+
+    }
 }
 
 

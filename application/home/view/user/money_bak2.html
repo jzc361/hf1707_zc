@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge"><!--设置ie内核浏览器下的渲染模式-->
+    <meta name="renderer" content="webkit"><!--设置成网页以webkit(极速模式)来渲染页面-->
+    <meta name="viewport" content="width=device-width,initial-scale=1"><!--设置网页宽度和访问设备宽度保持一致，且显示比例1:1，-->
+    <title>资金管理</title>
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <link rel="stylesheet" href="__CSS__/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="__CSS__/home/userView.css">
+    <script src="__JS__/vue.js"></script>
+    <script src="__JS__/jquery-2.1.4.js"></script>
+    <script src="__JS__/bootstrap.min.js"></script>
+    <script src="__JS__/bootstrapValidator.min.js"></script>
+</head>
+<style>
+    .money_box {
+        border: #d8d8d8 solid 1px;
+        margin: 10px;
+        padding: 20px;
+        background: #fafafa;
+    }
+    .credit_box {
+        font-size: 20px;
+        font-family: "微软雅黑";
+    }
+    @media (min-width: 768px) {
+        .money_tabs>li>a {
+            padding: 10px 15px;
+        }
+    }
+    @media (max-width: 767px) {
+        .money_tabs>li>a {
+            padding: 10px 6px;
+        }
+    }
+    .my_table th{
+        text-align: center;
+    }
+    .my_table td{
+        text-align: center;
+    }
+    .my_table tr{
+        height: 47px;
+    }
+
+</style>
+<body style="min-height: 800px">
+<form id="defaultForm" class="form-horizontal" role="form" style="margin-top: 20px">
+    <div class="form-group">
+        <label for="rechargeNum" class="col-xs-2 control-label" style="font-size: 16px;margin-top: 10px">充值金额：</label>
+        <div class="col-xs-8 input-group-lg">
+            <input name="rechargeNum" type="text" class="form-control" id="rechargeNum"  placeholder="请输入充值金额">
+        </div>
+        <span style="font-size: 16px;margin-top: 13px;display: inline-block;">人民币（元）</span>
+    </div>
+    <button  type="button"  id="my_btn" class="btn btn-primary btn-lg">确定，去付款</button>
+</form>
+
+</body>
+
+<script>
+
+//    //去充值
+//    function toRecharge(){
+//        $('#my_tabs li:eq(1) a').tab('show')
+//    }
+//    //去提现
+//    function toWithdrawals(){
+//        $('#my_tabs li:eq(3) a').tab('show')
+//    }
+    var $myForm=$('#defaultForm');
+    $(function(){
+        $("#my_btn").click(function(){
+            $myForm.bootstrapValidator('validate');
+        });
+        //正则校验
+        $myForm.bootstrapValidator({
+//        live: 'disabled',
+            message: '该值不能为空',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                rechargeNum: {
+                    validators: {
+                        notEmpty: {
+                            message: '充值金额不能为空'
+                        },
+                        regexp: {
+//                            regexp: /^[a-zA-Z0-9_\.]+$/,
+                            regexp:/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/,
+//                            regexp:/(^[1-9](\d+)?(\.\d{1,2})?$)|(^(0){1}$)|(^\d\.\d{1,2}?$)/,
+                            message: '充值金额格式不正确'
+                        }
+                    }
+                }
+            }
+        })
+    });
+</script>
+
+</html>
