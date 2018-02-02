@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:83:"D:\AppServ\www\hf1707_zc\public/../application/home\view\publishpro\proBaseMsg.html";i:1517560887;s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517561623;s:72:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\nav.html";i:1517447918;s:75:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\footer.html";i:1517371150;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:83:"D:\AppServ\www\hf1707_zc\public/../application/home\view\publishpro\proBaseMsg.html";i:1517560887;s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517581140;s:72:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\nav.html";i:1517447918;s:75:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\footer.html";i:1517371150;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -79,18 +79,21 @@
 </head>
 <body>
 <!--聊天客服-->
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-    <!--<meta charset="UTF-8">-->
-    <!--<meta http-equiv="x-ua-compatible" content="IE=edge">-->
-    <!--<meta name="renderer" content="webkit">-->
-    <!--<meta name="viewport" content="width=device-width,initial-scale=1">-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="__CSS__/zzsc.css">
-<!--</head>-->
-<!--<body>-->
+    <link rel="stylesheet" type="text/css" href="__CSS__/chat.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/font_Icon/iconfont.css">
+</head>
+<body>
+<div id="myChat" style="left: 200px;"></div>
 <div>
-    <div style="z-index: 10000000" class="qqserver" id="service" @click="getService()" >
+    <div style="z-index: 10000000" class="qqserver" id="service" @click="getService">
         <div class="qqserver_fold" >
             <div></div>
         </div>
@@ -102,14 +105,18 @@
             </div>
             <div>
                 <ul>
-                    <li  v-for="x in serviceList" style="cursor: pointer;">
-                        <div onclick="showchat()" value="{{x.empid}}" v-if="x.loginstate=='在线'" style="color: red">
-                            <span>{{x.empname}}</span>
-                            ({{x.loginstate}})
+                    <li v-for="x in serviceList" style="cursor: pointer;">
+                        <div v-if="x.loginstate=='在线'" style="color: red">
+                            <div  @click="showchat(x.empid,x.empname,x.headimg)">
+                                <span>{{x.empname}}</span>
+                                ({{x.loginstate}})
+                            </div>
                         </div>
-                        <div onclick="showchat()" v-if="x.loginstate=='离线'" style="color: black">
-                            <span value="x.empid" >{{x.empname}}</span>
-                            ({{x.loginstate}})
+                        <div  v-if="x.loginstate=='离线'" style="color: black">
+                            <div @click="showchat(x.empid,x.empname,x.headimg)">
+                                <span>{{x.empname}}</span>
+                                ({{x.loginstate}})
+                            </div>
                         </div>
                         <br>
                     </li>
@@ -118,12 +125,15 @@
         </div>
     </div>
 </div>
-<!--</body>-->
+</body>
 <script src="__JS__/jquery-2.1.4.js"></script>
 <script src="__JS__/vue.js"></script>
 <script>
    var getServiceMsgUrl = "<?php echo url('home/publishpro/getServiceMsg'); ?>";
+   var staticUrl='__STATIC__';
 </script>
+<script src="__JS__/qqface.js"></script>
+<script src="__JS__/myChat.js"></script>
 <script src="__JS__/zzsc.js" ></script>
 <!--</html>-->
 <!--nav-->

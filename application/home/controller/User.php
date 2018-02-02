@@ -38,7 +38,6 @@ class User extends Auth
     //我的项目页面
     public function myProject()
     {
-
         $keyword=input('?get.keyword')?input('get.keyword'):'';
         session('keyword',$keyword);
         $this->assign('keyword',$keyword);

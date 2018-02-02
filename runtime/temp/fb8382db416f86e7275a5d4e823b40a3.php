@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\index\mainView.html";i:1517559976;s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517563131;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\index\mainView.html";i:1517580108;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,59 +51,6 @@
     </style>
 </head>
 <body>
-<!--聊天客服-->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="x-ua-compatible" content="IE=edge">
-    <meta name="renderer" content="webkit">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="__CSS__/zzsc.css">
-</head>
-<body>
-<div>
-    <div style="z-index: 10000000" class="qqserver" id="service" @click="getService">
-        <div class="qqserver_fold" >
-            <div></div>
-        </div>
-        <div class="qqserver-body" style="display: block;">
-            <div class="qqserver-header" >
-                <div></div>
-                <!--<a href="<?php echo url('home/Publishpro/getServiceMsg'); ?>" ></a>-->
-                <span class="qqserver_arrow" ></span>
-            </div>
-            <div>
-                <ul>
-                    <li v-for="x in serviceList" style="cursor: pointer;">
-                        <div v-if="x.loginstate=='在线'" style="color: red">
-                            <div value="x.empname">
-                                <span>{{x.empname}}</span>
-                                ({{x.loginstate}})
-                            </div>
-                        </div>
-                        <div  v-if="x.loginstate=='离线'" style="color: black">
-                            <div v-on:click="showchat(x.empname)">
-                                <span>{{x.empname}}</span>
-                                ({{x.loginstate}})
-                            </div>
-
-                        </div>
-                        <br>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-</body>
-<script src="__JS__/jquery-2.1.4.js"></script>
-<script src="__JS__/vue.js"></script>
-<script>
-   var getServiceMsgUrl = "<?php echo url('home/publishpro/getServiceMsg'); ?>";
-</script>
-<script src="__JS__/zzsc.js" ></script>
-</html>
 <!--后台跳转-------------------------------->
 <div>
     <a href="<?php echo url('home/ToManager/ToManager'); ?>">

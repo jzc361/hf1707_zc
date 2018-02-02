@@ -6,8 +6,11 @@
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="__CSS__/zzsc.css">
+    <link rel="stylesheet" type="text/css" href="__CSS__/chat.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/font_Icon/iconfont.css">
 </head>
 <body>
+<div id="myChat" style="left: 200px;"></div>
 <div>
     <div style="z-index: 10000000" class="qqserver" id="service" @click="getService">
         <div class="qqserver_fold" >
@@ -23,13 +26,13 @@
                 <ul>
                     <li v-for="x in serviceList" style="cursor: pointer;">
                         <div v-if="x.loginstate=='在线'" style="color: red">
-                            <div value="x.empname">
+                            <div  @click="showchat(x.empid,x.empname,x.headimg)">
                                 <span>{{x.empname}}</span>
                                 ({{x.loginstate}})
                             </div>
                         </div>
                         <div  v-if="x.loginstate=='离线'" style="color: black">
-                            <div @click="showchat(x.empname)">
+                            <div @click="showchat(x.empid,x.empname,x.headimg)">
                                 <span>{{x.empname}}</span>
                                 ({{x.loginstate}})
                             </div>
@@ -46,6 +49,9 @@
 <script src="__JS__/vue.js"></script>
 <script>
    var getServiceMsgUrl = "{:url('home/publishpro/getServiceMsg')}";
+   var staticUrl='__STATIC__';
 </script>
+<script src="__JS__/qqface.js"></script>
+<script src="__JS__/myChat.js"></script>
 <script src="__JS__/zzsc.js" ></script>
-</html>
+<!--</html>-->

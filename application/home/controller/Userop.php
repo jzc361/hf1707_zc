@@ -65,7 +65,7 @@ class Userop extends Controller
             $reMsg=[
                 'code'=>10001,
                 'msg'=>config('Msg')['login']['success'],
-                'data'=>[]
+                'data'=>[session('zc_user')]
             ];
             return json($reMsg);
         }
