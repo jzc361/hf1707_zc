@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>支持记录</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <link rel="stylesheet" href="__CSS__/proSupRecord.css">
+</head>
+<body>
+<div class="container">
+    <div class="blank"></div>
+    <div class="dlmain Myhomepage">
+
+        <div class="homeright pageright f_r">
+            <div class="full">
+                <div class="deal_name_title">
+                    {$projectname.projectname}的支持记录
+                </div>
+                {volist name="order" id="order"}
+                {if $order.orderstate!="未支付"&&$order.orderstate!="交易关闭"}
+                <table class="data-table">
+                    <tr>
+                        <td class="data-title">支持者</td>
+                        <td width=193 class="tl"><a href="" class="linkgreen" target="_blank">{$order.address['username']}</a></td>
+                        <td class="data-title">支持金额</td>
+                        <td width=193 class="tl">
+                            ￥{$order.prodetails['price']}
+                        </td>
+                        <td class="data-title">下单时间</td>
+                        <td width=193 class="tl">{$order.orderstime}</td>
+                        <td class="data-title">状态</td>
+                        <td width=193 class="tl">{$order.orderstate}</td>
+                    </tr>
+
+
+                    <tr>
+                        <td class="data-title">配送信息</td>
+                        <td colspan="7" class="tl">
+                            <p>
+                                <span>地址: {$order.address['province_name']}{$order.address['city_name']}{$order.address['county_name']}{$order.address['addressdetails']}</span>
+                                <span>邮编: {$order.address['county']}</span>
+                            </p>
+                            <p>
+                                <span>收件人: {$order.address['revername']}</span>
+                                <span>电话：{$order.address['revertel']}</span>
+                            </p>
+                        </td>
+                    </tr>
+
+
+                    <!--<tr>
+                        <td class="data-title">备注</td>
+                        <td colspan="5" class="tl"></td>
+                    </tr>-->
+
+                    <tr>
+                        <td class="data-title">回报显示</td>
+                        <td colspan="7" class="tl">
+                            <p>{$order.prodetails['introduce']}</p>
+                            {if $order.prodetails['imgs']}
+                            <img src="__STATIC__/{$order.prodetails['imgs']}" alt="" style="width: 100px;height: 100px">
+                            {/if}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="data-split">
+
+                        </td>
+                    </tr>
+
+                </table>
+                {/if}
+                {/volist}
+
+                <!--<div class="empty_tip">
+                    没有任何支持记录
+                </div>-->
+
+            </div>
+            <div class="blank20"></div>
+            <div class="pages"></div>
+            <div class="blank20"></div>
+
+        </div>
+        <div class="blank"></div>
+    </div>
+    <div class="blank"></div>
+</div>
+</body>
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/bootstrap.min.js"></script>
+</html>

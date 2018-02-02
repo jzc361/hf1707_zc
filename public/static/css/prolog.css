@@ -1,0 +1,99 @@
+textarea{
+    resize: none;
+}
+#progress{
+    margin: 20px auto;
+}
+.container{
+    background-color: #fff;
+}
+.control-group {
+    margin:0 0 5px 10px;
+    padding:5px 0;
+    overflow:hidden
+}
+.small-control-group{
+    padding:0;
+}
+.control-label {
+    float:left;
+    text-align:right;
+    font-size:14px;
+    margin-right:15px;
+    overflow:hidden;
+}
+.control-group label {
+    height:41px;
+    line-height:41px;
+    color:#666;
+    font-size:14px;
+}
+.control-group .small_form_lable{
+    height:37px;
+    line-height:37px;
+    color:#666;
+    font-size:14px;
+}
+.small-control-group label{
+    height:26px;
+    line-height:26px;
+}
+.control-group .form_cont {
+    float:left;
+    height:41px;
+    line-height:41px;
+    color:#333;
+    font-size:14px;
+}
+.small-control-group .form_cont ,.small-control-group .form_cont *{
+    height:26px;
+    line-height:26px;
+}
+.control-group .fileupload {
+    height:39px;
+    line-height:39px;
+}
+.control-group a {
+    height:41px;
+    line-height:41px;
+    display:inline-block;
+}
+.control-group .controls select {
+    height:45px;
+    width:180px;
+}
+.fileupload{
+    float: left;
+    width: 97px;
+    height: 39px;
+    cursor: pointer;
+    overflow: hidden;
+    display: inline-block;
+    background: url(../img/home/publishPro/savecover.png);
+    text-align: center;
+    line-height: 39px;
+    color: #fff;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+.log_image_upd{
+    float: left;
+    height: 50px;
+    width: 50px;
+    margin-left: 10px;
+    border: #ccc solid 1px;
+    display: none;
+}
+.f_l{
+    float: left;
+}
+.mr15{
+    margin-left: 15px;
+}
+button{
+    background-color: #0099ff;
+}
+#imagePreview{
+    width: 50px;
+    height: 50px;
+}

@@ -173,10 +173,22 @@ class User extends Auth
     //更新日志
     public function updateLog(){
         $userid=session('zc_user')['userid'];
-        $proid=input('?post.projectid')?input('post.projectid'):"";
-        $prologinfo=input('?post.prologinfo')?input('post.prologinfo'):"";
-        //$file=request()->file('imgFile');
-        if(!$prologinfo){
+        $proid=input('?get.projectid')?input('get.projectid'):"";
+        //上传图片
+        $file = request()->file('imgFile');
+        $logMsg=input('post.');
+        //var_dump($file);//var_dump($logMsg);
+        //用户未登录
+        if(!$userid){
+            $reMsg=[
+                'code'=>00000,
+                'msg'=>config('Msg')['nologin']['nologin'],
+                'data'=>$proid
+            ];
+            return json($reMsg);
+        }
+        //内容为空，提示
+        if(!$file&&!$logMsg['prologinfo']){
             $reMsg=[
                 'code'=>50003,
                 'msg'=>config('Msg')['prolog']['null'],
@@ -186,13 +198,25 @@ class User extends Auth
         }
         $condition=[
             'projectid'=>$proid,
-            'prologinfo'=>$prologinfo,
             'userid'=>$userid,
-            'logtime'=>date('Y-m-d H:i:s',time())
+            'logtime'=>date('Y-m-d H:i:s',time()),
+            'prologinfo'=>$logMsg['prologinfo'],
+            'logimg'=>''
         ];
+        //有图片上传
+        if($file){
+            $path = ROOT_PATH . 'public/static/img/home/logimg/pro'.$proid;
+            $info = $file->move($path);
+            if($info){
+                //图片上传成功，获取上传信息
+                $imgPath=$info->getSaveName();
+                $condition['logimg']='img/home/logimg/pro'.$proid.'/'.$imgPath;
+            }
+        }
         //var_dump($condition);
         $res=db('prolog')->insert($condition);
         if($res){
+            //更新成功
             $reMsg=[
                 'code'=>50001,
                 'msg'=>config('Msg')['prolog']['success'],
@@ -200,6 +224,7 @@ class User extends Auth
             ];
             return json($reMsg);
         }else{
+            //更新失败
             $reMsg=[
                 'code'=>50002,
                 'msg'=>config('Msg')['prolog']['error'],
@@ -208,6 +233,68 @@ class User extends Auth
             return json($reMsg);
         }
     }
+    //查看支持记录
+    public function showSupRecord(){
+        $proid=input('get.id');
+        $condition=['projectid'=>$proid];
+        $order=[];//订单信息数组
+        //$prodetails=[];
+        //项目名
+        $projectname=db('project')->where($condition)->field('projectname')->find();
+        //var_dump($projectname);exit;
+        //回报信息
+        //$prodetails=db('prodetails')->where($condition)->select();
+        //var_dump($prodetails);exit;
+        //项目下的所有订单
+        $orderList=db('orders')
+            ->where($condition)
+            //->paginate(2);
+            ->select();
+        //var_dump($orderList);exit;
+        foreach($orderList as $key=>$value){
+            $supUserid=$value['userid'];//订单内的用户id
+            $supUseraddid=$value['addressid'];
+            $supProdetailsid=$value['prodetailsid'];
+            //查询地址表数据
+            $condition1=[
+                'a.userid'=>$supUserid,
+                'addressid'=>$supUseraddid
+            ];
+            //订单内用户的地址信息
+            $useradd=db('address a')
+                ->field('a.*,b.name province_name,c.name city_name,d.name county_name,e.username')
+                ->join('zc_region b','a.province=b.id')
+                ->join('zc_region c','a.city=c.id')
+                ->join('zc_region d','a.county=d.id')
+                ->join('zc_user e','a.userid=e.userid')//获取用户名
+                ->where($condition1)
+                ->find();
+            //var_dump($useradd);
+            //用户地址插入订单数组
+            $value['address']=$useradd;
+            //获取回报信息
+            $condition2=['prodetailsid'=>$supProdetailsid];
+            $prodetailsList=db('prodetails')->where($condition2)->find();
+            //var_dump($prodetailsList);
+            $value['prodetails']=$prodetailsList;
+            //array_push($prodetails,$prodetailsList);
+            //var_dump($value);
+            //订单信息插入order数组
+            array_push($order,$value);
+        }
+
+        //echo gettype($orderList);
+        //var_dump($orderList);exit;
+        //echo gettype($order);
+        //var_dump($order);exit;
+        //var_dump($prodetails);exit;
+        //exit;
+        $this->assign('projectname',$projectname);//项目名
+        //$this->assign('prodetails',$prodetails);//回报信息
+        $this->assign('order',$order);//订单信息
+        return $this->fetch('proSupRecord');
+    }
+
     //关注的项目页面
     public function focus()
     {

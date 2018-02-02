@@ -10,87 +10,8 @@
     <link rel="stylesheet" href="__CSS__/admin/font.css">
     <link rel="stylesheet" href="__CSS__/admin/xadmin.css">
     <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <link rel="stylesheet" href="__CSS__/prolog.css">
 </head>
-<style>
-    textarea{
-        resize: none;
-    }
-    #progress{
-        margin: 20px auto;
-    }
-    .container{
-        background-color: #fff;
-    }
-    .control-group {
-        margin:0 0 5px 10px;
-        padding:5px 0;
-        overflow:hidden
-    }
-    .small-control-group{
-        padding:0;
-    }
-    .control-label {
-        float:left;
-        text-align:right;
-        font-size:14px;
-        margin-right:15px;
-        overflow:hidden;
-    }
-    .control-group label {
-        height:41px;
-        line-height:41px;
-        color:#666;
-        font-size:14px;
-    }
-    .control-group .small_form_lable{
-        height:37px;
-        line-height:37px;
-        color:#666;
-        font-size:14px;
-    }
-    .small-control-group label{
-        height:26px;
-        line-height:26px;
-    }
-    .control-group .form_cont {
-        float:left;
-        height:41px;
-        line-height:41px;
-        color:#333;
-        font-size:14px;
-    }
-    .small-control-group .form_cont ,.small-control-group .form_cont *{
-        height:26px;
-        line-height:26px;
-    }
-    .control-group .fileupload {
-        height:39px;
-        line-height:39px;
-    }
-    .control-group a {
-        height:41px;
-        line-height:41px;
-        display:inline-block;
-    }
-    .control-group .controls select {
-        height:45px;
-        width:180px;
-    }
-    .f_l{
-        float: left;
-    }
-    .mr15{
-        margin-left: 15px;
-    }
-    button{
-        background-color: #0099ff;
-    }
-    #imagePreview{
-        width: 50px;
-        height: 50px;
-    }
-
-</style>
 <body>
 <div id="vueDiv" class="container">
     <!--更新动态模态框-->
@@ -100,30 +21,36 @@
                 <form action="" id="log_form" method="post">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h5 class="modal-title" id="myModalLabel">更新动态</h5>
+                        <h5 class="modal-title" id="myModalLabel">{$pro.projectname}</h5>
                     </div>
                     <div class="modal-body">
                         <div class="control-group">
                             <label class="f_l mr15">动态内容：</label>
-                            <textarea name="" id="prologinfo" cols="40" rows="5"></textarea>
+                            <textarea name="prologinfo" id="prologinfo" cols="40" rows="5"></textarea>
                         </div>
                         <div class="control-group">
                             <label class="f_l mr15">相关图片：</label>
-                            <input type="file" onchange="imgView()" class="filebox" id="imgFile" name="imagePreview" accept="image/gif,image/jpeg,image/jpg,image/png"  style="display: inline-block;cursor:pointer;padding: 0;height: 39px;width: 97px;filter: alpha(opacity=0);-moz-opacity: 0;-khtml-opacity: 0;opacity: 0; "/>
-                            <div id="img" style="display: none"><img id="imagePreview"  :src="" /></div>
+                            <label class="fileupload">
+                                <input type="file" onchange="imgView()" class="filebox" id="imgFile" name="imgFile" accept="image/gif,image/jpeg,image/jpg,image/png"  style="display: inline-block;cursor:pointer;padding: 0;height: 39px;width: 97px;filter: alpha(opacity=0);-moz-opacity: 0;-khtml-opacity: 0;opacity: 0; "/>
+                            </label>
+                            <div id="img" class="log_image_upd"><img id="imagePreview"  :src="" /></div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                         <button type="button" class="btn btn-info" onclick="savelog({$pro.projectid})">保存</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
+    <div class="blank0"></div>
     <h4>项目：{$pro.projectname}</h4>
-    <div><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">更新动态</button></div>
+    <div class="container">
+        <div class="col-xs-10"></div>
+        <div class="col-xs-1"><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">更新动态</button></div>
+    </div>
+    <hr>
     <div role="tabpanel" class="tab-pane" id="progress">
         {volist name="prolog" id="log"}
         <ul class="layui-timeline">
@@ -135,6 +62,7 @@
                         <p>
                             {$log.prologinfo}
                         </p>
+                        <img src="__STATIC__/{$log.logimg}" alt="">
                     </div>
                 </div>
             </li>
@@ -147,8 +75,6 @@
 <script src="__JS__/jquery-2.1.4.js"></script>
 <script src="__JS__/vue.js"></script>
 <script src="__JS__/bootstrap.min.js"></script>
-<!--<script src=" __JS__/lay/modules/layer/jquery.js"></script>-->
-<!--<script src=" __JS__/lay/modules/layer.js"></script>-->
 <script>
 
     //图片预览
@@ -166,25 +92,29 @@
 
     //保存
     function savelog(projectid){
-        var prologinfo=$('#prologinfo').val();
-        //var img=$('#imgFile').val();
-        var formData = new FormData();
-        formData.append("imgFile", document.getElementById("imgFile").files[0]);
-        //console.log(prologinfo);
+        //var prologinfo=$('#prologinfo').val();
+        var formData = new FormData($('#log_form')[0]);
+        //formData.append("imgFile", document.getElementById("imgFile").files[0]);
+        //console.log(formData);
         $.ajax({
-            url:"{:url('home/User/updateLog')}",
-            type:"POST",
-            data:{projectid:projectid,prologinfo:prologinfo},
-            dataType:"json",
-            success:function(res){
-                if(res.code==50001){
+             url:"{:url('home/User/updateLog')}?projectid="+projectid,
+             type:"POST",
+             data:formData,
+             dataType:"json",
+             async: false,
+             cache: false,
+             contentType: false,
+             processData: false,
+             success:function(res){
+                 //console.log(res.msg);
+                 if(res.code==50001){
+                     alert(res.msg);
+                     location.reload(true);
+                 }else {
                     alert(res.msg);
-                    location.reload(true);
-                }else {
-                    alert(res.msg);
-                }
-            }
-        });
+                 }
+             }
+         });
     }
     /*new Vue({
         el : '#vueDiv',
