@@ -111,6 +111,8 @@
                 if(res.data.code==10001){
                     alert(res.data.msg);
                     //location.href="{:url('index/Index')}";
+                   // console.log(res.data.data);
+                    localStorage.userMsg=JSON.stringify(res.data.data);
                     location.href='javascript:history.go(-1)';//回到上一页
                 } else if(res.data.code==10002) {
                     //验证码错误--刷新验证码

@@ -1,0 +1,228 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:88:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\myProject.html";i:1517581102;}*/ ?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>我的项目</title>
+    <link rel="stylesheet" href="__CSS__/admin/font.css">
+    <link rel="stylesheet" href="__CSS__/admin/xadmin.css">
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <link rel="stylesheet" href="__CSS__/proBaseMsg.css">
+    <link rel="stylesheet" href="__CSS__/default.css">
+    <link rel="stylesheet" href="__CSS__/myproject.css">
+    <style>
+        .btn_creat{ height:30px; font-size:14px; line-height:30px; padding:0 15px; background:#12adff; color:#fff; display:inline-block; -moz-border-radius:3px; -khtml-border-radius:3px; -webkit-border-radius:3px; border-radius:3px;  }
+        .btn_creat:hover{ color:#fff; }
+        input{border:solid 1px rgb(169, 169, 169);}
+        .label_l{height:31px;line-height:31px;font-size:14px;}
+        .small_textbox{padding:9px;}
+        .ui-button{height:39px;line-height:39px}
+        .btn_select ,
+        .btn_select .cur_select,
+        .btn_select select{height:29px;line-height:29px}
+        .select_arrow{margin-top:11px;}
+        .ui-button{height:31px;line-height:31px;font-size:14px;}
+    </style>
+</head>
+<body>
+<!--填写开始时间模态框-->
+<div id="starttime" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">选择开始时间：</h4>
+            </div><!--标题-->
+            <div class="modal-body">
+                <div style="text-align: center">
+                    <span>开始时间：</span>
+                    <input type="text" id="start">
+                </div>
+            </div><!--内容-->
+            <div class="modal-footer">
+                <button type="button" id="updateStartTime" class="btn btn-primary" >确定</button>
+            </div><!--脚注-->
+        </div>
+    </div>
+</div>
+<div style="background: #fff; border: 1px solid #e3e3e3;">
+    <div>
+        <div class="page_title">我的项目</div>
+        <div class="full">
+            <form method="post" action="" id="account_project">
+                <span>
+                <label class="label_l f_l mr10">项目名称:</label>
+                <input type="text" value="<?php echo $keyword; ?>" class="smaller_textbox mr10" id="project_label" name="search_name" >
+                </span>
+                <span>
+                <button type="button" name="submit_form" class="ui-button theme_bgcolor" id="screening">筛选</button>
+                </span>
+            </form>
+        </div>
+        <div class="blank0"></div>
+        <div class="full">
+            <?php if($proList): ?>
+            <div class="i_deal_list clearfix">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="uc_table">
+                    <tr>
+                        <th width="50%">项目名称</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    <?php if(is_array($proList) || $proList instanceof \think\Collection || $proList instanceof \think\Paginator): $i = 0; $__LIST__ = $proList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$val): $mod = ($i % 2 );++$i;?>
+                    <tr>
+                         <td>
+                             <img style="width: 150px;height: 150px;float: left" src="<?php echo $val['projectimg']; ?>" alt="">
+                             <span style="height: 150px;line-height: 150px;"><?php echo $val['projectname']; ?></span>
+                         </td>
+                         <td><?php echo $val['statename']; ?></td>
+                        <td>
+                            <?php if($val['statename']=='待审核'): ?>
+                            <span>等待审核</span>
+                            <?php elseif($val['statename']=='审核成功'): ?>
+                            <span>
+                                <span data-toggle="modal" data-target="#starttime" onclick="selectStarttime(<?php echo $val['projectid']; ?>)" style="cursor: pointer">选择开始时间</span>
+                                <br>
+                                <a href="javascript:;"
+                                    onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
+                                <br>
+                                <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
+                            </span>
+                            <?php elseif($val['statename']=='审核失败'): ?>
+                            <span>
+                                <a href="javascript:;"
+                                   onclick='x_admin_show("不合格原因：","showReason?projectid="+<?php echo $val['projectid']; ?>,"450","400")'>
+                                    查看原因
+                                </a>
+                                <br>
+                                 <a href="javascript:;"
+                                    onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
+                                <br>
+                                <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
+                            </span>
+                            <?php elseif($val['statename']=='众筹中'): ?>
+                            <span>
+                                <a href="javascript:;"
+                                   onclick='x_admin_show("项目日志","showLog?id="+<?php echo $val['projectid']; ?>)'>项目日志</a>
+                                <br>
+                                <a href="">支持记录</a>
+                                <br>
+                                <a href="javascript:;"
+                                     onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
+                                <br>
+                                <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
+                            </span>
+                            <?php elseif($val['statename']=='众筹成功'): ?>
+                            <span>
+                                <a href="javascript:;"
+                                   onclick='x_admin_show("项目日志","showLog?id="+<?php echo $val['projectid']; ?>)'>项目日志</a>
+                                <br>
+                                <a href="">支持记录</a>
+                                <br>
+                                <a href="javascript:;"
+                                    onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
+                                <br>
+                                <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
+                            </span>
+                            <?php elseif($val['statename']=='众筹失败'): ?>
+                            <span>
+                                <a href="javascript:;"
+                                   onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
+                                <br>
+                                <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
+                            </span>
+                            <?php endif; ?>
+                        </td>
+
+                    </tr>
+                    <?php endforeach; endif; else: echo "" ;endif; ?>
+                </table>
+            </div>
+            <div class="blank20"></div>
+            <div class="">
+                <?php echo $proList->render(); ?>
+            </div>
+            <div class="blank20"></div>
+            <?php endif; if(!$proList): ?>
+            <div class="empty_tip">
+                从未创建过任何项目
+                <a href="" class="btn_creat linkgreen">立即创建项目</a>
+            </div>
+            <?php endif; ?>
+        </div>
+        <div class="blank"></div>
+    </div>
+    <div class="blank"></div>
+</div>
+</body>
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/bootstrap.min.js"></script>
+<script type="text/javascript" src="__STATIC__/lib/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript" src="__JS__/admin/xadmin.js"></script>
+<script>
+    //点击筛选
+    $("#screening").click(function(){
+        var keyword=$("#project_label").val();
+        location.href="<?php echo url('home/User/myProject'); ?>?keyword="+keyword;
+    });
+    //删除项目
+    function deletePro(id){
+        if(confirm("删除该项目？")){
+            $.ajax({
+                 type: "get",
+                 url: "<?php echo url('home/User/deletePro'); ?>",
+                 data: {projectid:id},
+                 dataType: "json",
+                 success: function (responseData){
+                     console.log(responseData);
+                     alert(responseData.msg);
+                     location.reload(true);
+                 },
+                 error:function(){
+                     alert("error");
+                 }
+            });
+        }
+    }
+    //选择开始时间
+    function selectStarttime(id){
+        console.log(id);
+        var updateStartTime=$("#updateStartTime");
+        updateStartTime.attr('value',id);
+    }
+    //确认选择该开始时间
+    $("#updateStartTime").click(function(){
+        var projectid=$(this).attr("value");
+        var starttime=$("#start").val();
+        console.log(projectid,starttime);
+        $.ajax({
+             type: "post",
+             url: "<?php echo url('home/User/updateStartTime'); ?>",
+             data: {projectid:projectid,starttime:starttime},
+             dataType: "json",
+             success: function (responseData){
+                 console.log(responseData);
+                 alert(responseData.msg);
+                 location.reload(true);
+             },
+             error:function(){
+                 alert("error");
+             }
+        });
+    });
+    //开始时间选择
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#start' //指定元素
+        });
+
+    });
+</script>
+</html>

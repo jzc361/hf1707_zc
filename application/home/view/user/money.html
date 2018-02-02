@@ -7,9 +7,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"><!--设置网页宽度和访问设备宽度保持一致，且显示比例1:1，-->
     <title>资金管理</title>
     <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <link rel="stylesheet" href="__CSS__/bootstrapValidator.min.css">
     <link rel="stylesheet" href="__CSS__/home/userView.css">
     <script src="__JS__/jquery-2.1.4.js"></script>
     <script src="__JS__/bootstrap.min.js"></script>
+    <script src="__JS__/bootstrapValidator.min.js"></script>
 </head>
 <style>
     .money_box {
@@ -37,7 +39,7 @@
 <body>
 <div class="container">
     <!-- tab标签 -->
-    <ul class="nav nav-tabs money_tabs">
+    <ul class="nav nav-tabs money_tabs" id="my_tabs">
         <li class="active"><a href="#pro1" data-toggle="tab">账户主页</a></li>
         <li><a href="#pro2" data-toggle="tab">会员充值</a></li>
         <li><a href="#pro3" data-toggle="tab">充值日志</a></li>
@@ -50,24 +52,23 @@
         <div id="pro1" class="tab-pane fade in active">
             <div class="money_box">
                 <div class="credit_box">
-                    <p><span>账户余额：</span><span style="color: #71b900;">￥9999.00</span><span>元</span></p>
+                    <p><span>账户余额：</span><span id="money_span" style="color: #71b900;">￥{$money}</span><span>元</span></p>
                     <p><span>诚意金：</span><span style="color: #71b900;">￥0.00</span><span>元</span></p>
                 </div>
-                <button class="btn btn-info">立即充值</button>
-                <button class="btn btn-warning">我要提现</button>
+                <button class="btn btn-info" onclick="toRecharge()">立即充值</button>
+                <button class="btn btn-warning" onclick="toWithdrawals()">我要提现</button>
             </div>
         </div>
         <div id="pro2" class="tab-pane fade">
-            <form class="form-horizontal" role="form" style="margin-top: 20px">
+            <form id="defaultForm" class="form-horizontal" action="{:url('home/User/charge')}"  method="post" role="form" style="margin-top: 20px">
                 <div class="form-group">
                     <label for="charge" class="col-xs-2 control-label" style="font-size: 16px;margin-top: 10px">充值金额：</label>
-                    <div class="col-xs-8 input-group  input-group-lg">
-                        <input type="text" class="form-control" id="charge" placeholder="请输入充值金额">
-                        <span class="input-group-addon">人民币（元）</span>
+                    <div class="col-xs-8 input-group-lg">
+                        <input name="chargeNum" type="number" class="form-control" id="charge" placeholder="请输入充值金额">
                     </div>
-
+                    <span style="font-size: 16px;margin-top: 13px;display: inline-block;">人民币（元）</span>
                 </div>
-                <button class="btn btn-primary btn-lg">确定，去付款</button>
+                <button id="charge_btn"  class="btn btn-primary btn-lg">确定，去付款</button>
             </form>
         </div>
         <div id="pro3" class="tab-pane fade">
@@ -130,5 +131,65 @@
 </div>
 
 </body>
+<script>
+    //去充值
+    function toRecharge(){
+        $('#my_tabs li:eq(1) a').tab('show')
+    }
+    //去提现
+    function toWithdrawals(){
+        $('#my_tabs li:eq(3) a').tab('show')
+    }
+    $(function(){
+        //正则校验
+        $('#defaultForm').bootstrapValidator({
+//        live: 'disabled',
+            message: '该值不能为空',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                chargeNum: {
+                    validators: {
+                        notEmpty: {
+                            message: '充值金额不能为空'
+                        },
+                        regexp: {
+//                            regexp: /^[a-zA-Z0-9_\.]+$/,
+                            regexp:/^(-)?(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/,
+                            message: '充值金额格式不正确'
+                        }
+                    }
+                }
+            }
+        });
+        //
+        $("#charge_btn").click(function(){
+            if(confirm("确认付款？")){
+                var formData=$('#defaultForm').serialize();
+                $.ajax({
+                    url: "{:url('home/User/charge')}",
+                    type: "post",
+                    data:formData,
+                    dataType: "json",
+                    success: function(res) {
+                        console.log(res);
+                        if(res.code==20007){
+                            alert('充值成功');
+                            $("#money_span").text('￥'+res.data);
+                            $('#my_tabs li:eq(0) a').tab('show')
+                        }else{
+                            alert(res.msg);
+                        }
+                    },
+                    error: function() {
+                    }
+                });
+            }
+        });
+    });
+</script>
 
 </html>

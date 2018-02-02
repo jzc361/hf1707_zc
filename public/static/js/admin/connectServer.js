@@ -1,9 +1,20 @@
 /**
  * Created by Administrator on 2018/2/2.
  */
-
+var choiceUser='';
+var userSrc='';
 var chatdiv=$("#myChat");
 var $chat=new MyChat(chatdiv,function(message){
+    var msg = {
+        sender: empid,
+        rever: choiceUser,
+        type: 'personChat1',
+        content: message,
+        msgid: 11111,
+        msgtime: (new Date()).getTime()
+    };
+    var msgString = JSON.stringify(msg);
+    ws.send(msgString);
     console.log(message);
 });
 var ws=new WebSocket("ws://localhost:7777");
@@ -46,6 +57,11 @@ ws.onmessage=function(msg)
         console.log(chatList);
         showChatMsg(chatList);
     }
+    else if(msgObj.type=='personChat'){
+        console.log(msgObj.content);
+        //showChatNow();
+        $chat.getFriendMsg(userSrc,msgObj.content);
+    }
 };
 
 ws.onclose=function()
@@ -72,8 +88,9 @@ function showUserList(empMsg){
                 var name=$(this).find("p").text();
                 $chat.setHead(userSrc,name); //设置头部 （选择的客服的头像与昵称）
                 $chat.show();
-                $chat.sendMsg(empheadimg); //调用发送消息，并传入当前客服的头像
+                $chat.sendMsg(staticUrl+"/"+empheadimg); //调用发送消息，并传入当前客服的头像
                 var $userid=$(this).attr("value");
+                choiceUser=$userid;
                 console.log($userid);
                 var msg={
                     sender:empid,

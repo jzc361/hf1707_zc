@@ -111,7 +111,7 @@ MyChat.prototype.sendMsg=function(img)
 //接收消息显示
 MyChat.prototype.getFriendMsg=function(img,message){
     this.msgDiv.append('\
-    <div class="clearfloat">\
+    <div class="clearfloat" style="font-size: 17px;">\
         <div class="left">\
             <div class="chat-avatars">\
                 <img src='+img+' alt="头像"/>\
@@ -121,12 +121,14 @@ MyChat.prototype.getFriendMsg=function(img,message){
             </div>\
         </div>\
     </div>');
+    $("#chatBox-content-demo").scrollTop($("#chatBox-content-demo")[0].scrollHeight);
+
 };
 
 //发送消息显示
 MyChat.prototype.sendMsgView=function(img,message){
     this.msgDiv.append('\
-    <div class="clearfloat">\
+    <div class="clearfloat" style="font-size: 17px;">\
         <div class="right">\
             <div class="chat-message">\
             '+message+'\
@@ -136,6 +138,8 @@ MyChat.prototype.sendMsgView=function(img,message){
             </div>\
         </div>\
     </div>');
+    $("#chatBox-content-demo").scrollTop($("#chatBox-content-demo")[0].scrollHeight);
+
 };
 //显示
 MyChat.prototype.show=function()

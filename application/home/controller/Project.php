@@ -14,7 +14,7 @@ use \think\Db;
 use \think\Cookie;
 use \think\Session;
 
-class Project extends Controller
+class Project extends Auth
 {
     //产品项目（更多众筹）
     public function proindex(){
@@ -120,6 +120,7 @@ class Project extends Controller
 
         $this->assign('pronum',$pronum);
         $this->assign('pro',$pro);
+        $this->assign('do',$this->do);
         return $this->fetch();
     }
 
@@ -165,10 +166,15 @@ class Project extends Controller
             ->paginate(4);
         //var_dump($pro);exit;
         $this->assign('pro',$pro);
+<<<<<<< HEAD
+        $this->assign('sortList',$sort);//分类列表
+        $this->assign('do',$this->do);
+=======
         $this->assign('sortid',cookie('limit_sortid'));//给前端返回搜索的分类id
         $this->assign('limitstateid',cookie('limit_stateid'));//给前端返回搜索的状态id
         $this->assign('sortList',$this->getsort());//分类列表
         $this->assign('limstaList',$limitstate);//状态列表
+>>>>>>> 2f7ab36beb11a7e4334d342515dc189749f414b5
         return $this->fetch();
     }
 
@@ -206,6 +212,7 @@ class Project extends Controller
         $this->assign('commentnum',$commentnum);//项目评论数
         $this->assign("pro",$pro);//项目信息
         $this->assign("proList",$prodetails);//项目详情
+        $this->assign('do',$this->do);
         return $this->fetch();
     }
 
