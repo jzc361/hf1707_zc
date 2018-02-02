@@ -12,9 +12,17 @@ class Publishpro extends Controller
         parent::__construct($request);
     }
 
+    //获取客服信息
+    public function getServiceMsg(){
+        $serviceList=db('emp')->where('roleid','3')->select();
+        //var_dump($serviceList);
+        return ($serviceList);
+    }
     //跳转到众筹发布页
     public function jumpToProBaseMsg()
     {
+        $serviceList=$this->getServiceMsg();
+        $this->assign('serviceList',$serviceList);
         Session::set('current','proBaseMsg');//当前所在页面
         $id=input('?get.id')?input('get.id'):"";
         $proList = [];

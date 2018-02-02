@@ -1,3 +1,4 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\user\myProject.html";i:1517451748;}*/ ?>
 
 
 <!DOCTYPE html>
@@ -56,7 +57,7 @@
             <form method="post" action="" id="account_project">
                 <span>
                 <label class="label_l f_l mr10">项目名称:</label>
-                <input type="text" value="{$keyword}" class="smaller_textbox mr10" id="project_label" name="search_name" >
+                <input type="text" value="<?php echo $keyword; ?>" class="smaller_textbox mr10" id="project_label" name="search_name" >
                 </span>
                 <span>
                 <button type="button" name="submit_form" class="ui-button theme_bgcolor" id="screening">筛选</button>
@@ -65,7 +66,7 @@
         </div>
         <div class="blank0"></div>
         <div class="full">
-            {if $proList}
+            <?php if($proList): ?>
             <div class="i_deal_list clearfix">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="uc_table">
                     <tr>
@@ -73,87 +74,84 @@
                         <th>状态</th>
                         <th>操作</th>
                     </tr>
-                    {volist name='proList' id='val'}
+                    <?php if(is_array($proList) || $proList instanceof \think\Collection || $proList instanceof \think\Paginator): $i = 0; $__LIST__ = $proList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$val): $mod = ($i % 2 );++$i;?>
                     <tr>
                          <td>
-                             <img style="width: 150px;height: 150px;float: left" src="{$val.projectimg}" alt="">
-                             <span style="height: 150px;line-height: 150px;">{$val.projectname}</span>
+                             <img style="width: 150px;height: 150px;float: left" src="<?php echo $val['projectimg']; ?>" alt="">
+                             <span style="height: 150px;line-height: 150px;"><?php echo $val['projectname']; ?></span>
                          </td>
-                         <td>{$val.statename}</td>
+                         <td><?php echo $val['statename']; ?></td>
                         <td>
-                            {if $val.statename=='待审核'}
+                            <?php if($val['statename']=='待审核'): ?>
                             <span>等待审核</span>
-                            {elseif $val.statename=='审核成功'}
+                            <?php elseif($val['statename']=='审核成功'): ?>
                             <span>
-                                <span data-toggle="modal" data-target="#starttime" onclick="selectStarttime({$val.projectid})" style="cursor: pointer">选择开始时间</span>
+                                <span data-toggle="modal" data-target="#starttime" onclick="selectStarttime(<?php echo $val['projectid']; ?>)" style="cursor: pointer">选择开始时间</span>
                                 <br>
                                 <a href="javascript:;"
-                                    onclick='x_admin_show("项目详情","showDetails?id="+{$val.projectid})'>查看详情</a>
+                                    onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
                                 <br>
-                                <span style="cursor: pointer" onclick="deletePro({$val.projectid})">删除</span>
+                                <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
                             </span>
-                            {elseif $val.statename=='审核失败'}
+                            <?php elseif($val['statename']=='审核失败'): ?>
                             <span>
                                 <a href="javascript:;"
-                                   onclick='x_admin_show("不合格原因：","showReason?projectid="+{$val.projectid},"450","400")'>
+                                   onclick='x_admin_show("不合格原因：","showReason?projectid="+<?php echo $val['projectid']; ?>,"450","400")'>
                                     查看原因
                                 </a>
                                 <br>
                                  <a href="javascript:;"
-                                    onclick='x_admin_show("项目详情","showDetails?id="+{$val.projectid})'>查看详情</a>
+                                    onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
                                 <br>
-                                <span style="cursor: pointer" onclick="deletePro({$val.projectid})">删除</span>
+                                <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
                             </span>
-                            {elseif $val.statename=='众筹中'}
+                            <?php elseif($val['statename']=='众筹中'): ?>
                             <span>
-                                <a href="javascript:;"
-                                   onclick='x_admin_show("项目日志","showLog?id="+{$val.projectid})'>项目日志</a>
+                                <a href="">项目日志</a>
                                 <br>
                                 <a href="">支持记录</a>
                                 <br>
                                 <a href="javascript:;"
-                                     onclick='x_admin_show("项目详情","showDetails?id="+{$val.projectid})'>查看详情</a>
+                                     onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
                                 <br>
-                                <span style="cursor: pointer" onclick="deletePro({$val.projectid})">删除</span>
+                                <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
                             </span>
-                            {elseif $val.statename=='众筹成功'}
+                            <?php elseif($val['statename']=='众筹成功'): ?>
                             <span>
-                                <a href="javascript:;"
-                                   onclick='x_admin_show("项目日志","showLog?id="+{$val.projectid})'>项目日志</a>
+                                <a href="">项目日志</a>
                                 <br>
                                 <a href="">支持记录</a>
                                 <br>
                                 <a href="javascript:;"
-                                    onclick='x_admin_show("项目详情","showDetails?id="+{$val.projectid})'>查看详情</a>
+                                    onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
                                 <br>
-                                <span style="cursor: pointer" onclick="deletePro({$val.projectid})">删除</span>
+                                <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
                             </span>
-                            {elseif $val.statename=='众筹失败'}
+                            <?php elseif($val['statename']=='众筹失败'): ?>
                             <span>
                                 <a href="javascript:;"
-                                   onclick='x_admin_show("项目详情","showDetails?id="+{$val.projectid})'>查看详情</a>
+                                   onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
                                 <br>
-                                <span style="cursor: pointer" onclick="deletePro({$val.projectid})">删除</span>
+                                <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
                             </span>
-                            {/if}
+                            <?php endif; ?>
                         </td>
 
                     </tr>
-                    {/volist}
+                    <?php endforeach; endif; else: echo "" ;endif; ?>
                 </table>
             </div>
             <div class="blank20"></div>
             <div class="">
-                {$proList->render()}
+                <?php echo $proList->render(); ?>
             </div>
             <div class="blank20"></div>
-            {/if}
-            {if !$proList}
+            <?php endif; if(!$proList): ?>
             <div class="empty_tip">
                 从未创建过任何项目
                 <a href="" class="btn_creat linkgreen">立即创建项目</a>
             </div>
-            {/if}
+            <?php endif; ?>
         </div>
         <div class="blank"></div>
     </div>
@@ -168,14 +166,14 @@
     //点击筛选
     $("#screening").click(function(){
         var keyword=$("#project_label").val();
-        location.href="{:url('home/User/myProject')}?keyword="+keyword;
+        location.href="<?php echo url('home/User/myProject'); ?>?keyword="+keyword;
     });
     //删除项目
     function deletePro(id){
         if(confirm("删除该项目？")){
             $.ajax({
                  type: "get",
-                 url: "{:url('home/User/deletePro')}",
+                 url: "<?php echo url('home/User/deletePro'); ?>",
                  data: {projectid:id},
                  dataType: "json",
                  success: function (responseData){
@@ -202,7 +200,7 @@
         console.log(projectid,starttime);
         $.ajax({
              type: "post",
-             url: "{:url('home/User/updateStartTime')}",
+             url: "<?php echo url('home/User/updateStartTime'); ?>",
              data: {projectid:projectid,starttime:starttime},
              dataType: "json",
              success: function (responseData){

@@ -137,6 +137,10 @@
             height: 40px;
             border-radius: 4px;
         }
+        .logcontent{
+            border: 1px solid gainsboro;
+            width: 90%;
+        }
         @media (min-width: 768px) {
             .pro-title{
                 font-size: 24px;
@@ -196,9 +200,9 @@
             <img src="{$pro.projectimg}" alt="" style="display: inline-block" class="img-responsive">
             <div class="pro_introduce">
                 <p class="pro-title">{$pro.projectname}</p>
+                {if $pro.projecttype=="普通众筹"}
                 <p class="pro-have">已筹到</p>
                 <p class="pro-amount"><span style="font-size: 24px">￥</span>{$pro.curamount}</p>
-                {if $pro.projecttype=="普通众筹"}
                 <div class="progress progress-striped active" style="width: 85%">
                     <div class="progress-bar progress-bar-success" role="progressbar"aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:{$pro.curamount/$pro.tolamount*100}%;">
                         <span class="sr-only">{$pro.curamount/$pro.tolamount*100}% 完成</span>
@@ -213,10 +217,17 @@
                     {if $pro.stateid==6}<span class="common-success">众筹成功</span>{/if}
                     {if $pro.stateid==7}<span class="common-fail">众筹失败</span> {/if}
                 </p>
+                {if $pro.projecttype=="普通众筹"}
                 <button type="button" style="width: 85%" class="btn btn-info" onclick="profocus({$pro.projectid})">关注({$pro.focuscount})</button>
-                {if $pro.projecttype=="限时众筹"}
-                <button type="button" style="width: 85%;margin-top: 5%" class="btn btn-info" onclick="">立即支持</button>
                 {/if}
+                {if $pro.projecttype=="限时众筹"}
+                {volist name="proList" id="value"}
+                <!--<p class="pro-have">金额</p>-->
+                <p class="pro-amount"><span style="font-size: 24px">￥</span>{$value.price}</p>
+                {/volist}
+                <button type="button" style="width: 85%;margin-bottom: 5%" class="btn btn-info" onclick="" {if $pro.limitstateid!=1}disabled{/if}>立即支持</button>
+                {/if}
+
             </div>
         </div>
         <div class="showdetails">
@@ -235,19 +246,22 @@
                     </div>
                     <!--进展-->
                     <div role="tabpanel" class="tab-pane" id="progress">
+                        {volist name="prolog" id="log"}
                         <ul class="layui-timeline">
-                            <li class="layui-timeline-item">
-                                <i class="layui-icon layui-timeline-axis"><div class="glyphicon glyphicon-record"></div></i>
-                                <div class="layui-timeline-content layui-text">
-                                    <h3 class="layui-timeline-title">time</h3>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"><div class="glyphicon glyphicon-record"></div></i>
+                            <div class="layui-timeline-content layui-text">
+                                <h5 class="layui-timeline-title">{$log.logtime}</h5>
+                                <p>发起人：{$log.username}</p>
+                                <div class="logcontent">
                                     <p>
-                                        layui 2.0 的一切准备工作似乎都已到位。发布之弦，一触即发。
-                                        <br>不枉近百个日日夜夜与之为伴。因小而大，因弱而强。
-                                        <br>无论它能走多远，抑或如何支撑？至少我曾倾注全心，无怨无悔
+                                        {$log.prologinfo}
                                     </p>
                                 </div>
-                            </li>
+                            </div>
+                        </li>
                         </ul>
+                        {/volist}
                     </div>
                     <!--评论-->
                     <div role="tabpanel" class="tab-pane" id="comment">
@@ -295,6 +309,8 @@
 <script src="__JS__/jquery-2.1.4.js"></script>
 <script src="__JS__/bootstrap.min.js"></script>
 <script src="__JS__/lay/modules/layer.js"></script>
+<script type="text/javascript" src="__STATIC__/lib/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript" src="__JS__/admin/xadmin.js"></script>
 <!--<script>
     !function(){
         //无需再执行layui.use()方法加载模块，直接使用即可
@@ -320,6 +336,13 @@
         });
     }
 
+
+    //支持
+    function suppro(prodetailsid,proid){
+        //$res=confirm();
+        console.log(prodetailsid,proid);
+    }
+
     //提示
     function showPrompt(content){
         layer.open({
@@ -328,10 +351,11 @@
         });
     }
 
-    //支持
-    function suppro(prodetailsid,proid){
-        //$res=confirm();
-        console.log(prodetailsid,proid);
+    function showLogin(){
+        x_admin_show('登录','{:url("home/Userop/showLogin")}')
     }
+
+    //layui.use('showPrompt');
+
 </script>
 </html>
