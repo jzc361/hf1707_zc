@@ -1,3 +1,4 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:86:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\backmanager\rolemanager.html";i:1517562504;}*/ ?>
 <!DOCTYPE html>
 <html>
   
@@ -225,7 +226,7 @@
   <script>
       $(
               $.ajax({
-                  url:"{:url('admin/backmanager/allRole')}",
+                  url:"<?php echo url('admin/backmanager/allRole'); ?>",
                   data:'',
                   type:'post',
                   dataType:'json',
@@ -290,7 +291,7 @@
           $checkDel = confirm('您确定要删除该角色吗？');
           if($checkDel){
               $.ajax({
-                  url:"{:url('admin/backmanager/roleDel')}",
+                  url:"<?php echo url('admin/backmanager/roleDel'); ?>",
                   data:'rid='+$rid,
                   type:'post',
                   dataType:'json',
@@ -305,7 +306,7 @@
       function roleEdit(obj){
           $rid = $(obj).attr('rid');//获取角色ID
           $.ajax({
-              url:"{:url('admin/backmanager/roleEditData')}" ,
+              url:"<?php echo url('admin/backmanager/roleEditData'); ?>" ,
               data:'rid='+$rid,
               type:'post',
               dataType:'json',
@@ -327,8 +328,6 @@
                             { id:222, pId:22, name:"随意勾选 2-2-2"},
                             { id:23, pId:2, name:"随意勾选 2-3"}
                         ];
-
-
                         console.log(JSON.stringify(zNodes));
                         for(var $j = 0;$j<zNodes.length;$j++){
                             console.log(zNodes[$j]);
@@ -339,9 +338,10 @@
                         for(var $i = 0;$i<res.data[0].length;$i++){
                             console.log(res.data[0][$i]);
                             console.log(res.data[0][$i]['menuname']);
+                            zNodes += res.data[0][$i];
                         }
                         //zTree(zNodes);
-                        console.log(zNodes);
+                        console.log(JSON.stringify(zNodes));
                     }
 
                 //zTree(res);
