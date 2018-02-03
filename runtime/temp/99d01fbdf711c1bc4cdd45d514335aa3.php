@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:72:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\chat\chat.html";i:1517584230;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:72:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\chat\chat.html";i:1517558113;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,7 +37,7 @@
     var empid=empInfo[0]['empid'];
     var empheadimg=empInfo[0]['headimg'];
     var empname=empInfo[0]['empname'];
-    $("#headimg").attr("src",'__STATIC__/'+empheadimg+'');
+    $("#headimg").attr("src",empheadimg);
     $("#empname").text(empname);
     var staticUrl='__STATIC__';
 </script>
