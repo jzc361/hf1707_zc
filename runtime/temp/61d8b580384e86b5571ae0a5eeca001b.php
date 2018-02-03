@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:88:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\index\mainView.html";i:1517587401;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517471035;s:88:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517581102;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:88:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\index\mainView.html";i:1517593890;s:88:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517587564;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517471035;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +16,95 @@
     <!--<script src="__JS__/bootstrap.min.js"></script>-->
 
 </head>
+    <style>
+        @media (min-width: 980px){
+            .my_nav>li {
+                line-height: 40px;
+                font-size: 16px;
+            }
+            .my_logo{
+
+                /*height: 40px;*/
+                /*line-height: 40px;*/
+            }
+            .my_content{
+                margin: 0 120px;
+
+            }
+            .my_progerss{
+                height: 12px;
+                margin: 10px 0;
+            }
+        }
+        @media (max-width: 979px){
+            .my_content{
+                margin: 0 80px;
+
+            }
+        }
+
+    </style>
+</head>
+
 <body>
+<!--聊天客服-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="__CSS__/zzsc.css">
+    <link rel="stylesheet" type="text/css" href="__CSS__/chat.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/font_Icon/iconfont.css">
+</head>
+<body>
+<div id="myChat" style="left: 200px;"></div>
+<div>
+    <div style="z-index: 10000000" class="qqserver" id="service" @click="getService">
+        <div class="qqserver_fold" >
+            <div></div>
+        </div>
+        <div class="qqserver-body" style="display: block;">
+            <div class="qqserver-header" >
+                <div></div>
+                <!--<a href="<?php echo url('home/Publishpro/getServiceMsg'); ?>" ></a>-->
+                <span class="qqserver_arrow" ></span>
+            </div>
+            <div>
+                <ul>
+                    <li v-for="x in serviceList" style="cursor: pointer;">
+                        <div v-if="x.loginstate=='在线'" style="color: red">
+                            <div  @click="showchat(x.empid,x.empname,x.headimg)">
+                                <span>{{x.empname}}</span>
+                                ({{x.loginstate}})
+                            </div>
+                        </div>
+                        <div  v-if="x.loginstate=='离线'" style="color: black">
+                            <div @click="showchat(x.empid,x.empname,x.headimg)">
+                                <span>{{x.empname}}</span>
+                                ({{x.loginstate}})
+                            </div>
+                        </div>
+                        <br>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/vue.js"></script>
+<script>
+   var getServiceMsgUrl = "<?php echo url('home/publishpro/getServiceMsg'); ?>";
+   var staticUrl='__STATIC__';
+</script>
+<script src="__JS__/qqface.js"></script>
+<script src="__JS__/myChat.js"></script>
+<script src="__JS__/zzsc.js" ></script>
+<!--</html>-->
 <!--公共nav-->
 <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
 <link rel="stylesheet" href="__CSS__/home/goTop.css">
@@ -122,237 +210,9 @@
         }
     }
 </script>
-<div class="row clearfix">
-    <div class="col-sm-12 column">
-        <div class="banner">
-            <div class="carousel slide" id="carousel-127411">
-                <ol class="carousel-indicators">
-                    <?php if(is_array($adList) || $adList instanceof \think\Collection || $adList instanceof \think\Paginator): $k = 0; $__LIST__ = $adList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($k % 2 );++$k;?>
-                    <li <?php echo !empty($k) && $k==1?"class='active'" : ''; ?>  data-slide-to="<?php echo $k; ?>" data-target="#carousel-127411">
-                    </li>
-                    <?php endforeach; endif; else: echo "" ;endif; ?>
-                </ol>
-                <div class="carousel-inner">
-                    {volist name='adList' id='vo' key="k"}
-                    <div class="item <?php echo !empty($k) && $k==1?'active' : ''; ?>">
-                        <img alt="" width="100%" src="<?php echo $vo['adimg']; ?>" />
-                        <div class="carousel-caption">
-                            <h4>
-                                <?php echo $vo['addetails']; ?>
-                            </h4>
-                            <p>
-                                Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
-                            </p>
-=======
-    <script src="__JS__/jquery-2.1.4.js"></script>
-    <script src="__JS__/bootstrap.min.js"></script>
-    <script src="__JS__/home/gotop.js"></script>
-    <!--<link rel="stylesheet" href="__CSS__/bootstrap.min.css">-->
-    <!--<link rel="stylesheet" href="http://www.bootcss.com/p/layoutit/css/bootstrap-combined.min.css">-->
-    <link href="http://cdn.staticfile.org/twitter-bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
-    <!--<link href="__CSS__/bootstrap-combined.min.css" rel="stylesheet">-->
-    <script src="__JS__/jquery-2.1.4.js"></script>
-    <script src="__JS__/bootstrap.min.js"></script>
-    <style>
-        @media (min-width: 980px){
-            .my_nav>li {
-                line-height: 40px;
-                font-size: 16px;
-            }
-            .my_logo{
-
-                /*height: 40px;*/
-                /*line-height: 40px;*/
-            }
-            .my_content{
-                margin: 0 120px;
-
-            }
-            .my_progerss{
-                height: 12px;
-                margin: 10px 0;
-            }
-        }
-        @media (max-width: 979px){
-            .my_content{
-                margin: 0 80px;
-
-            }
-        }
-
-    </style>
-</head>
-<body>
-<!--聊天客服-->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="x-ua-compatible" content="IE=edge">
-    <meta name="renderer" content="webkit">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="__CSS__/zzsc.css">
-</head>
-<body>
-<div>
-    <div style="z-index: 10000000" class="qqserver" id="service" @click="getService">
-        <div class="qqserver_fold" >
-            <div></div>
-        </div>
-        <div class="qqserver-body" style="display: block;">
-            <div class="qqserver-header" >
-                <div></div>
-                <!--<a href="<?php echo url('home/Publishpro/getServiceMsg'); ?>" ></a>-->
-                <span class="qqserver_arrow" ></span>
-            </div>
-            <div>
-                <ul>
-                    <li v-for="x in serviceList" style="cursor: pointer;">
-                        <div v-if="x.loginstate=='在线'" style="color: red">
-                            <div value="x.empname">
-                                <span>{{x.empname}}</span>
-                                ({{x.loginstate}})
-                            </div>
-                        </div>
-                        <div  v-if="x.loginstate=='离线'" style="color: black">
-                            <div @click="showchat(x.empname)">
-                                <span>{{x.empname}}</span>
-                                ({{x.loginstate}})
-                            </div>
-                        </div>
-                        <br>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-</body>
-<script src="__JS__/jquery-2.1.4.js"></script>
-<script src="__JS__/vue.js"></script>
-<script>
-   var getServiceMsgUrl = "<?php echo url('home/publishpro/getServiceMsg'); ?>";
-</script>
-<script src="__JS__/zzsc.js" ></script>
-</html>
-<!--后台跳转-------------------------------->
-<div>
-    <a href="<?php echo url('home/ToManager/ToManager'); ?>">
-        <input type="button" value="后台登录">
-    </a>
-</div>
-<!--=---------------------------------------------->
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-md-12 column">
-            <nav class="navbar navbar-default" role="navigation">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand my_logo" href="#">众筹网</a>
-                </div>
-
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav my_nav">
-                        <li class="active">
-                            <a href="#">首页</a>
-                        </li>
-                        <li>
-                            <a href="<?php echo url('/home/Project/proindex'); ?>">更多众筹</a>
-                        </li>
-                        <li>
-                            <a href="<?php echo url('/home/Publishpro/jumpToProBaseMsg'); ?>">发起项目</a>
-                            <!--<a href="#">联系我们</a>-->
-                        </li>
-                        <!--<li class="dropdown">-->
-                            <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>-->
-                            <!--<ul class="dropdown-menu">-->
-                                <!--<li>-->
-                                    <!--<a href="#">Action</a>-->
-                                <!--</li>-->
-                                <!--<li>-->
-                                    <!--<a href="#">Another action</a>-->
-                                <!--</li>-->
-                                <!--<li>-->
-                                    <!--<a href="#">Something else here</a>-->
-                                <!--</li>-->
-                                <!--<li class="divider">-->
-                                <!--</li>-->
-                                <!--<li>-->
-                                    <!--<a href="#">Separated link</a>-->
-                                <!--</li>-->
-                                <!--<li class="divider">-->
-                                <!--</li>-->
-                                <!--<li>-->
-                                    <!--<a href="#">One more separated link</a>-->
-                                <!--</li>-->
-                            <!--</ul>-->
-                        <!--</li>-->
-                    </ul>
-
-                    <form class="navbar-form navbar-left" id="my_search" action="<?php echo url('project/proindex'); ?>" role="search" method="get">
-                    <form class="navbar-form navbar-left" role="search">
-
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="search" />
-                        </div> <button type="submit" class="btn btn-default">搜索</button>
-                    </form>
-                    <ul class="nav navbar-nav navbar-right">
-                        <!--<li>-->
-                            <!--<a href="<?php echo url('/home/Index/index'); ?>"><span class="glyphicon glyphicon-log-in"></span> 登录</a>-->
-                        <!--</li>-->
-                        <!--<li>-->
-                            <!--<a href="<?php echo url('/home/Index/index'); ?>"><span class="glyphicon glyphicon-user"></span> 注册</a>-->
-                        <!--</li>-->
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">admin<strong class="caret"></strong></a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="<?php echo url('/home/User/user'); ?>">个人设置</a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo url('/home/User/user'); ?>">项目管理(用户)</a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo url('/home/User/test'); ?>">查看通知(测试)</a>
-                                </li>
-                                <li class="divider">
-                                </li>
-                                <li>
-                                    <a href="#">Separated link</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="<?php echo url('/home/Index/index'); ?>"><span class="glyphicon glyphicon-log-in"></span> 退出</a>
-                        <li>
-                            <a href="#">Link</a>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#">Action</a>
-                                </li>
-                                <li>
-                                    <a href="#">Another action</a>
-                                </li>
-                                <li>
-                                    <a href="#">Something else here</a>
-                                </li>
-                                <li class="divider">
-                                </li>
-                                <li>
-                                    <a href="#">Separated link</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-
-            </nav>
             <div class="banner">
                 <div class="carousel slide" id="carousel-127411">
                     <ol class="carousel-indicators">
@@ -373,7 +233,6 @@
                                     Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
                                 </p>
                             </div>
->>>>>>> 2f7ab36beb11a7e4334d342515dc189749f414b5
                         </div>
                     </div>
                     <?php endforeach; endif; else: echo "" ;endif; ?>
@@ -549,7 +408,7 @@
                     <div class="col-sm-6">
                         <a href="<?php echo url('home/Project/prodetails'); ?>?proid=<?php echo $vo['projectid']; ?>">
                             <div class="thumbnail hotList">
-                                <img alt="300x200" src="<?php echo $vo['projectimg']; ?>" />
+                                <img alt="300x200" src="__STATIC__/<?php echo $vo['projectimg']; ?>" />
                                 <div class="caption">
                                     <h3>
                                         <?php echo $vo['projectname']; ?>
@@ -655,7 +514,7 @@
                     <div class="col-md-4 col-sm-6">
                         <a href="<?php echo url('home/Project/prodetails'); ?>?proid=<?php echo $vo['projectid']; ?>">
                             <div class="thumbnail newList">
-                                <img alt="300x200" src="<?php echo $vo['projectimg']; ?>" />
+                                <img alt="300x200" src="__STATIC__/<?php echo $vo['projectimg']; ?>" />
                                 <div class="caption">
                                     <h3>
                                         <?php echo $vo['projectname']; ?>
@@ -742,7 +601,7 @@
                     <div class="col-md-4 col-sm-6">
                         <a href="<?php echo url('home/Project/prodetails'); ?>?proid=<?php echo $vo['projectid']; ?>">
                             <div class="thumbnail oldList">
-                                <img alt="300x200" src="<?php echo $vo['projectimg']; ?>" />
+                                <img alt="300x200" src="__STATIC__/<?php echo $vo['projectimg']; ?>" />
                                 <div class="caption">
                                     <h3>
                                         <?php echo $vo['projectname']; ?>
@@ -828,7 +687,7 @@
                     <div class="col-md-4 col-sm-6">
                         <a href="<?php echo url('home/Project/prodetails'); ?>?proid=<?php echo $vo['projectid']; ?>">
                             <div class="thumbnail likeList">
-                                <img alt="300x200" src="<?php echo $vo['projectimg']; ?>" />
+                                <img alt="300x200" src="__STATIC__/<?php echo $vo['projectimg']; ?>" />
                                 <div class="caption">
                                     <h3>
                                         <?php echo $vo['projectname']; ?>
@@ -1113,18 +972,7 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-=======
 
-
-    <!-- GOTOP -->
-    <div>
-        <div id="code"></div>
-        <div id="code_img"></div>
-        <a id="gotop" href="javascript:void(0)"></a>
-    </div>
-    <!-- GOTOP -->
->>>>>>> 2f7ab36beb11a7e4334d342515dc189749f414b5
     <!--<div id="gotop" style="display: block; z-index: 99;">-->
         <!--<a href="#top"></a>-->
     <!--</div>-->
@@ -1169,7 +1017,6 @@
     </div>
 </div>
 </body>
-<<<<<<< HEAD
 <script>
     $(function(){
 
@@ -1196,15 +1043,4 @@
 
     })
 </script>
-=======
-
-</div>
-
-</body>
-
-<script>
-
-</script>
-
->>>>>>> 2f7ab36beb11a7e4334d342515dc189749f414b5
 </html>
