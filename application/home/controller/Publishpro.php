@@ -163,7 +163,7 @@ class Publishpro extends Auth
             $returnData=[
                 'projectid'=>$maxProId,
                 'introduce'=>$returnMsg[$i]['returnDetails'],
-                'imgs'=>'_/img/home/project/'.$returnMsg[$i][0],
+                'imgs'=>'/img/home/project/'.$returnMsg[$i][0],
                 'price'=>$returnMsg[$i]['price'],
                 'limitcount'=>$returnMsg[$i]['limitpart'],
             ];

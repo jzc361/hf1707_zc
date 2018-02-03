@@ -133,6 +133,7 @@ class Project extends Auth
 
     //限时众筹（列表）
     public function prolimit(){
+        $this->updateProState();//更新商品状态
         //cookie( null,'limit_');//清空前缀为pro_的cookie
         //$limitstateid=$this->getlimitstateid('众筹中');
         $sortid=input('?get.sortid')?input('get.sortid'):"";//分类id
@@ -381,6 +382,19 @@ class Project extends Auth
                 return json($reMsg);
             }
         }
+    }
+
+    //确认回报内容
+    public function prorepay(){
+        $prodetailsid=input('get.prodetailsid');
+        $prodetails=db('prodetails a')
+            ->join('zc_project b','a.projectid=b.projectid')
+            ->where('prodetailsid',$prodetailsid)
+            ->field('a.*,b.projectname')
+            ->find();
+        //var_dump($prodetails);
+        $this->assign('prodetails',$prodetails);
+        return $this->fetch();
     }
 
     //获取分类列表

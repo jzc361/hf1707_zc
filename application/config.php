@@ -275,6 +275,8 @@ return [
             'home/index/index',
             'home/project/prolimit',
             'home/project/proindex',
+            'home/project/prodetails',
+            'home/project/prorepay',
             'home/user/showlogin',
             'home/user/showregister',
             'home/user/userlogin',
