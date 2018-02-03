@@ -269,10 +269,23 @@ class User extends Auth
     //更新日志
     public function updateLog(){
         $userid=session('zc_user')['userid'];
-        $proid=input('?post.projectid')?input('post.projectid'):"";
-        $prologinfo=input('?post.prologinfo')?input('post.prologinfo'):"";
-        //$file=request()->file('imgFile');
-        if(!$prologinfo){
+        $proid=input('?get.projectid')?input('get.projectid'):"";
+        //var_dump($proid);exit;
+        //上传图片
+        $file = request()->file('imgFile');
+        $logMsg=input('post.');
+        //var_dump($file);//var_dump($logMsg);
+        //用户未登录
+        if(!$userid){
+            $reMsg=[
+                'code'=>00000,
+                'msg'=>config('Msg')['nologin']['nologin'],
+                'data'=>$proid
+            ];
+            return json($reMsg);
+        }
+        //内容为空，提示
+        if(!$file&&!$logMsg['prologinfo']){
             $reMsg=[
                 'code'=>50003,
                 'msg'=>config('Msg')['prolog']['null'],
@@ -282,13 +295,25 @@ class User extends Auth
         }
         $condition=[
             'projectid'=>$proid,
-            'prologinfo'=>$prologinfo,
             'userid'=>$userid,
-            'logtime'=>date('Y-m-d H:i:s',time())
+            'logtime'=>date('Y-m-d H:i:s',time()),
+            'prologinfo'=>$logMsg['prologinfo'],
+            'logimg'=>''
         ];
-        //var_dump($condition);
+        //有图片上传
+        if($file){
+            $path = ROOT_PATH . 'public/static/img/home/logimg/pro'.$proid;
+            $info = $file->move($path);
+            if($info){
+                //图片上传成功，获取上传信息
+                $imgPath=$info->getSaveName();
+                $condition['logimg']='img/home/logimg/pro'.$proid.'/'.$imgPath;
+            }
+        }
+//        var_dump($condition);exit;
         $res=db('prolog')->insert($condition);
         if($res){
+            //更新成功
             $reMsg=[
                 'code'=>50001,
                 'msg'=>config('Msg')['prolog']['success'],
@@ -296,6 +321,7 @@ class User extends Auth
             ];
             return json($reMsg);
         }else{
+            //更新失败
             $reMsg=[
                 'code'=>50002,
                 'msg'=>config('Msg')['prolog']['error'],
@@ -303,6 +329,68 @@ class User extends Auth
             ];
             return json($reMsg);
         }
+    }
+    //查看支持记录
+    public function showSupRecord(){
+        $proid=input('get.id');
+        $condition=['projectid'=>$proid];
+        $order=[];//订单信息数组
+        //$prodetails=[];
+        //项目名
+        $projectname=db('project')->where($condition)->field('projectname')->find();
+        //var_dump($projectname);exit;
+        //回报信息
+        //$prodetails=db('prodetails')->where($condition)->select();
+        //var_dump($prodetails);exit;
+        //项目下的所有订单
+        $orderList=db('orders')
+            ->where($condition)
+            //->paginate(2);
+            ->select();
+        //var_dump($orderList);//exit;
+        foreach($orderList as $key=>$value){
+            $supUserid=$value['userid'];//订单内的用户id
+            $supUseraddid=$value['addressid'];
+            $supProdetailsid=$value['prodetailsid'];
+            //查询地址表数据
+            $condition1=[
+                'a.userid'=>$supUserid,
+                'addressid'=>$supUseraddid
+            ];
+            //订单内用户的地址信息
+            $useradd=db('address a')
+                ->field('a.*,b.name province_name,c.name city_name,d.name county_name,e.username')
+                ->join('zc_region b','a.province=b.id')
+                ->join('zc_region c','a.city=c.id')
+                ->join('zc_region d','a.county=d.id')
+                ->join('zc_user e','a.userid=e.userid')//获取用户名
+                ->where($condition1)
+                ->find();
+            //var_dump($useradd);
+            //用户地址插入订单数组
+            $value['address']=$useradd;
+            //获取回报信息
+            $condition2=['prodetailsid'=>$supProdetailsid];
+            $prodetailsList=db('prodetails')->where($condition2)->find();
+            //var_dump($prodetailsList);
+            $value['prodetails']=$prodetailsList;
+            //array_push($prodetails,$prodetailsList);
+            //var_dump($value);
+            //订单信息插入order数组
+            array_push($order,$value);
+        }
+
+        //echo gettype($orderList);
+        //var_dump($orderList);exit;
+        //echo gettype($order);
+        //var_dump($order);exit;
+        //var_dump($prodetails);exit;
+        //exit;
+        $this->assign('projectname',$projectname);//项目名
+        //$this->assign('prodetails',$prodetails);//回报信息
+        $this->assign('order',$order);//订单信息
+        $this->assign('orderList',$orderList);
+        return $this->fetch('proSupRecord');
     }
     //关注的项目页面
     public function focus(){
@@ -324,30 +412,132 @@ class User extends Auth
         $this->assign('money',$this->zc_user['money']);
         return $this->fetch('money');
     }
-    public function charge(){
-        $chargeNum=input('?post.chargeNum')?input('chargeNum'):'';
-        $res=Validate::regex($chargeNum,'/^(-)?(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/');
-
-//        $data=db('user')
-//            ->where('userid',$this->zc_user['userid'])
-//            ->find();
-//        Session::set('zc_user',$data);
-//        $this->zc_user=$data;
-        $res=db("user")
-            ->where('userid',$this->zc_user['userid'])
-            ->setInc('money', $chargeNum);
-        if($res>0){
-            $this->zc_user['money']+=$chargeNum;
-            Session::set('zc_user',$this->zc_user);
-            $msgResp=[
-                'code'=>20007,
-                'msg'=>config('msg')['oper']['update'],
-                'data'=>$this->zc_user['money']
-            ];
+    //资金管理页面-充值
+    public function recharge(){
+        $rechargeNum=input('?post.rechargeNum')?input('rechargeNum'):'';
+//        var_dump($rechargeNum);
+        $validate=Validate::regex($rechargeNum,'/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/');
+//        var_dump($rechargeNum,$validate);exit;
+        if($validate) {
+            // 启动事务
+            Db::startTrans();
+            try {
+                //更新用户信息
+                db("user")
+                    ->where('userid', $this->zc_user['userid'])
+                    ->setInc('money', $rechargeNum);
+                //添加充值记录
+                $data = [
+                    'r_time' => date('Y-m-d H:i:s'),
+                    'r_amount' => "{$rechargeNum}",
+                    'r_method' => '微信支付',
+                    'r_state' => '1',
+                    'userid' => "{$this->zc_user['userid']}",
+                ];
+                db("recharge")
+                    ->insert($data);
+                // 提交事务
+                Db::commit();
+                $this->zc_user['money'] += $rechargeNum;
+                Session::set('zc_user', $this->zc_user);
+                $msgResp = [
+                    'code' => 20005,
+                    'msg' => config('msg')['oper']['update'],
+                    'data' => $this->zc_user['money']
+                ];
+            } catch (\Exception $e) {
+                // 回滚事务
+                Db::rollback();
+                $msgResp = [
+                    'code' => 20006, //更新失败
+                    'msg' => config('msg')['oper']['updateFail'],
+                    'data' => []
+                ];
+            }
         }else{
             $msgResp=[
                 'code'=>20006, //更新失败
                 'msg'=>config('msg')['oper']['updateFail'],
+                'data'=>[]
+            ];
+        }
+        return json($msgResp);
+
+//            $res=db("user")
+//                ->where('userid',$this->zc_user['userid'])
+//                ->setInc('money', $rechargeNum);
+//
+//            if($res>0){
+//                $data=[
+//                    'r_time'=>'now()',
+//                    'r_amount'=>"{$rechargeNum}",
+//                    'r_method'=>'微信支付',
+//                    'r_state'=>'1',
+//                    'userid'=>"{$this->zc_user['userid']}",
+//                ];
+//                $res2=db("recharge")
+//                    ->where('userid',$this->zc_user['userid'])
+//                    ->insert($data);
+//                if($res2>0){
+//
+//                }
+//
+//                $this->zc_user['money']+=$rechargeNum;
+//                Session::set('zc_user',$this->zc_user);
+//                $msgResp=[
+//                    'code'=>20005,
+//                    'msg'=>config('msg')['oper']['update'],
+//                    'data'=>$this->zc_user['money']
+//                ];
+//            }else{
+//                $msgResp=[
+//                    'code'=>20006, //更新失败
+//                    'msg'=>config('msg')['oper']['updateFail'],
+//                    'data'=>[]
+//                ];
+//            }
+//        }else{
+//            $msgResp=[
+//                'code'=>20006, //更新失败
+//                'msg'=>config('msg')['oper']['updateFail'],
+//                'data'=>[]
+//            ];
+//        }
+
+//        return json($msgResp);
+    }
+    //资金管理页面-获取充值记录表
+    public function getRechargeList(){
+        $current=input('?get.pageNow')?input('pageNow'):1;
+        $showItem=5;
+        $pageSize=5;
+        $rowCount=db('recharge')
+            ->where('userid',$this->zc_user['userid'])
+            ->count();
+        $allPage=ceil($rowCount/$pageSize);
+        if($allPage<$current){
+            $current=$allPage;
+        }
+        $pageData=[
+            'current'=>$current,
+            'showItem'=>$showItem,
+            'allPage'=>$allPage
+        ];
+        $data=db('recharge')
+            ->where('userid',$this->zc_user['userid'])
+            ->order('r_id desc')
+            ->page("{$current},{$pageSize}")
+            ->select();
+        if($data){
+            $msgResp=[
+                'code'=>20007,
+                'msg'=>config('msg')['oper']['select'],
+                'data'=>[$data,$pageData]
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20008,
+                'msg'=>config('msg')['oper']['selectFail'],
                 'data'=>[]
             ];
         }

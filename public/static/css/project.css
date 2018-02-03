@@ -16,6 +16,9 @@
     margin: 20px 5px 40px;
     height: 37px;
 }
+/*.searchNull{
+    height: 100%;
+}*/
 .proList{
     /*width: 21%;*/
     background-color: #fff;
@@ -37,7 +40,7 @@
 .container-fluid{
     padding: 0;
 }
-@media (min-width: 992px) {
+/*@media (min-width: 992px) {
     .proList{
         width: 21%;
     }
@@ -47,7 +50,7 @@
     .intro{
         font-size: 12px;
     }
-}
+}*/
 @media (min-width: 768px) {
     .proList{
         width: 46%;

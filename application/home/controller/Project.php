@@ -19,7 +19,7 @@ class Project extends Auth
     //产品项目（更多众筹）
     public function proindex(){
         $this->updateProState();//更新商品状态
-        Session::set('current','proindex');//当前所在页面
+        //Session::set('current','proindex');//当前所在页面
         cookie( null,'pro_');//清空前缀为pro_的cookie
         $condition=[];
         $condition['projecttype']='普通众筹';
@@ -106,6 +106,13 @@ class Project extends Auth
             ->paginate(4, false, $pageParam);
         var_dump($pro);exit;*/
         $pro=db('project')->where($condition)->where($stateType)->order($ord,$ordertype)->paginate(4, false, $pageParam);//->whereOr($or)
+        if($pro->isEmpty()){
+            //查询项目不存在
+            $this->assign('pro',null);
+        }else{
+            $this->assign('pro',$pro);
+        }
+        //exit;
         //var_dump($pro);exit;
         $pronum=db('project')->where($condition)->where($stateType)->count('projectid');//->whereOr($or)
         $this->assign('sortid',cookie('pro_sortid'));//给前端返回搜索的分类id
@@ -114,19 +121,19 @@ class Project extends Auth
         $this->assign('sortList',$sort);//分类列表
         $this->assign('stateList',$state);//状态列表
 
-        $pronum=db('project')->count('projectid');
-        $pro=db('project')->select();
-        $this->assign('sortList',$sort);
+        //$pronum=db('project')->count('projectid');
+        //$pro=db('project')->select();
+        //$this->assign('sortList',$sort);
 
         $this->assign('pronum',$pronum);
-        $this->assign('pro',$pro);
+        //$this->assign('pro',$pro);
         $this->assign('do',$this->do);
         return $this->fetch();
     }
 
     //限时众筹（列表）
     public function prolimit(){
-        cookie( null,'limit_');//清空前缀为pro_的cookie
+        //cookie( null,'limit_');//清空前缀为pro_的cookie
         //$limitstateid=$this->getlimitstateid('众筹中');
         $sortid=input('?get.sortid')?input('get.sortid'):"";//分类id
         $stateid=input('?get.stateid')?input('get.stateid'):"";//状态id
@@ -153,7 +160,7 @@ class Project extends Auth
             ['zc_limitstate c','a.limitstateid=c.limitstateid']
         ];
         //获取分类
-        //$sort=db('sort')->select();
+        $sort=db('sort')->select();
         //获取限时众筹状态
         $limitstate=db('limitstate')->select();
         //$pro=db('project')->where($condition)->paginate(4);//->whereOr($or)
@@ -166,15 +173,14 @@ class Project extends Auth
             ->paginate(4);
         //var_dump($pro);exit;
         $this->assign('pro',$pro);
-<<<<<<< HEAD
         $this->assign('sortList',$sort);//分类列表
         $this->assign('do',$this->do);
-=======
+
         $this->assign('sortid',cookie('limit_sortid'));//给前端返回搜索的分类id
         $this->assign('limitstateid',cookie('limit_stateid'));//给前端返回搜索的状态id
         $this->assign('sortList',$this->getsort());//分类列表
         $this->assign('limstaList',$limitstate);//状态列表
->>>>>>> 2f7ab36beb11a7e4334d342515dc189749f414b5
+
         return $this->fetch();
     }
 
@@ -466,7 +472,7 @@ class Project extends Auth
                 }
             }
             //更改限时众筹的状态
-           /* else if($proList[$i]['projecttype']=='限时众筹'){
+            else if($proList[$i]['projecttype']=='限时众筹'){
                 if($proList[$i]['begintime']!=NULL){
                     $begintimeStamp=strtotime($proList[$i]['begintime']);
                     $endtimeStamp=strtotime($proList[$i]['endtime']);
@@ -498,7 +504,7 @@ class Project extends Auth
                         }
                     }
                 }
-            }*/
+            }
         }
     }
 }
