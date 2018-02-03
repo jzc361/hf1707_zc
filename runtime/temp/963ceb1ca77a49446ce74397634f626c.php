@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\money.html";i:1517574863;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\money.html";i:1517625756;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -151,14 +151,14 @@
 </script>
 <script>
 
-//    //去充值
-//    function toRecharge(){
-//        $('#my_tabs li:eq(1) a').tab('show')
-//    }
-//    //去提现
-//    function toWithdrawals(){
-//        $('#my_tabs li:eq(3) a').tab('show')
-//    }
+    //    //去充值
+    //    function toRecharge(){
+    //        $('#my_tabs li:eq(1) a').tab('show')
+    //    }
+    //    //去提现
+    //    function toWithdrawals(){
+    //        $('#my_tabs li:eq(3) a').tab('show')
+    //    }
     var $myForm=$('#rechargeForm');
     var bus=new Vue();
     Vue.component("page",{

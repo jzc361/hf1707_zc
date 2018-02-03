@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:100:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\project\prodetails_comment.html";i:1517448844;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:100:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\project\prodetails_comment.html";i:1517581102;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,13 +7,18 @@
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo $proid; ?></title>
-    <!--<link rel="stylesheet" href="__CSS__/layui.css">-->
+    <link rel="stylesheet" href="__CSS__/layui.css">
+    <link rel="stylesheet" href="__CSS__/admin/font.css">
+    <link rel="stylesheet" href="__CSS__/admin/xadmin.css">
     <link rel="stylesheet" href="__CSS__/layer.css">
     <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
     <style>
         textarea{
             /*textarea固定宽高*/
             resize: none;
+        }
+        #comments{
+            background-color: #fff;
         }
         .comment{
             border-bottom: 1px solid gainsboro;
@@ -51,7 +56,7 @@
             <div style="float: right;">
                 <?php if(!session('?zc_user')): ?>
                 <div>
-                    <p>请登录后提问，立即 <a href="" onclick=top.location="<?php echo url('home/Userop/showLogin'); ?>">登录</a>或<!--"<?php echo url('home/Userop/showLogin'); ?>" target="_blank"-->
+                    <p>请登录后提问，立即 <a href="javascript:;" onclick=top.location="<?php echo url('home/Userop/showLogin'); ?>">登录</a>或<!-- onclick="parent.showLogin()"-->
                         <a href="" onclick=top.location="<?php echo url('home/Userop/showRegister'); ?>">注册</a>
                     </p>
                 </div>
@@ -94,7 +99,9 @@
 <!--<script src="__JS__/layui.js"></script>-->
 <script src="__JS__/bootstrap.min.js"></script>
 <script src="__JS__/vue.js"></script>
+<script type="text/javascript" src="__STATIC__/lib/layui/layui.js" charset="utf-8"></script>
 <script src="__JS__/lay/modules/layer.js"></script>
+<script type="text/javascript" src="__JS__/admin/xadmin.js"></script>
 <script>
 
     //对项目评论

@@ -76,7 +76,11 @@
 {include file="public/nav"}
 <link rel="stylesheet" href="__CSS__/project.css">
 <div class="center container">
+<<<<<<< HEAD
     <div class="list" style="background-color: #fff">
+=======
+    <div style="background-color: #fff">
+>>>>>>> 87b2819f759d235f70ac3a02b4ad19b57d69f73c
         <div class="list sortList">
             <!--分类列表-->
             <ul class="nav nav-pills">
@@ -107,12 +111,16 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
 
     <div class="showPro">
         <!--项目不存在-->
         {if !$pro}
         <div class="searchNull">无查询结果</div>
         {else}
+=======
+    <div class="showPro">
+>>>>>>> 87b2819f759d235f70ac3a02b4ad19b57d69f73c
         {volist name="pro" id="value"}
         <div class="proList col-sm-2">
             <!--项目图片-->
@@ -160,10 +168,15 @@
         <div class="space col-sm-1"></div>
         {/volist}
     </div>
+<<<<<<< HEAD
 
 </div>
 <div align="center">{$pro->render()}</div>
 {/if}
+=======
+</div>
+<div align="center">{$pro->render()}</div>
+>>>>>>> 87b2819f759d235f70ac3a02b4ad19b57d69f73c
 {include file="public/footer"}
 </body>
 <!--<script src="__JS__/jquery-2.1.4.js"></script>-->
@@ -174,9 +187,12 @@
         //var w=window.innerWidth||document.body.clientWidth||document.documentElement.clientWidth;
         var h=window.innerHeight||document.body.clientHeight||document.documentElement.clientHeight;
 
+<<<<<<< HEAD
         //$(".footer").css("width",w);
         $(".searchNull").css("height",h-$(".nav").height()-$(".footer").height()-$(".list").height());
     });
+=======
+>>>>>>> 87b2819f759d235f70ac3a02b4ad19b57d69f73c
     //分类
     /*    $('.sortList').find('li').click(function(){
      $('.sortList').find('li').attr('class','');

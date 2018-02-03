@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:92:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\project\prodetails.html";i:1517467836;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517471035;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:92:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\project\prodetails.html";i:1517581113;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517471035;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -137,6 +137,10 @@
             font-size: 18px;
             height: 40px;
             border-radius: 4px;
+        }
+        .logcontent{
+            border: 1px solid gainsboro;
+            width: 90%;
         }
         @media (min-width: 768px) {
             .pro-title{
@@ -301,9 +305,9 @@
             <img src="<?php echo $pro['projectimg']; ?>" alt="" style="display: inline-block" class="img-responsive">
             <div class="pro_introduce">
                 <p class="pro-title"><?php echo $pro['projectname']; ?></p>
+                <?php if($pro['projecttype']=="普通众筹"): ?>
                 <p class="pro-have">已筹到</p>
                 <p class="pro-amount"><span style="font-size: 24px">￥</span><?php echo $pro['curamount']; ?></p>
-                <?php if($pro['projecttype']=="普通众筹"): ?>
                 <div class="progress progress-striped active" style="width: 85%">
                     <div class="progress-bar progress-bar-success" role="progressbar"aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $pro['curamount']/$pro['tolamount']*100; ?>%;">
                         <span class="sr-only"><?php echo $pro['curamount']/$pro['tolamount']*100; ?>% 完成</span>
@@ -316,10 +320,15 @@
                 <p class="state">
                     <?php if($pro['stateid']==5): ?><span class="common-sprite">众筹中</span><?php endif; if($pro['stateid']==6): ?><span class="common-success">众筹成功</span><?php endif; if($pro['stateid']==7): ?><span class="common-fail">众筹失败</span> <?php endif; ?>
                 </p>
+                <?php if($pro['projecttype']=="普通众筹"): ?>
                 <button type="button" style="width: 85%" class="btn btn-info" onclick="profocus(<?php echo $pro['projectid']; ?>)">关注(<?php echo $pro['focuscount']; ?>)</button>
-                <?php if($pro['projecttype']=="限时众筹"): ?>
-                <button type="button" style="width: 85%;margin-top: 5%" class="btn btn-info" onclick="">立即支持</button>
+                <?php endif; if($pro['projecttype']=="限时众筹"): if(is_array($proList) || $proList instanceof \think\Collection || $proList instanceof \think\Paginator): $i = 0; $__LIST__ = $proList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?>
+                <!--<p class="pro-have">金额</p>-->
+                <p class="pro-amount"><span style="font-size: 24px">￥</span><?php echo $value['price']; ?></p>
+                <?php endforeach; endif; else: echo "" ;endif; ?>
+                <button type="button" style="width: 85%;margin-bottom: 5%" class="btn btn-info" onclick="" <?php if($pro['limitstateid']!=1): ?>disabled<?php endif; ?>>立即支持</button>
                 <?php endif; ?>
+
             </div>
         </div>
         <div class="showdetails">
@@ -338,19 +347,22 @@
                     </div>
                     <!--进展-->
                     <div role="tabpanel" class="tab-pane" id="progress">
+                        <?php if(is_array($prolog) || $prolog instanceof \think\Collection || $prolog instanceof \think\Paginator): $i = 0; $__LIST__ = $prolog;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$log): $mod = ($i % 2 );++$i;?>
                         <ul class="layui-timeline">
-                            <li class="layui-timeline-item">
-                                <i class="layui-icon layui-timeline-axis"><div class="glyphicon glyphicon-record"></div></i>
-                                <div class="layui-timeline-content layui-text">
-                                    <h3 class="layui-timeline-title">time</h3>
+                        <li class="layui-timeline-item">
+                            <i class="layui-icon layui-timeline-axis"><div class="glyphicon glyphicon-record"></div></i>
+                            <div class="layui-timeline-content layui-text">
+                                <h5 class="layui-timeline-title"><?php echo $log['logtime']; ?></h5>
+                                <p>发起人：<?php echo $log['username']; ?></p>
+                                <div class="logcontent">
                                     <p>
-                                        layui 2.0 的一切准备工作似乎都已到位。发布之弦，一触即发。
-                                        <br>不枉近百个日日夜夜与之为伴。因小而大，因弱而强。
-                                        <br>无论它能走多远，抑或如何支撑？至少我曾倾注全心，无怨无悔
+                                        <?php echo $log['prologinfo']; ?>
                                     </p>
                                 </div>
-                            </li>
+                            </div>
+                        </li>
                         </ul>
+                        <?php endforeach; endif; else: echo "" ;endif; ?>
                     </div>
                     <!--评论-->
                     <div role="tabpanel" class="tab-pane" id="comment">
@@ -436,6 +448,8 @@
 <!--<script src="__JS__/jquery-2.1.4.js"></script>-->
 <!--<script src="__JS__/bootstrap.min.js"></script>-->
 <script src="__JS__/lay/modules/layer.js"></script>
+<script type="text/javascript" src="__STATIC__/lib/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript" src="__JS__/admin/xadmin.js"></script>
 <!--<script>
     !function(){
         //无需再执行layui.use()方法加载模块，直接使用即可
@@ -461,6 +475,13 @@
         });
     }
 
+
+    //支持
+    function suppro(prodetailsid,proid){
+        //$res=confirm();
+        console.log(prodetailsid,proid);
+    }
+
     //提示
     function showPrompt(content){
         layer.open({
@@ -469,10 +490,11 @@
         });
     }
 
-    //支持
-    function suppro(prodetailsid,proid){
-        //$res=confirm();
-        console.log(prodetailsid,proid);
+    function showLogin(){
+        x_admin_show('登录','<?php echo url("home/Userop/showLogin"); ?>')
     }
+
+    //layui.use('showPrompt');
+
 </script>
 </html>

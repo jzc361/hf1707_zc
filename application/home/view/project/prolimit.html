@@ -6,74 +6,12 @@
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>限时众筹</title>
-    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="__CSS__/bootstrap.min.css">-->
     <link rel="stylesheet" href="__CSS__/project.css">
-    <!--<style>
-        .center{
-            margin-top: 30px;
-            /*height: 1420px;*/
-        }
-        .sortList{
-            width: 100%;
-            overflow: hidden;
-            padding: 5px;
-            background-color: #fff;
-        }
-        .sortList a{
-            cursor: pointer;
-        }
-        .stateList{
-            width: 100%;
-            margin: 20px 5px 40px;
-            height: 37px;
-        }
-        .proList{
-            /*width: 21%;*/
-            background-color: #fff;
-            margin: 0 5px 20px;
-        }
-        .proList>div{
-            margin: 15px 0;
-        }
-        .proimg img{
-            transition: all 0.5s;
-        }
-        .proimg img:hover{
-            transform: scale(1.03);
-        }
-        .intro{
-            margin: 0;
-            font-size: 12px;
-        }
-        .container-fluid{
-            padding: 0;
-        }
-        @media (min-width: 992px) {
-            .proList{
-                width: 21%;
-            }
-            .space{
-                width: 1%;
-            }
-            .intro{
-                font-size: 12px;
-            }
-        }
-        @media (min-width: 768px) {
-            .proList{
-                width: 46%;
-            }
-            .space{
-                width: 1%;
-            }
-            .intro{
-                font-size: 12px;
-            }
-        }
-    </style>-->
 </head>
 <body style="background: #f9f9f9;">
 {include file="public/nav"}
+<link rel="stylesheet" href="__CSS__/project.css">
 <div class="center container">
     <div style="background-color: #fff;margin-bottom: 30px">
         <div class="list sortList">
@@ -101,7 +39,7 @@
             <!--项目图片-->
             <div class="proimg">
                 <a href="prodetails?proid={$value.projectid}">
-                    <img src="{$value.projectimg}" alt="" class="img-responsive" style="margin: auto">
+                    <img src="__STATIC__/{$value.projectimg}" alt="" class="img-responsive" style="margin: auto">
                 </a>
             </div>
             <!--项目名-->

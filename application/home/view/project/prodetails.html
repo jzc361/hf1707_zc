@@ -140,6 +140,10 @@
         .logcontent{
             border: 1px solid gainsboro;
             width: 90%;
+            padding: 5px 10px;
+        }
+        .logcontent img{
+            width: 80%;
         }
         @media (min-width: 768px) {
             .pro-title{
@@ -197,7 +201,7 @@
     {include file="public/nav"}
     <div class="center container">
         <div class="showpro">
-            <img src="{$pro.projectimg}" alt="" style="display: inline-block" class="img-responsive">
+            <img src="__STATIC__/{$pro.projectimg}" alt="" style="display: inline-block" class="img-responsive">
             <div class="pro_introduce">
                 <p class="pro-title">{$pro.projectname}</p>
                 {if $pro.projecttype=="普通众筹"}
@@ -257,6 +261,7 @@
                                     <p>
                                         {$log.prologinfo}
                                     </p>
+                                    <img src="__STATIC__/{$log.logimg}" alt="进度加载失败">
                                 </div>
                             </div>
                         </li>
@@ -293,7 +298,7 @@
                     <div class="grade-con">
                         <div class="grade-limit">限额 {$value.limitcount}份 | 剩余 {$value.limitcount-$value.curcount}份</div>
                         <p class="grade-intro">{$value.introduce}</p>
-                        <div class="grade-img"><img src="{$value.imgs}" alt="" width="50px" height="50px"></div>
+                        <div class="grade-img"><img src="__STATIC__/{$value.imgs}" alt="" width="50px" height="50px"></div>
                         <p>配送费用： 免运费</p>
                         <p>预计回报发送时间：项目众筹成功后30天内</p>
                         <div class="grade-btn"><button {if $pro.stateid==7}disabled{/if} type="button" class="btn btn-info" style="width: 100%" onclick="suppro({$value.prodetailsid},{$pro.projectid})">支持￥{$value.price}</button></div>
