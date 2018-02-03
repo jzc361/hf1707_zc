@@ -63,6 +63,44 @@ class Backmanager extends Controller
         }
     }
 
+    //角色修改
+    public function roleEditData(){
+        $rid = isset($_POST['rid'])?$_POST['rid']:'';
+        $res = [
+            'code'=>20008,
+            'msg'=>config('msg')['oper']['selectFail'],
+            'data'=>''
+        ];
+
+        if($rid!=''){
+            //条件
+            $where = [
+                'roleid'=>$rid
+            ];
+            //返回值
+
+            $menuData = Db::name('backmenu')
+                ->field('menuname,menuid,menufid')
+                ->select();
+
+            $roleData = Db::name('limit')
+                ->alias('a')
+                ->join('role b','a.roleid= b.roleid')
+                ->where('b.roleid',$rid)
+                ->select();
+            if($roleData!=''){
+                $res = [
+                    'code'=>20007,
+                    'msg'=>config('msg')['oper']['select'],
+                    'data'=>[$menuData,$roleData]
+                ];
+            }
+            return $res;
+        }else{
+            return $res;
+        }
+    }
+
     //角色/////////////////////////////
 
     //员工//////////////////////////////
