@@ -1,9 +1,9 @@
 <!--公共nav-->
-<!--<link rel="stylesheet" href="__CSS__/bootstrap.min.css">-->
+<link rel="stylesheet" href="__CSS__/bootstrap.min.css">
 <link rel="stylesheet" href="__CSS__/home/goTop.css">
-<link rel="stylesheet" href="__CSS__/home/mainView.css">
-<!--<script src="__JS__/jquery-2.1.4.js"></script>-->
-<!--<script src="__JS__/bootstrap.min.js"></script>-->
+<!--<link rel="stylesheet" href="__CSS__/home/mainView.css">-->
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/bootstrap.min.js"></script>
 
 <nav class="navbar navbar-default" style="margin-bottom: 0" role="navigation">
     <div class="navbar-header">
@@ -13,22 +13,23 @@
         </button>
         <a class="navbar-brand my_logo" href="{:url('/home/Index/index')}">众筹网</a>
     </div>
-
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav my_nav">
-            <li {if !session('?current')} class="active"{/if}><!--||session('current')=='index'-->
-                <a href="{:url('/home/Index/index')}">首页</a>
+            <li {in name='do' value="home/index/index,home/,home/index,index/"} class="active"{/in}><!--||session('current')=='index'-->
+            <a href="{:url('home/Index/index')}">首页</a>
             </li>
-            <li {if session('current')=='proindex'} class="active"{/if}>
-                <a href="{:url('/home/Project/proindex')}">更多众筹</a>
+            <li {if $do=='home/project/proindex'} class="active"{/if}>
+                <a href="{:url('home/Project/proindex')}">更多众筹</a>
             </li>
-            <li>
-                <a href="{:url('/home/Project/prolimit')}">限时众筹</a>
+            <li {if $do=='home/project/prolimit'} class="active"{/if}>
+                <a href="{:url('home/Project/prolimit')}">限时众筹</a>
             </li>
-            <li {if session('current')=='proBaseMsg'} class="active"{/if}>
-                <a href="{:url('/home/Publishpro/jumpToProBaseMsg')}">发起项目</a>
+            {if session('?zc_user')}
+            <li {in name='do' value="home/publishpro/jumptoprobasemsg,home/publishpro/jumptoaddreturn"}  class="active"{/in}>
+                <a href="{:url('home/Publishpro/jumpToProBaseMsg')}">发起项目</a>
                 <!--<a href="#">联系我们</a>-->
             </li>
+            {/if}
             <!--<li class="dropdown">-->
             <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>-->
             <!--<ul class="dropdown-menu">-->
@@ -60,23 +61,25 @@
             </div> <button type="submit" class="btn btn-default">搜索</button>
         </form>
         <ul class="nav navbar-nav navbar-right">
-            <!--<li>-->
-            <!--<a href="{:url('/home/Index/index')}"><span class="glyphicon glyphicon-log-in"></span> 登录</a>-->
-            <!--</li>-->
-            <!--<li>-->
-            <!--<a href="{:url('/home/Index/index')}"><span class="glyphicon glyphicon-user"></span> 注册</a>-->
-            <!--</li>-->
+            {if !session('?zc_user')/}
+            <li>
+            <a href="{:url('home/User/showLogin')}"><span class="glyphicon glyphicon-log-in"></span> 登录</a>
+            </li>
+            <li>
+            <a href="{:url('home/User/showRegister')}"><span class="glyphicon glyphicon-user"></span> 注册</a>
+            </li>
+            {else/}
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">admin<strong class="caret"></strong></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{php}echo session('zc_user')['username']{/php}<strong class="caret"></strong></a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="{:url('/home/User/user')}">个人设置</a>
+                        <a href="{:url('home/User/user')}">个人设置</a>
                     </li>
                     <li>
-                        <a href="{:url('/home/User/user')}">项目管理(用户)</a>
+                        <a href="{:url('home/User/user')}">项目管理(用户)</a>
                     </li>
                     <li>
-                        <a href="{:url('/home/User/test')}">查看通知(测试)</a>
+                        <a href="{:url('home/User/test')}">查看通知(测试)</a>
                     </li>
                     <li class="divider">
                     </li>
@@ -86,9 +89,17 @@
                 </ul>
             </li>
             <li>
-                <a href="{:url('/home/Index/index')}"><span class="glyphicon glyphicon-log-in"></span> 退出</a>
+                <a href="javascript:void(0)" onclick="exitLogin()"><span class="glyphicon glyphicon-log-in"></span> 退出</a>
             </li>
+            {/if}
         </ul>
     </div>
 
 </nav>
+<script>
+    function exitLogin(){
+        if(confirm("确认退出？")){
+            location.href="{:url('home/User/exitLogin')}";
+        }
+    }
+</script>

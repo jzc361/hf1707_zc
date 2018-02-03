@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\index\mainView.html";i:1517467003;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\index\mainView.html";i:1517580108;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -180,7 +180,7 @@
                     <div class="carousel-inner">
                         <?php if(is_array($adList) || $adList instanceof \think\Collection || $adList instanceof \think\Paginator): $k = 0; $__LIST__ = $adList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($k % 2 );++$k;?>
                         <div class="item <?php echo !empty($k) && $k==1?'active' : ''; ?>">
-                            <img alt="" width="100%" src="<?php echo $vo['adimg']; ?>" />
+                            <img alt="" width="100%" src='__STATIC__/<?php echo $vo['adimg']; ?>' />
                             <div class="carousel-caption">
                                 <h4>
                                     <?php echo $vo['addetails']; ?>

@@ -240,7 +240,7 @@ class Promanage extends Controller
                 $data = [
                     'projectname' =>$proMsg['proTitle'],
                     'intro' =>$proMsg['proDetails'],
-                    'projectimg' =>'__STATIC__/img/home/project/'.$imgPath,
+                    'projectimg' =>'img/home/project/'.$imgPath,
                     'limitstateid' =>$stateid,
                     'sortid' =>$proMsg['proSort'],
                     'createtime'=>date("Y-m-d H:i:s",time()),

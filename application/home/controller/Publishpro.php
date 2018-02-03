@@ -5,12 +5,12 @@ use think\Request;
 use think\Db;
 use think\Session;
 use \think\File;
-class Publishpro extends Controller
+class Publishpro extends Auth
 {
-    public function __construct(Request $request)
-    {
-        parent::__construct($request);
-    }
+//    public function __construct(Request $request)
+//    {
+//        parent::__construct($request);
+//    }
 
     //获取客服信息
     public function getServiceMsg(){
@@ -50,6 +50,7 @@ class Publishpro extends Controller
         //获取项目分类
         $proSort=Db::table('zc_sort')->select();
         $this->assign('proSortList',$proSort);
+        $this->assign('do',$this->do);
         return $this->fetch('proBaseMsg');
     }
     //点击下一步，保存项目信息
@@ -64,7 +65,7 @@ class Publishpro extends Controller
             if($info){
                 // 成功上传后 获取上传信息
                 $imgPath=$info->getSaveName();
-                $imgPath='__STATIC__/img/home/project/'.$imgPath;
+                $imgPath='img/home/project/'.$imgPath;
             }else{
                 // 上传失败获取错误信息
                 echo $file->getError();
@@ -89,6 +90,7 @@ class Publishpro extends Controller
         $proMsg=Session::get('proMsg');
         //var_dump($proMsg);
         $this->assign('proTitle',$proMsg['projectname']);
+        $this->assign('do',$this->do);
         return $this->fetch('addReturn');
     }
     //保存回报数据
@@ -161,7 +163,7 @@ class Publishpro extends Controller
             $returnData=[
                 'projectid'=>$maxProId,
                 'introduce'=>$returnMsg[$i]['returnDetails'],
-                'imgs'=>'__STATIC__/img/home/project/'.$returnMsg[$i][0],
+                'imgs'=>'_/img/home/project/'.$returnMsg[$i][0],
                 'price'=>$returnMsg[$i]['price'],
                 'limitcount'=>$returnMsg[$i]['limitpart'],
             ];
@@ -178,7 +180,4 @@ class Publishpro extends Controller
         return json($msgResp);
     }
 
-    public function aa(){
-        var_dump($_POST);
-    }
 }

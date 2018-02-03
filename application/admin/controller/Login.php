@@ -38,7 +38,7 @@ class Login extends Controller
                 //session存值
 
                 //登陆状态问题暂时滞留-----------------------------------------------------------------
-                //Db::name('emp')->where($sel[0]['empid'],1)->update(['loginstate' => '在线']);
+                Db::name('emp')->where('empid',$sel[0]['empid'])->update(['loginstate' => '在线']);
                 //$sel[0]['loginstate'] = '在线';
                 Session::set('adminEmp',$sel);
                 $res = [

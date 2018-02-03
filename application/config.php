@@ -269,7 +269,17 @@ return [
     //提示信息
     'msg'=>[
         'whiteList' => [
-            'home/Index/index'
+            'home/',
+            'home/index',
+            'index/index/index',
+            'home/index/index',
+            'home/project/prolimit',
+            'home/project/proindex',
+            'home/user/showlogin',
+            'home/user/showregister',
+            'home/user/userlogin',
+            'home/user/userregister',
+            'home/user/exitlogin'
         ],
         'login'=>[
             'error'=>'登录失败，请从稍后再试',  //10000

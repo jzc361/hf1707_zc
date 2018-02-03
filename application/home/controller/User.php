@@ -6,7 +6,7 @@ use \think\Db;
 use \think\Request;
 use \think\Session;
 use \think\Cache;
-
+use \think\Validate;
 class User extends Auth
 {
     public function __construct(Request $request)
@@ -14,22 +14,119 @@ class User extends Auth
         parent::__construct($request);
     }
 
+    //登录页
+    public function showLogin(){
+        return $this->fetch('userLogin');
+    }
+    //注册页
+    public function showRegister(){
+        return $this->fetch('userRegister');
+    }
+    //登录
+    public function userLogin(){
+        $username=input('?post.username')?input('post.username'):"";
+        $userpsd=input('?post.userpsd')?md5(input('post.userpsd')):"";
+        $code=input('?post.code')?input('code'):"";
+        //验证码
+        if(!captcha_check($code)){
+            //验证失败
+            $reMsg=[
+                'code'=>10002,
+                'msg'=>config('Msg')['login']['codeFail'],
+                'data'=>[]
+            ];
+            return json($reMsg);
+        }
+        $condition=['username'=>$username,'userpsw'=>$userpsd];
+        $data=db('user')->where($condition)->find();
+        if(empty($data)){
+            //登录失败
+            $reMsg=[
+                'code'=>10000,
+                'msg'=>config('Msg')['login']['fail'],
+                'data'=>[]
+            ];
+            return json($reMsg);
+        }else{
+            if($data['usestate']=='锁定'){
+                //账号被锁定
+                $reMsg=[
+                    'code'=>10005,
+                    'msg'=>config('Msg')['login']['usestateFail'],
+                    'data'=>[]
+                ];
+                return json($reMsg);
+            }
+            //登录成功
+            Session::set('zc_user',$data);
+            $reMsg=[
+                'code'=>10001,
+                'msg'=>config('Msg')['login']['success'],
+                'data'=>[]
+            ];
+            return json($reMsg);
+        }
+    }
+    //注册
+    public function userRegister(){
+        $username=input('?post.username')?input('post.username'):"";
+        $userpsd=input('?post.userpsd')?md5(input('post.userpsd')):"";
+        $code=input('?post.code')?input('code'):"";
+        //验证码
+        if(!captcha_check($code)){
+            //验证失败
+            $reMsg=[
+                'code'=>10002,
+                'msg'=>config('Msg')['register']['codeFail'],
+                'data'=>[]
+            ];
+            return json($reMsg);
+        }
+        if($username&&$userpsd){
+            $condition=['username'=>$username,'userpsw'=>$userpsd];
+            $data=db('user')->where('username',$username)->select();
+            if(!empty($data)){
+                //账号存在，注册失败
+                $reMsg=[
+                    'code'=>10014,
+                    'msg'=>config('Msg')['register']['fail'],
+                    'data'=>[]
+                ];
+                return json($reMsg);
+            }else{
+                $res=db('user')->insert($condition);
+                if($res){
+                    //注册成功
+                    $reMsg=[
+                        'code'=>10011,
+                        'msg'=>config('Msg')['register']['success'],
+                        'data'=>[]
+                    ];
+                    return json($reMsg);
+                }
+            }
+        }
+    }
+    //退出登录
+    public function exitLogin(){
+        Session::delete('zc_user');
+        return $this->fetch('userLogin');
+    }
+
+
     //跳转用户中心
     public function user()
     {
+        $this->assign('do',$this->do);
         return $this->fetch('userView');
     }
     //支持的项目页面
     public function support()
     {
         //获取分页项目
-////////////////
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
-//////////////
         $supportList=db('orders a,zc_project b')
             ->where('a.projectid=b.projectid')
-            ->where('a.userid',$zc_user['userid'])
+            ->where('a.userid',$this->zc_user['userid'])
             ->order('a.orderstime desc')
             ->paginate(5);
         $this->assign('supportList',$supportList);
@@ -38,7 +135,6 @@ class User extends Auth
     //我的项目页面
     public function myProject()
     {
-
         $keyword=input('?get.keyword')?input('get.keyword'):'';
         session('keyword',$keyword);
         $this->assign('keyword',$keyword);
@@ -209,18 +305,14 @@ class User extends Auth
         }
     }
     //关注的项目页面
-    public function focus()
-    {
-
+    public function focus(){
         //获取分页项目
-////////////////
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
-//////////////
         $focusList=db('focuspro a')
-            ->field('*,sum(c.curcount) sum_curcount,datediff(b.endtime,NOW()) resttime')
-            ->join('zc_project b','a.projectid=b.projectid')
-            ->join('zc_prodetails c','a.projectid=c.projectid')
+            ->field('*,count(d.ordersid) surport_count,datediff(b.endtime,NOW()) resttime')
+            ->join('zc_project b','a.projectid=b.projectid','left')
+            ->join('zc_prodetails c','a.projectid=c.projectid','left')
+            ->join('zc_orders d','a.projectid=d.projectid','left')
+            ->where('a.userid',$this->zc_user['userid'])
             ->group('a.projectid')
             ->order('a.focustime desc')
             ->paginate(5);
@@ -228,19 +320,44 @@ class User extends Auth
         return $this->fetch('focus');
     }
     //资金管理页面
-    public function money()
-    {
+    public function money(){
+        $this->assign('money',$this->zc_user['money']);
         return $this->fetch('money');
+    }
+    public function charge(){
+        $chargeNum=input('?post.chargeNum')?input('chargeNum'):'';
+        $res=Validate::regex($chargeNum,'/^(-)?(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/');
+
+//        $data=db('user')
+//            ->where('userid',$this->zc_user['userid'])
+//            ->find();
+//        Session::set('zc_user',$data);
+//        $this->zc_user=$data;
+        $res=db("user")
+            ->where('userid',$this->zc_user['userid'])
+            ->setInc('money', $chargeNum);
+        if($res>0){
+            $this->zc_user['money']+=$chargeNum;
+            Session::set('zc_user',$this->zc_user);
+            $msgResp=[
+                'code'=>20007,
+                'msg'=>config('msg')['oper']['update'],
+                'data'=>$this->zc_user['money']
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20006, //更新失败
+                'msg'=>config('msg')['oper']['updateFail'],
+                'data'=>[]
+            ];
+        }
+        return json($msgResp);
     }
     //个人设置页面
     public function settings()
     {
-////////////////
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
-//////////////
         $data=db('user')
-            ->where('userid',$zc_user['userid'])
+            ->where('userid',$this->zc_user['userid'])
             ->find();
         //session保存个人信息
         Session::set('zc_user',$data);
@@ -250,20 +367,104 @@ class User extends Auth
     //收货地址页面
     public function address()
     {
-        ////////////////
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
-        //////////////
+        $current=1;
+        $showItem=5;
+        $pageSize=5;
+        $rowCount=db('address')
+            ->where('userid',$this->zc_user['userid'])
+            ->count();
+        $allPage=ceil($rowCount/$pageSize);
+        if($allPage<$current){
+            $current=$allPage;
+        }
+        $pageData=[
+            'current'=>$current,
+            'showItem'=>$showItem,
+            'allPage'=>$allPage
+        ];
         $data=db('address a')
             ->field('a.*,b.name province_name,c.name city_name,d.name county_name')
             ->join('zc_region b','a.province=b.id')
             ->join('zc_region c','a.city=c.id')
             ->join('zc_region d','a.county=d.id')
-            ->where('a.userid',$zc_user['userid'])
+            ->where('a.userid',$this->zc_user['userid'])
+            ->order('a.isdefault desc,a.addressid')
+            ->page("{$current},{$pageSize}")
             ->select();
-//        var_dump($data);
-        $this->assign('addrList',$data);
+
+        $this->assign('addrList',json_encode($data));
+        $this->assign('pageData',json_encode($pageData));
         return $this->fetch('address');
+    }
+    //获取收货地址列表
+    public function getAddrList()
+    {
+        $current=input('?get.pageNow')?input('pageNow'):1;
+//        var_dump($current);exit;
+        $showItem=5;
+        $pageSize=5;
+        $rowCount=db('address')
+            ->where('userid',$this->zc_user['userid'])
+            ->count();
+        $allPage=ceil($rowCount/$pageSize);
+        if($allPage<$current){
+            $current=$allPage;
+        }
+        $pageData=[
+            'current'=>$current,
+            'showItem'=>$showItem,
+            'allPage'=>$allPage
+        ];
+        $data=db('address a')
+            ->field('a.*,b.name province_name,c.name city_name,d.name county_name')
+            ->join('zc_region b','a.province=b.id')
+            ->join('zc_region c','a.city=c.id')
+            ->join('zc_region d','a.county=d.id')
+            ->where('a.userid',$this->zc_user['userid'])
+            ->order('a.isdefault desc,a.addressid')
+            ->page("{$current},{$pageSize}")
+            ->select();
+        if($data){
+            $msgResp=[
+                'code'=>20007,
+                'msg'=>config('msg')['oper']['select'],
+                'data'=>[$data,$pageData]
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20008,
+                'msg'=>config('msg')['oper']['selectFail'],
+                'data'=>''
+            ];
+        }
+        return json($msgResp);
+    }
+    //收货地址页面-获取省市区
+    public function getCityCounty(){
+
+        $provinceId=input('?post.province')?input('province'):'';
+        $cityId=input('?post.city')?input('city'):'';
+        $cityList=db('region')
+            ->where('pid',$provinceId)
+            ->select();
+        $countyList=db('region')
+            ->where('pid',$cityId)
+            ->select();
+        if($cityList && $countyList){
+            $msgResp=[
+                'code'=>20007,
+                'msg'=>config('msg')['oper']['select'],
+                'data'=>[$cityList,$countyList]
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20008,
+                'msg'=>config('msg')['oper']['selectFail'],
+                'data'=>''
+            ];
+        }
+        return json($msgResp);
+
     }
     //个人设置页面-获取省份
     public function getProvince(){
@@ -288,22 +489,10 @@ class User extends Auth
     }
     //个人设置页面-获取省市区
     public function getAddr(){
-////////////////
-//        $zc_user=Session::get('zc_user');
-
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
-        $zc_user=db('user')
-            ->where('userid',10001)
-            ->find();//(测试用)
-//        $zc_user['province']=350000;//(测试用)
-//        $zc_user['city']=350100;//(测试用)
-//        $zc_user['county']=350102;//(测试用)
- //////////////
         $data=db('region')
             ->where('type',0)
-            ->whereOr('pid',$zc_user['province'])
-            ->whereOr('pid',$zc_user['city'])
+            ->whereOr('pid',$this->zc_user['province'])
+            ->whereOr('pid',$this->zc_user['city'])
             ->select();
         if($data){
 
@@ -368,12 +557,8 @@ class User extends Auth
         return json($msgResp);
 
     }
-    //头像上传
+    //个人设置页面-头像上传
     public function headImg(){
-////////////////
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
-//////////////
         //上传预览图
         $file = request()->file('headImg');
         // 移动到框架应用根目录/public/static/img/home/headImg/ 目录下
@@ -384,7 +569,7 @@ class User extends Auth
                 // 成功上传后 获取上传信息
                 $imgPath='__STATIC__/img/home/headImg/'.$info->getSaveName();
                 db('user')
-                    ->where('userid',$zc_user['userid'])
+                    ->where('userid',$this->zc_user['userid'])
                     ->update(['headimg' => $imgPath]);
                 $msgResp=[
                     'code'=>20005,
@@ -402,21 +587,27 @@ class User extends Auth
             return json($msgResp);
         }
     }
-    //更新用户信息
+    //个人设置更新用户信息
     public function updateInfo(){
-        ////////////////
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
-//////////////
         $sex=input('?post.sex')?input('sex'):'';
         $province=input('?post.province')?input('province'):'';
         $city=input('?post.city')?input('city'):'';
         $county=input('?post.county')?input('county'):'';
         $res=db('user')
-            ->where('userid',$zc_user['userid'])
+            ->where('userid',$this->zc_user['userid'])
             ->update(['sex' => $sex,'province'=>$province,'city'=>$city,'county'=>$county]);
         if($res>0){
-
+            //更新session
+            $data=db('user')
+                ->where('userid',$this->zc_user['userid'])
+                ->find();
+            $this->zc_user=$data;
+            Session::set('zc_user',$data);
+            $msgResp=[
+                'code'=>20005,
+                'msg'=>config('msg')['oper']['updateFail'],
+                'data'=>''
+            ];
         }else{
             $msgResp=[
                 'code'=>20006,
@@ -426,13 +617,8 @@ class User extends Auth
         }
         return json($msgResp);
     }
-    //添加地址
+    //收货地址页面-添加地址
     public function insertAddress(){
-        ////////////////
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
-        //////////////
-
         $reverName=input('?post.reverName')?input('reverName'):'';
         $province=input('?post.province')?input('province'):'';
         $city=input('?post.city')?input('city'):'';
@@ -441,7 +627,7 @@ class User extends Auth
 //        $Postcode=input('?post.Postcode')?input('Postcode'):'';
         $telephone=input('?post.telephone')?input('telephone'):'';
         $data=[
-            'userid'=>$zc_user['userid'],
+            'userid'=>$this->zc_user['userid'],
             'revername'=>$reverName,
             'province'=>$province,
             'city'=>$city,
@@ -465,16 +651,12 @@ class User extends Auth
         }
         return json($msgResp);
     }
-    //删除地址
+    //收货地址页面-删除地址
     public function deleteAddress(){
-////////////////
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
-//////////////
         $id=input('?post.id')?input('id'):'';
         $res=db('address')
             ->where('addressid',$id)
-            ->where('userid',$zc_user['userid'])
+            ->where('userid',$this->zc_user['userid'])
             ->delete();
         if($res>0){
             $msgResp=[
@@ -491,82 +673,99 @@ class User extends Auth
         }
         return json($msgResp);
     }
-    //修改地址
+    //收货地址页面-修改地址
     public function updateAddress(){
+        $id=input('?get.id')?input('id'):'';
         $reverName=input('?post.reverName')?input('reverName'):'';
         $province=input('?post.province')?input('province'):'';
         $city=input('?post.city')?input('city'):'';
         $county=input('?post.county')?input('county'):'';
         $detailAddr=input('?post.detailAddr')?input('detailAddr'):'';
-        $Postcode=input('?post.Postcode')?input('Postcode'):'';
+//        $Postcode=input('?post.Postcode')?input('Postcode'):'';
         $telephone=input('?post.telephone')?input('telephone'):'';
         $data=[
             'revername'=>$reverName,
-            'rovince'=>$province,
+            'province'=>$province,
             'city'=>$city,
             'county'=>$county,
-            'detailAddr'=>$detailAddr,
-            'Postcode'=>$Postcode,
-            'telephone'=>$telephone
+            'addressdetails'=>$detailAddr,
+            'revertel'=>$telephone
         ];
-        $res=db('address')->update($data);
+        $res=db('address')
+            ->where('addressid',$id)
+            ->update($data);
         if($res>0){
             $msgResp=[
-                'code'=>20001,
-                'msg'=>config('msg')['oper']['add'],
+                'code'=>20005,
+                'msg'=>config('msg')['oper']['update'],
                 'data'=>''
             ];
         }else{
             $msgResp=[
-                'code'=>20002,
-                'msg'=>config('msg')['oper']['addFail'],
+                'code'=>20006,
+                'msg'=>config('msg')['oper']['updateFail'],
                 'data'=>''
             ];
         }
         return json($msgResp);
     }
-    //获取收货地址
-    public function selectAddress(){
-////////////////
-//        $zc_user=Session::get('zc_user');
+    //收货地址页面-设置默认地址
+    public function setDefaultAddress(){
         $id=input('?post.id')?input('id'):'';
-        $zc_user=[];
-        $zc_user['userid']=10001;//(测试用)
-        $addrData=db('address')
-            ->where('userid',10001)
+        $data1=[
+            'isdefault'=>0
+        ];
+        $data2=[
+            'isdefault'=>1
+        ];
+        //修改原默认地址
+        db('address')
+            ->where('isdefault',1)
+            ->where('userid',$this->zc_user['userid'])
+            ->update($data1);
+        //设置新默认地址
+        $res=db('address')
             ->where('addressid',$id)
-            ->find();//(测试用)
-//        $zc_user['province']=350000;//(测试用)
-//        $zc_user['city']=350100;//(测试用)
-//        $zc_user['county']=350102;//(测试用)
-        //////////////
-        $regionData=db('region')
-            ->where('type',0)
-            ->whereOr('pid',$addrData['province'])
-            ->whereOr('pid',$addrData['city'])
-            ->select();
-        if($regionData && $addrData){
-
+            ->where('userid',$this->zc_user['userid'])
+            ->update($data2);
+        if($res>0){
             $msgResp=[
-                'code'=>20007,
-                'msg'=>config('msg')['oper']['select'],
-                'data'=>[$regionData,$addrData]
+                'code'=>20005,
+                'msg'=>config('msg')['oper']['update'],
+                'data'=>''
             ];
         }else{
             $msgResp=[
-                'code'=>20008,
-                'msg'=>config('msg')['oper']['selectFail'],
+                'code'=>20006,
+                'msg'=>config('msg')['oper']['updateFail'],
                 'data'=>''
             ];
         }
-
         return json($msgResp);
-
     }
-    //test
-    public function test()
+
+    //关注的项目页面-取消关注
+    public function cancelFocus()
     {
-        return $this->fetch('money');
+        $focusId=input('?get.id')?input('id'):'';
+        $res=db('focuspro')
+            ->where('userid', $this->zc_user['userid'])
+            ->where('focusid', $focusId)
+            ->delete();
+        if($res>0){
+            $msgResp=[
+                'code'=>20003,
+                'msg'=>config('msg')['oper']['del'],
+                'data'=>''
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20004,
+                'msg'=>config('msg')['oper']['delFail'],
+                'data'=>''
+            ];
+        }
+        return json($msgResp);
     }
     //
 }

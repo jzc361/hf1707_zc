@@ -5,6 +5,7 @@ namespace app\admin\controller;
 use \think\Controller;
 use \think\Request;
 use \think\Session;
+use \think\Db;
 
 class Controll extends Controller
 {
@@ -18,23 +19,30 @@ class Controll extends Controller
 
     public function quit(){
         //用户注销删除SESSION
-        //$onlineEmp = Session::get('adminInfo');
-        Session::delete('adminInfo');
-        if(Session::has('adminInfo')){
+        $onlineEmp = Session::get('adminEmp');
+        $empid=$onlineEmp[0]['empid'];
+       // echo $empid;
+        //var_dump($onlineEmp);exit();
+        $res=Db::name('emp')->where('empid',$empid)->update(['loginstate' => '离线']);
+        if($res==1){
+            Session::delete('adminEmp');
+            if(Session::has('adminInfo')){
             //session删除失败
-            $res = [
-                'code' => 90010,
-                'msg' => config('msg')['signOut']['outFail'],
-                'data' => ''
-            ];
-        }else{
+                $res = [
+                    'code' => 90010,
+                    'msg' => config('msg')['signOut']['outFail'],
+                    'data' => ''
+                ];
+            }
+            else{
             //session删除成功
-            //Db::name('emp')->where('', 1)->update(['name' => 'thinkphp']);
-            $res = [
-                'code' => 90011,
-                'msg' => config('msg')['signOut']['signOut'],
-                'data' => ''
-            ];
+
+                $res = [
+                    'code' => 90011,
+                    'msg' => config('msg')['signOut']['signOut'],
+                    'data' => ''
+                ];
+            }
         }
         return json($res);
     }
