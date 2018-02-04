@@ -132,6 +132,32 @@ class User extends Auth
         $this->assign('supportList',$supportList);
         return $this->fetch('support');
     }
+    //支持的项目页面--项目详情
+    public function supportDetail(){
+        $orderid=input('?get.id')?input('id'):'';
+        $order=db('orders a')
+            ->where('a.ordersid',$orderid)
+            ->join('zc_prodetails b','a.prodetailsid=b.prodetailsid')
+            ->join('zc_project c','b.projectid=c.projectid')
+            ->field('a.*,b.introduce,c.projectname')
+            ->find();
+
+        $condition=['a.projectid'=>$orderid];
+        $log=db('prolog a')
+            ->join('zc_user b','a.userid=b.userid')
+            ->join('zc_user b','a.userid=b.userid')
+            ->join('zc_user b','a.userid=b.userid')
+            ->where($condition)
+            ->order('logtime','desc')
+            ->field('a.*,b.userid,b.username')
+            ->select();
+
+        //项目进度
+        $this->assign('pro',$order);
+        $this->assign('prolog',$log);
+        return $this->fetch('supportDetail');
+    }
+
     //我的项目页面
     public function myProject()
     {
