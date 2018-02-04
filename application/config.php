@@ -327,7 +327,11 @@ return [
             'null'=>'内容不能为空'//30004
         ],
         'nologin'=>['nologin'=>'请先登录'],//00000
-
+        'order'=>[
+            'addOrder'=>'提交订单成功',//60001
+            'addOrderFail'=>'提交订单失败',//60003
+            'orderFull'=>'支持数达上限'//60002
+        ],
         'signOut'=>[
             'signOut'=>'已退出',//90011
             'outFail'=>'注销失败'//90010

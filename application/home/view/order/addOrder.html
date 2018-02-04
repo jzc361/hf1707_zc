@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>确认订单</title>
+    <link rel="stylesheet" href="__CSS__/proBaseMsg.css">
+    <link rel="stylesheet" href="__CSS__/addOrder.css">
 </head>
 <style>
     .center{
@@ -12,25 +14,182 @@
 </style>
 <body style="background: #f9f9f9;">
 {include file="public/nav"}
-<div class="center container">
-    <div>
-        <div>
-            <img src="" alt="" style="width: 80px;height: 80px;border: 1px solid gainsboro">图片
+<div class="blank20"></div>
+<div class="shadow_bg" style="height: 760px">
+    <div id="app" class="white_box">
+
+        <div class="page_title">
+            {$prodetails.projectname}
+            <div class="support_price">
+                <input name="is_delivery" id="is_delivery" type="hidden" value="" />
+                支持金额 <span>¥{$prodetails.price}</span> 元
+
+                <font class="delivery_fee">
+                    包邮
+                </font>
+
+            </div>
         </div>
-        <div style="margin-left: 20px">
-            <h4>项目名(档位￥价格)</h4>
-            <p>回报介绍</p>
-        </div>
-    </div>
-    <hr>
-    <div>
-        <div><h5>收货地址</h5></div>
-        <div>地址列表</div>
-        <hr>
-        <div><h5>支付信息</h5></div>
+        <div class="switch_nav" style="height:1px;"></div>
+        <div class="blank10"></div>
+
+        <!--<form id="cart_form" action="" method="post">-->
+        <div class="public_left" style="padding:20px;">
+
+            <div class="form_title">
+                <div class="f_l">收件地址</div>
+
+                <div class="f_r" style="margin-top:7px">
+                    <div class="ui-small-button theme_bgcolor" rel="green" id="add_consignee">
+                        <div>
+                            <span class="f14" @click="addModel">添加配送地址</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="blank20"></div>
+            {volist name="addList" id="addList"}
+            <div class="consignee_radio_row">
+                <div class="cbo">
+                    <input type="radio" name="consignee_id" {if $addList.isdefault} checked="checked" {/if} value="{$addList.addressid}"/>
+                </div>
+                <div class="cnt">
+                    <span>{$addList.province_name}{$addList.city_name}{$addList.county_name}{$addList.addressdetails}</span>
+                    <span>{$addList.county}</span>
+                    <span>{$addList.revername}</span>
+                    <span class="phone">{$addList.revertel}</span>
+                </div>
+            </div>
+            {/volist}
+
+            <!--&lt;!&ndash;begin_consignee&ndash;&gt;
+            <div class="control-group">
+                <label class="title control-label w100">收货人姓名:</label>
+                <input type="text" class="textbox" value="" name="consignee" />
+            </div>
+            <div class="blank10"></div>
+            <div class="control-group">
+                <label class="title control-label w100">地区:</label>
+                <a class="btn_select f_l f14 mr10" id="province_select">
+                    <span class="cur_select" id="province_cur">请选择省份</span>
+                    <div class="select_arrow"></div>
+                    <select name="province" class="select-h" id="province">
+                        <option value="" rel="0">请选择省份</option>
+
+                        <option></option>
+
+                    </select>
+                </a>
+                <a class="btn_select f14 f_l" id="city_select">
+                    <span class="cur_select" id="city_cur">请选择城市</span>
+                    <div class="select_arrow"></div>
+                    <select name="city" class="select-h" id="city">
+                        <option value="" rel="0">请选择城市</option>
+
+                        <option></option>
+
+                    </select>
+                </a>
+            </div>
+            <div class="blank10"></div>
+            <div class="control-group">
+                <label class="title control-label w100">详细地址:</label>
+                <textarea name="address" class="textareabox w300" style="height:60px"></textarea>
+            </div>
+            <div class="blank10"></div>
+            <div class="control-group">
+                <label class="title control-label w100">邮编:</label>
+                <input type="text"  name="zip" class="textbox" value="" />
+            </div>
+            <div class="blank10"></div>
+            <div class="control-group">
+                <label class="title control-label w100">手机:</label>
+                <input type="text"  name="mobile" class="textbox" value="" />
+                <div class="blank15"></div>
+            </div>-->
+            <!--end conignee-->
+
+            <div class="blank10"></div>
+            <div class="form_title">
+                回报内容
+            </div>
+            <div class="form_content">
+                {$prodetails.introduce}
+            </div>
+
+            <div class="blank20"></div>
+            <div>
+                <div class="ui-button theme_bgcolor" rel="green" id="stand_by" onclick="addOrder({$prodetails.prodetailsid})">
+                    <div>
+                        <span>确定，提交</span>
+                    </div>
+                </div>
+                <input type="hidden" name="id" value="" />
+                <input type="hidden" name="ajax" value="1" />
+                <div class="blank15"></div>
+            </div>
+
+        <!--</form>-->
+
     </div>
 
+    <div class="public_right" style="padding:20px;width:305px">
+
+        <div class="deal_item_box" style="height:auto">
+            <div class="deal_content_box">
+                <a href="" style="display:block;overflow:hidden">
+                <img  src="__STATIC__/{$prodetails.imgs}" />
+                </a>
+                <!--<div class="blank"></div>
+                <a href="" class="deal_title" ></a>
+                <div class="blank"></div>
+                <a href="" style="padding-left:12px;"></a></a>&nbsp;&nbsp;(<span><a href="" title=""></a></span><span><a href="" title=""></a></span>)
+                <div class="blank"></div>
+                <div style="padding:12px;"></div>-->
+            </div>
+
+        </div>
+
+
+
+    </div>
+    <div class="blank"></div>
+
+
+</div>
+
+<div class="blank20"></div>
 </div>
 {include file="public/footer"}
 </body>
+<!--<script src="__JS__/vue.js"></script>-->
+<script>
+    //var phone = $('.phone').text();
+    //console.log(phone);
+    //var mphone = phone.substr(0, 3) + '****' + phone.substr(7);
+    //$('.phone').text(mphone)
+    function addOrder(prodetailsid){
+        var addressid=$(':checked').val();
+        console.log(addressid,prodetailsid);
+        $.ajax({
+            url:'{:url("Order/addOrder")}',
+            type:"POST",
+            data:{prodetailsid:prodetailsid,addressid:addressid},
+            dataType:'json',
+            success:function(res){
+                if(res.code=='60001'){
+                    //提交订单成功
+                    var orderid=res.data;//订单id
+                    console.log(orderid);
+                    alert(res.msg);
+                }else {
+                    alert(res.msg);
+                }
+            }
+        });
+    }
+</script>
+<script>
+
+</script>
 </html>
