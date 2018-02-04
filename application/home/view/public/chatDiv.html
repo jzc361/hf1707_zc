@@ -11,6 +11,10 @@
 </head>
 <body>
 <div id="myChat" style="left: 200px;"></div>
+<div id="hisShow" class="contentR">
+    <div id="hisContent"></div>
+    <div id="page"></div>
+</div>
 <div>
     <div style="z-index: 10000000" class="qqserver" id="service" @click="getService">
         <div class="qqserver_fold" >
@@ -29,12 +33,14 @@
                             <div  @click="showchat(x.empid,x.empname,x.headimg)">
                                 <span>{{x.empname}}</span>
                                 ({{x.loginstate}})
+                                <!--<i>{{x.unreadcount}}</i>-->
                             </div>
                         </div>
                         <div  v-if="x.loginstate=='离线'" style="color: black">
                             <div @click="showchat(x.empid,x.empname,x.headimg)">
                                 <span>{{x.empname}}</span>
                                 ({{x.loginstate}})
+                                <!--<i>{{x.unreadcount}}</i>-->
                             </div>
                         </div>
                         <br>
@@ -50,8 +56,10 @@
 <script>
    var getServiceMsgUrl = "{:url('home/publishpro/getServiceMsg')}";
    var staticUrl='__STATIC__';
+   var getHisUrl = "{:url('admin/Chat/showChat')}";
 </script>
 <script src="__JS__/qqface.js"></script>
+<script src="__JS__/page.js"></script>
 <script src="__JS__/myChat.js"></script>
 <script src="__JS__/zzsc.js" ></script>
 <!--</html>-->

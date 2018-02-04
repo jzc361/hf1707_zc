@@ -1,17 +1,21 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:92:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\project\prodetails.html";i:1517581113;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517471035;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:92:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\project\prodetails.html";i:1517707187;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517471035;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="renderer" content="webkit">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
     <title><?php echo $pro['projectname']; ?></title>
     <link rel="stylesheet" href="__CSS__/layui.css">
     <link rel="stylesheet" href="__CSS__/layer.css">
     <!--<link rel="stylesheet" href="__STATIC__/layui/css/layui.css">-->
     <!--<link rel="stylesheet" href="__CSS__/bootstrap.min.css">-->
     <link rel="stylesheet" href="__CSS__/project.css">
+    <link rel="stylesheet" type="text/css" href="__CSS__/verify.css">
+    <!--<link rel="stylesheet" href="__CSS__/admin/font.css">-->
+    <!--<link rel="stylesheet" href="__CSS__/admin/xadmin.css">-->
     <style>
         .center{
             margin: 50px auto;
@@ -141,6 +145,10 @@
         .logcontent{
             border: 1px solid gainsboro;
             width: 90%;
+            padding: 5px 10px;
+        }
+        .logcontent img{
+            width: 80%;
         }
         @media (min-width: 768px) {
             .pro-title{
@@ -302,7 +310,7 @@
 </script>
     <div class="center container">
         <div class="showpro">
-            <img src="<?php echo $pro['projectimg']; ?>" alt="" style="display: inline-block" class="img-responsive">
+            <img src="__STATIC__/<?php echo $pro['projectimg']; ?>" alt="" style="display: inline-block" class="img-responsive">
             <div class="pro_introduce">
                 <p class="pro-title"><?php echo $pro['projectname']; ?></p>
                 <?php if($pro['projecttype']=="普通众筹"): ?>
@@ -326,7 +334,12 @@
                 <!--<p class="pro-have">金额</p>-->
                 <p class="pro-amount"><span style="font-size: 24px">￥</span><?php echo $value['price']; ?></p>
                 <?php endforeach; endif; else: echo "" ;endif; ?>
-                <button type="button" style="width: 85%;margin-bottom: 5%" class="btn btn-info" onclick="" <?php if($pro['limitstateid']!=1): ?>disabled<?php endif; ?>>立即支持</button>
+                <button type="button" style="width: 85%;margin-bottom: 5%" class="btn btn-info" onclick="limitSup(<?php echo $pro['projectid']; ?>)" <?php if($pro['limitstateid']!=1): ?>disabled<?php endif; ?>>立即支持</button>
+                <!--滑块验证-->
+                <div>
+                    <div id="mpanel1" ></div>
+                    <div style="margin-top:50px;"></div>
+                </div>
                 <?php endif; ?>
 
             </div>
@@ -358,6 +371,7 @@
                                     <p>
                                         <?php echo $log['prologinfo']; ?>
                                     </p>
+                                    <img src="__STATIC__/<?php echo $log['logimg']; ?>" alt="进度加载失败">
                                 </div>
                             </div>
                         </li>
@@ -394,10 +408,13 @@
                     <div class="grade-con">
                         <div class="grade-limit">限额 <?php echo $value['limitcount']; ?>份 | 剩余 <?php echo $value['limitcount']-$value['curcount']; ?>份</div>
                         <p class="grade-intro"><?php echo $value['introduce']; ?></p>
-                        <div class="grade-img"><img src="<?php echo $value['imgs']; ?>" alt="" width="50px" height="50px"></div>
+                        <div class="grade-img"><img src="__STATIC__/<?php echo $value['imgs']; ?>" alt="" width="50px" height="50px"></div>
                         <p>配送费用： 免运费</p>
                         <p>预计回报发送时间：项目众筹成功后30天内</p>
-                        <div class="grade-btn"><button <?php if($pro['stateid']==7): ?>disabled<?php endif; ?> type="button" class="btn btn-info" style="width: 100%" onclick="suppro(<?php echo $value['prodetailsid']; ?>,<?php echo $pro['projectid']; ?>)">支持￥<?php echo $value['price']; ?></button></div>
+                        <div class="grade-btn">
+                            <!---->
+                            <button <?php if($pro['stateid']==7): ?>disabled<?php endif; ?> type="button" class="btn btn-info" style="width: 100%" onclick="suppro(<?php echo $value['prodetailsid']; ?>,<?php echo $pro['projectid']; ?>)">支持￥<?php echo $value['price']; ?></button>
+                        </div>
                     </div>
                 </div>
                 <?php endforeach; endif; else: echo "" ;endif; ?>
@@ -447,9 +464,11 @@
 </body>
 <!--<script src="__JS__/jquery-2.1.4.js"></script>-->
 <!--<script src="__JS__/bootstrap.min.js"></script>-->
-<script src="__JS__/lay/modules/layer.js"></script>
+<!--<script src="__JS__/lay/modules/layer.js"></script>-->
 <script type="text/javascript" src="__STATIC__/lib/layui/layui.js" charset="utf-8"></script>
 <script type="text/javascript" src="__JS__/admin/xadmin.js"></script>
+<script type="text/javascript" src="__JS__/jquery.min.js"></script>
+<script src="__JS__/move.js"></script>
 <!--<script>
     !function(){
         //无需再执行layui.use()方法加载模块，直接使用即可
@@ -460,6 +479,28 @@
     }();
 </script>-->
 <script>
+    //滑块验证
+    var r=false;
+    $('#mpanel1').slideVerify({
+        type : 1,		//类型
+        vOffset : 5,	//误差量，根据需求自行调整
+        barSize : {
+            width : '85%',
+            height : '40px'
+        },
+        ready : function() {
+        },
+        success : function() {
+            //alert('验证成功，添加你自己的代码！');
+            //......后续操作
+            r=true;
+        },
+        error : function() {
+//		        	alert('验证失败！');
+        }
+
+    });
+
     //关注
     function profocus(projectid){
         //console.log(projectid);
@@ -476,10 +517,27 @@
     }
 
 
-    //支持
+    //普通项目支持
     function suppro(prodetailsid,proid){
-        //$res=confirm();
-        console.log(prodetailsid,proid);
+        //x_admin_show("确认回报内容","showRepay?id="+proid);
+        layer.open({
+            title:'确认回报内容',
+            type: 2,
+            area: ['600px', '350px'],
+            fixed: true, //固定
+            maxmin: true,
+            content: '<?php echo url("home/Project/prorepay"); ?>?prodetailsid='+prodetailsid
+        });
+        //console.log(prodetailsid,proid);
+    }
+
+    //限时项目支持
+    function limitSup(){
+        if(!r){
+            console.log(1);
+        }else {
+            console.log(2);
+        }
     }
 
     //提示
@@ -495,6 +553,15 @@
     }
 
     //layui.use('showPrompt');
+
+    //关闭iframe窗口
+    function closeIframe(){
+        $('div[type="iframe"]').css('display','none');
+        for(var i=0;i<10;i++){
+            $('#layui-layer-shade'+i).css('display','none');
+        }
+
+    }
 
 </script>
 </html>

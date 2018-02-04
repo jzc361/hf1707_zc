@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:90:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\project\proindex.html";i:1517626686;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517471035;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:90:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\project\proindex.html";i:1517707187;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517471035;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -182,87 +182,89 @@
 <link rel="stylesheet" href="__CSS__/project.css">
 <div class="center container">
     <div class="list" style="background-color: #fff">
-        <div class="list sortList">
-            <!--分类列表-->
-            <ul class="nav nav-pills">
-                <?php if(is_array($sortList) || $sortList instanceof \think\Collection || $sortList instanceof \think\Paginator): $i = 0; $__LIST__ = $sortList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$sort): $mod = ($i % 2 );++$i;?>
-                <li role="presentation" class="<?php if(cookie('pro_sortid')==$sort['sortid']): ?>active<?php endif; ?>"><a href="proindex?sortid=<?php echo $sort['sortid']; if(cookie('pro_search')): ?>&search=<?php echo $search; endif; ?>" class="<?php echo $sort['sortid']; ?>"><?php echo $sort['sortname']; ?></a></li>
-                <?php endforeach; endif; else: echo "" ;endif; ?>
-            </ul>
-        </div>
-        <div class="list stateList">
-            <!--<div class="col-sm-7"></div>-->
-            <!--状态列表-->
-            <ul class="nav nav-pills col-xs-4" style="font-size: 12px">
-                <li role="presentation" class="<?php if(!cookie('pro_stateid')): ?>active<?php endif; ?>"><a href="proindex">所有项目(<?php echo $pronum; ?>)</a></li>
-                <?php if(is_array($stateList) || $stateList instanceof \think\Collection || $stateList instanceof \think\Paginator): $i = 0; $__LIST__ = $stateList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$state): $mod = ($i % 2 );++$i;?>
-                <li role="presentation" class="<?php if(cookie('pro_stateid')==$state['stateid']): ?>active<?php endif; ?>"><a href="proindex?stateid=<?php echo $state['stateid']; if(cookie('pro_sortid')): ?>&sortid=<?php echo $sortid; endif; if(cookie('pro_search')): ?>&search=<?php echo $search; endif; ?>"><?php echo $state['statename']; ?></a></li>
-                <?php endforeach; endif; else: echo "" ;endif; ?>
-            </ul>
-            <div class="col-xs-6"></div>
-            <div class="col-xs-2">
-                <span>排序</span>
-                <select name="order" onchange="window.location=this.value">
-                    <option value="proindex?sortid=<?php echo $sortid; ?>&stateid=<?php echo $stateid; ?>" <?php if(!cookie('order')): ?>echo selected<?php endif; ?>>请选择</option>
-                    <option value="proindex?order=1&sortid=<?php echo $sortid; ?>&stateid=<?php echo $stateid; ?>" <?php if(cookie('order')==1): ?>echo selected<?php endif; ?>>热度</option>
-                    <option value="proindex?order=2&sortid=<?php echo $sortid; ?>&stateid=<?php echo $stateid; ?>" <?php if(cookie('order')==2): ?>echo selected<?php endif; ?>>最新上线</option>
-                    <option value="proindex?order=3&sortid=<?php echo $sortid; ?>&stateid=<?php echo $stateid; ?>" <?php if(cookie('order')==3): ?>echo selected<?php endif; ?>>金额最多</option>
-                    <!--<option value="proindex?order=4&sortid=<?php echo $sortid; ?>" <?php if(cookie('order')==4): ?>echo selected<?php endif; ?>>支持最多</option>-->
-                </select>
+        <div style="background-color: #fff">
+            <div class="list sortList">
+                <!--分类列表-->
+                <ul class="nav nav-pills">
+                    <?php if(is_array($sortList) || $sortList instanceof \think\Collection || $sortList instanceof \think\Paginator): $i = 0; $__LIST__ = $sortList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$sort): $mod = ($i % 2 );++$i;?>
+                    <li role="presentation" class="<?php if(cookie('pro_sortid')==$sort['sortid']): ?>active<?php endif; ?>"><a href="proindex?sortid=<?php echo $sort['sortid']; if(cookie('pro_search')): ?>&search=<?php echo $search; endif; ?>" class="<?php echo $sort['sortid']; ?>"><?php echo $sort['sortname']; ?></a></li>
+                    <?php endforeach; endif; else: echo "" ;endif; ?>
+                </ul>
             </div>
+            <div class="list stateList">
+                <!--<div class="col-sm-7"></div>-->
+                <!--状态列表-->
+                <ul class="nav nav-pills col-xs-4" style="font-size: 12px">
+                    <li role="presentation" class="<?php if(!cookie('pro_stateid')): ?>active<?php endif; ?>"><a href="proindex">所有项目(<?php echo $pronum; ?>)</a></li>
+                    <?php if(is_array($stateList) || $stateList instanceof \think\Collection || $stateList instanceof \think\Paginator): $i = 0; $__LIST__ = $stateList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$state): $mod = ($i % 2 );++$i;?>
+                    <li role="presentation" class="<?php if(cookie('pro_stateid')==$state['stateid']): ?>active<?php endif; ?>"><a href="proindex?stateid=<?php echo $state['stateid']; if(cookie('pro_sortid')): ?>&sortid=<?php echo $sortid; endif; if(cookie('pro_search')): ?>&search=<?php echo $search; endif; ?>"><?php echo $state['statename']; ?></a></li>
+                    <?php endforeach; endif; else: echo "" ;endif; ?>
+                </ul>
+                <div class="col-xs-6"></div>
+                <div class="col-xs-2">
+                    <span>排序</span>
+                    <select name="order" onchange="window.location=this.value">
+                        <option value="proindex?sortid=<?php echo $sortid; ?>&stateid=<?php echo $stateid; ?>" <?php if(!cookie('order')): ?>echo selected<?php endif; ?>>请选择</option>
+                        <option value="proindex?order=1&sortid=<?php echo $sortid; ?>&stateid=<?php echo $stateid; ?>" <?php if(cookie('order')==1): ?>echo selected<?php endif; ?>>热度</option>
+                        <option value="proindex?order=2&sortid=<?php echo $sortid; ?>&stateid=<?php echo $stateid; ?>" <?php if(cookie('order')==2): ?>echo selected<?php endif; ?>>最新上线</option>
+                        <option value="proindex?order=3&sortid=<?php echo $sortid; ?>&stateid=<?php echo $stateid; ?>" <?php if(cookie('order')==3): ?>echo selected<?php endif; ?>>金额最多</option>
+                        <!--<option value="proindex?order=4&sortid=<?php echo $sortid; ?>" <?php if(cookie('order')==4): ?>echo selected<?php endif; ?>>支持最多</option>-->
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="showPro">
+            <!--项目不存在-->
+            <?php if(!$pro): ?>
+            <div class="searchNull">无查询结果</div>
+            <?php else: if(is_array($pro) || $pro instanceof \think\Collection || $pro instanceof \think\Paginator): $i = 0; $__LIST__ = $pro;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?>
+            <div class="proList col-sm-2">
+                <!--项目图片-->
+                <div class="proimg">
+                    <a href="prodetails?proid=<?php echo $value['projectid']; ?>">
+                        <img src="__STATIC__/<?php echo $value['projectimg']; ?>" alt="" class="img-responsive" style="margin: auto">
+                    </a>
+                </div>
+                <!--项目名-->
+                <div class="proname">
+                    <h4><a href="prodetails?proid=<?php echo $value['projectid']; ?>"><?php echo $value['projectname']; ?></a></h4>
+                </div>
+                <!--目标-->
+                <div>
+                    <span>目标：<?php echo $value['daysnumber']; ?>天</span>
+                    <span>￥<?php echo $value['tolamount']; ?></span>
+                    <!--显示众筹状态-->
+                    <div style="float: right">
+                        <?php if($value['stateid']==5): ?><span class="common-sprite">众筹中</span><?php endif; if($value['stateid']==6): ?><span class="common-success">众筹成功</span><?php endif; if($value['stateid']==7): ?><span class="common-fail">众筹失败</span> <?php endif; ?>
+                    </div>
+                </div>
+                <div class="progress progress-striped active" style="width: 85%">
+                    <div class="progress-bar progress-bar-success" role="progressbar"aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $value['curamount']/$value['tolamount']*100; ?>%;">
+                        <span class="sr-only"><?php echo $value['curamount']/$value['tolamount']*100; ?>%完成</span>
+                    </div>
+                </div>
+                <!--脚-->
+                <div class="intro">
+                    <div class="col-xs-3">
+                        <p><?php echo $value['curamount']/$value['tolamount']*100; ?>%</p>
+                        <p>已达</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p><?php echo $value['curamount']; ?></p>
+                        <p>已筹集</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p><?php echo substr($value['endtime'],0,10); ?></p>
+                        <p>结束时间</p>
+                    </div>
+                </div>
+            </div>
+            <div class="space col-sm-1"></div>
+            <?php endforeach; endif; else: echo "" ;endif; ?>
+
         </div>
     </div>
-
-    <div class="showPro">
-        <!--项目不存在-->
-        <?php if(!$pro): ?>
-        <div class="searchNull">无查询结果</div>
-        <?php else: if(is_array($pro) || $pro instanceof \think\Collection || $pro instanceof \think\Paginator): $i = 0; $__LIST__ = $pro;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?>
-        <div class="proList col-sm-2">
-            <!--项目图片-->
-            <div class="proimg">
-                <a href="prodetails?proid=<?php echo $value['projectid']; ?>">
-                    <img src="__STATIC__/<?php echo $value['projectimg']; ?>" alt="" class="img-responsive" style="margin: auto">
-                </a>
-            </div>
-            <!--项目名-->
-            <div class="proname">
-                <h4><a href="prodetails?proid=<?php echo $value['projectid']; ?>"><?php echo $value['projectname']; ?></a></h4>
-            </div>
-            <!--目标-->
-            <div>
-                <span>目标：<?php echo $value['daysnumber']; ?>天</span>
-                <span>￥<?php echo $value['tolamount']; ?></span>
-                <!--显示众筹状态-->
-                <div style="float: right">
-                    <?php if($value['stateid']==5): ?><span class="common-sprite">众筹中</span><?php endif; if($value['stateid']==6): ?><span class="common-success">众筹成功</span><?php endif; if($value['stateid']==7): ?><span class="common-fail">众筹失败</span> <?php endif; ?>
-                </div>
-            </div>
-            <div class="progress progress-striped active" style="width: 85%">
-                <div class="progress-bar progress-bar-success" role="progressbar"aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $value['curamount']/$value['tolamount']*100; ?>%;">
-                    <span class="sr-only"><?php echo $value['curamount']/$value['tolamount']*100; ?>%完成</span>
-                </div>
-            </div>
-            <!--脚-->
-            <div class="intro">
-                <div class="col-xs-3">
-                    <p><?php echo $value['curamount']/$value['tolamount']*100; ?>%</p>
-                    <p>已达</p>
-                </div>
-                <div class="col-sm-3">
-                    <p><?php echo $value['curamount']; ?></p>
-                    <p>已筹集</p>
-                </div>
-                <div class="col-sm-6">
-                    <p><?php echo substr($value['endtime'],0,10); ?></p>
-                    <p>结束时间</p>
-                </div>
-            </div>
-        </div>
-        <div class="space col-sm-1"></div>
-        <?php endforeach; endif; else: echo "" ;endif; ?>
-    </div>
-
 </div>
 <div align="center"><?php echo $pro->render(); ?></div>
 <?php endif; ?>
@@ -309,7 +311,7 @@
 <!--<script src="__JS__/jquery-2.1.4.js"></script>-->
 <!--<script src="__JS__/bootstrap.min.js"></script>-->
 <script>
-    console.log($(".footer").height);
+    //console.log($(".footer").height);
     $(window).on("load resize",function(){
         //var w=window.innerWidth||document.body.clientWidth||document.documentElement.clientWidth;
         var h=window.innerHeight||document.body.clientHeight||document.documentElement.clientHeight;

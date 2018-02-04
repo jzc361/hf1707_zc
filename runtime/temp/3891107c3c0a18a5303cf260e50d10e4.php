@@ -1,3 +1,4 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\user\userLogin.html";i:1517639285;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +16,7 @@
         <div class="head_cont" style="background:#fff">
             <div class="wrap1000 constr clearfix">
                 <div class="logo_1 f_l">
-                    <a class="link" href="{:url('index/Index')}">首页</a>
+                    <a class="link" href="<?php echo url('index/Index'); ?>">首页</a>
                 </div>
                 <div class="f_yahei no-nav-text">登录</div>
             </div>
@@ -60,7 +61,7 @@
                         <div class="form_row control-group mycontrol-group">
                             <label class="title control-label"><span class="f_red">*</span>验证码&emsp;</label>
                             <input type="text" name="code" ng-model="code" class="textbox" placeholder="验证码" maxlength="4" required style="width: 20%">
-                            <img id="codeimg" src="{:captcha_src()}" alt="captcha" onclick="this.src='{:captcha_src()}?'+Math.random()"/>
+                            <img id="codeimg" src="<?php echo captcha_src(); ?>" alt="captcha" onclick="this.src='<?php echo captcha_src(); ?>?'+Math.random()"/>
                             <div class="tip_box" style="display: inline-block">
                                 <span style="color:red" ng-show="user_register_form.code.$dirty">
                                     <span ng-show="user_register_form.code.$error.required">请输入验证码</span>
@@ -111,17 +112,17 @@
                 if(res.data.code==10001){
                     alert(res.data.msg);
                     localStorage.userMsg=JSON.stringify(res.data.data);
-                    location.href="{:url('home/Index/index')}";
+                    location.href="<?php echo url('home/Index/index'); ?>";
 //                    location.href='javascript:history.go(-1)';//回到上一页
 
                 } else if(res.data.code==10002) {
                     //验证码错误--刷新验证码
                     alert(res.data.msg);
-                    $('#codeimg').attr('src', '{:captcha_src()}?' + Math.random());
+                    $('#codeimg').attr('src', '<?php echo captcha_src(); ?>?' + Math.random());
                 }else {
                     //登录失败
                     alert(res.data.msg);
-                    $('#codeimg').attr('src','{:captcha_src()}?'+Math.random());
+                    $('#codeimg').attr('src','<?php echo captcha_src(); ?>?'+Math.random());
                 }
             });
         }

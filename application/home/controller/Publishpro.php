@@ -14,8 +14,15 @@ class Publishpro extends Auth
 
     //获取客服信息
     public function getServiceMsg(){
-        $serviceList=db('emp')->where('roleid','3')->select();
-        //var_dump($serviceList);
+        $user =Session::has('zc_user')?Session::get('zc_user'):'';
+        if(is_array($user)){
+            $userid=$user['userid'];
+        }
+       // $subQuery = db('emp')->where('roleid','3')->buildSql();
+        $serviceList=Db::query("SELECT b.*,SUM(a.unreadcount) unreadcount FROM zc_chats a,
+(select * FROM zc_emp WHERE roleid=3)b WHERE a.sender in(b.empid) AND a.rever=$userid GROUP BY a.sender
+");
+        //var_dump($serviceList);exit();
         return ($serviceList);
     }
     //跳转到众筹发布页

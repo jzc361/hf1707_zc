@@ -7,8 +7,21 @@
     <link rel="stylesheet" type="text/css" href="__CSS__/chat.css">
     <link rel="stylesheet" type="text/css" href="__STATIC__/font_Icon/iconfont.css">
 </head>
+
 <body>
-<div id="myChat" style="left: 400px;"></div>
+<div id="myChat" style="left: 400px;width: 760px;margin: 0">
+    <div id="hisShow" style="width: 34.7%" class="contentR">
+        <div id="hisContent"></div>
+        <div id="page"></div>
+        <!--<div>-->
+            <!--<p class='hisP'>-->
+                <!--<span style='margin-right: 10px;'></span>-->
+                <!--<span></span>-->
+            <!--</p>-->
+            <!--<p class='hisP'></p>-->
+        <!--</div>-->
+    </div>
+</div>
 <!--<div class="chatContainer">-->
     <div id="chatlist" ref="chatBox">
         <!--头部-->
@@ -23,7 +36,7 @@
             </div>
         </div>
         <!--用户列表-->
-        <div class="chatBox-info" style="height: 100%">
+        <div class="chatBox-info" style="height: 100%;">
             <div class="chatBox-list" ref="chatBoxlist" style="height: 100%">
             </div>
         </div>
@@ -39,8 +52,10 @@
     $("#headimg").attr("src",'__STATIC__/'+empheadimg+'');
     $("#empname").text(empname);
     var staticUrl='__STATIC__';
+    var getHisUrl = "{:url('admin/Chat/showChat')}";
 </script>
 <script src="__JS__/qqface.js"></script>
+<script src="__JS__/page.js"></script>
 <script src="__JS__/myChat.js"></script>
 <script src="__JS__/admin/connectServer.js"></script>
 
