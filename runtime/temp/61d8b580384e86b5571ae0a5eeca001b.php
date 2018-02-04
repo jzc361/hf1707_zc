@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:88:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\index\mainView.html";i:1517623669;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517471035;s:88:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517620942;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:88:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\index\mainView.html";i:1517708134;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517471035;s:88:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517620942;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -551,7 +551,7 @@
 </body>
 <script>
     $(function(){
-
+        console.log('加载完成');
         $(".hotList>img").load(function(){
             console.log(333,$(this).width());
 //            $(this).css("height",$(this).width()*0.78);

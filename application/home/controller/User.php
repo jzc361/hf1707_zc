@@ -124,8 +124,9 @@ class User extends Auth
     public function support()
     {
         //获取分页项目
-        $supportList=db('orders a,zc_project b')
-            ->where('a.projectid=b.projectid')
+        $supportList=db('orders a,zc_prodetails b,zc_project c')
+            ->where('a.prodetailsid=b.prodetailsid')
+            ->where('b.projectid=c.projectid')
             ->where('a.userid',$this->zc_user['userid'])
             ->order('a.orderstime desc')
             ->paginate(5);
@@ -145,15 +146,13 @@ class User extends Auth
         $condition=['a.projectid'=>$orderid];
         $log=db('prolog a')
             ->join('zc_user b','a.userid=b.userid')
-            ->join('zc_user b','a.userid=b.userid')
-            ->join('zc_user b','a.userid=b.userid')
             ->where($condition)
             ->order('logtime','desc')
             ->field('a.*,b.userid,b.username')
             ->select();
 
         //项目进度
-        $this->assign('pro',$order);
+        $this->assign('order',$order);
         $this->assign('prolog',$log);
         return $this->fetch('supportDetail');
     }
@@ -420,16 +419,20 @@ class User extends Auth
     }
     //关注的项目页面
     public function focus(){
+        var_dump(input());
+        $page=input('?get.page')?input('page'):"";
         //获取分页项目
         $focusList=db('focuspro a')
             ->field('*,count(d.ordersid) surport_count,datediff(b.endtime,NOW()) resttime')
             ->join('zc_project b','a.projectid=b.projectid','left')
             ->join('zc_prodetails c','a.projectid=c.projectid','left')
-            ->join('zc_orders d','a.projectid=d.projectid','left')
+            ->join('zc_orders d','c.prodetailsid=d.prodetailsid','left')
             ->where('a.userid',$this->zc_user['userid'])
             ->group('a.projectid')
             ->order('a.focustime desc')
-            ->paginate(5);
+            ->paginate(3,false,[
+
+            ]);
         $this->assign('focusList',$focusList);
         return $this->fetch('focus');
     }
