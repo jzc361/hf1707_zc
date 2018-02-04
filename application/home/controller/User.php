@@ -62,7 +62,7 @@ class User extends Auth
             $reMsg=[
                 'code'=>10001,
                 'msg'=>config('Msg')['login']['success'],
-                'data'=>[]
+                'data'=>[$data]
             ];
             return json($reMsg);
         }

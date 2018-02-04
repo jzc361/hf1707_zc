@@ -1,17 +1,18 @@
 /**
  * Created by Administrator on 2018/2/1.
  */
-function MyChat($div,callback){
+function MyChat($div,$hisdiv,callback){
     this.$div=$div;
+    this.$contentR=$hisdiv;
     this.callback=callback;
     this.draw();
 }
 
 MyChat.prototype.draw=function(){
     this.$div.attr('class','chatBox');
+    this.$contentR.attr('class','contentR');
     //聊天框头部
     this.$head=$("<div class='chatBox-head-one chatBox-head'></div>");
-
     //聊天用户信息显示
     this.$userMsg=$("<div class='chat-people'></div>");
     this.$head.append(this.$userMsg);
@@ -27,8 +28,10 @@ MyChat.prototype.draw=function(){
         //this.$divR.hide();
     }.bind(this));
     //聊天框头部结束
+    //左边
+    this.$contentL=$("<div></div>");
     //聊天信息显示
-    this.$chatBox=$("<div class='chatBox-info'></div>");
+    this.$chatBox=$("<div class='chatBox-info' style='top: 0;'></div>");
     this.$chatBoxContent=$("<div class='chatBox-content' style='height:100%'></div>");
     this.$chatBox.append(this.$chatBoxContent);
     //this.$div.append(this.$chatBox);
@@ -57,7 +60,17 @@ MyChat.prototype.draw=function(){
             <i class="iconfont icon-tuxiang"></i>\
         </label>');
     //消息记录
-    this.$hisBtn=$("<span class='hisBtn'>消息记录</span>");
+    this.$hisBtn=$("<input type='button' class='hisBtn' value='消息记录'>");
+    //点击消息记录
+    this.$hisBtn.click(function(){
+        this.$contentR.toggle();
+        if(this.$contentR.css("display")=="none"){
+            this.$contentL.css({width:"100%"});
+        }
+        else {
+            this.$contentL.css({width:"65%"});
+        }
+    }.bind(this));
     //输入框
     this.$inputDiv=$("<div class='div-textarea' contenteditable='true'></div>");
     //发送按钮
@@ -66,7 +79,13 @@ MyChat.prototype.draw=function(){
 
     this.$btn.append(this.$face, this.$pic,this.$hisBtn);
     this.$footer.append(this.$btn,this.$inputDiv,this.$sendBtn);
-    this.$div.append(this.$head,this.$chatBox,this.$footer,this.$faceDiv);
+    this.$contentL.append(this.$chatBox,this.$footer,this.$faceDiv);
+    this.$contentL.css({width: '100%', height: '88%', marginTop: '77px', float: 'left',position:"relative" });
+    //右边 消息记录
+    //this.$contentR=$("<div></div>");
+    //this.$contentR.css({width: '35%', height: '90%', marginTop: '74px', float: 'right',display:"none",backgroundColor:' #eee',
+    //border: '1px #D0D0D0 solid'});
+    this.$div.append(this.$head,this.$contentL,this.$contentR);
 };
 //设置头部信息
 MyChat.prototype.setHead=function(img,nickname){
@@ -103,7 +122,7 @@ MyChat.prototype.sendMsg=function(img)
             // });
         }
         else {
-            this.$inputDiv.html('请输入发送的消息');
+            //this.$inputDiv.html('请输入发送的消息');
         }
 
     }.bind(this));
@@ -124,7 +143,6 @@ MyChat.prototype.getFriendMsg=function(img,message){
     $("#chatBox-content-demo").scrollTop($("#chatBox-content-demo")[0].scrollHeight);
 
 };
-
 //发送消息显示
 MyChat.prototype.sendMsgView=function(img,message){
     this.msgDiv.append('\
@@ -146,6 +164,19 @@ MyChat.prototype.show=function()
 {
     //this.$userMsg.empty();
     this.$div.show();
+};
+
+//显示历史记录
+MyChat.prototype.showHis=function(HisList)
+{
+    //循环显示发送者什么时间发送了什么
+    this.$contentR.append("<div>" +
+            "<p class='hisP'>" +
+                "<span style='margin-right: 10px;'>小一</span>" +
+                "<span>2018/2/4/10:10</span>" +
+            "</p>" +
+            "<p class='hisP'>你在干嘛</p>" +
+        "</div>");
 };
 
 

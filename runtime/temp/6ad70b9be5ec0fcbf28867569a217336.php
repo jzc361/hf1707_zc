@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:83:"D:\AppServ\www\hf1707_zc\public/../application/home\view\publishpro\proBaseMsg.html";i:1517560887;s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517561623;s:72:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\nav.html";i:1517447918;s:75:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\footer.html";i:1517371150;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:83:"D:\AppServ\www\hf1707_zc\public/../application/home\view\publishpro\proBaseMsg.html";i:1517587242;s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517757175;s:72:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\nav.html";i:1517636030;s:75:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\footer.html";i:1517587242;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +7,7 @@
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>众筹发布页</title>
-    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="__CSS__/bootstrap.min.css">-->
     <link rel="stylesheet" href="__CSS__/proBaseMsg.css">
     <link rel="stylesheet" href="__CSS__/default.css">
 
@@ -79,18 +79,25 @@
 </head>
 <body>
 <!--聊天客服-->
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-    <!--<meta charset="UTF-8">-->
-    <!--<meta http-equiv="x-ua-compatible" content="IE=edge">-->
-    <!--<meta name="renderer" content="webkit">-->
-    <!--<meta name="viewport" content="width=device-width,initial-scale=1">-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="__CSS__/zzsc.css">
-<!--</head>-->
-<!--<body>-->
+    <link rel="stylesheet" type="text/css" href="__CSS__/chat.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/font_Icon/iconfont.css">
+</head>
+<body>
+<div id="myChat" style="left: 200px;"></div>
+<div id="hisShow" class="contentR">
+    <div id="hisContent"></div>
+    <div id="page"></div>
+</div>
 <div>
-    <div style="z-index: 10000000" class="qqserver" id="service" @click="getService()" >
+    <div style="z-index: 10000000" class="qqserver" id="service" @click="getService">
         <div class="qqserver_fold" >
             <div></div>
         </div>
@@ -102,14 +109,20 @@
             </div>
             <div>
                 <ul>
-                    <li  v-for="x in serviceList" style="cursor: pointer;">
-                        <div onclick="showchat()" value="{{x.empid}}" v-if="x.loginstate=='在线'" style="color: red">
-                            <span>{{x.empname}}</span>
-                            ({{x.loginstate}})
+                    <li v-for="x in serviceList" style="cursor: pointer;">
+                        <div v-if="x.loginstate=='在线'" style="color: red">
+                            <div  @click="showchat(x.empid,x.empname,x.headimg)">
+                                <span>{{x.empname}}</span>
+                                ({{x.loginstate}})
+                                <!--<i>{{x.unreadcount}}</i>-->
+                            </div>
                         </div>
-                        <div onclick="showchat()" v-if="x.loginstate=='离线'" style="color: black">
-                            <span value="x.empid" >{{x.empname}}</span>
-                            ({{x.loginstate}})
+                        <div  v-if="x.loginstate=='离线'" style="color: black">
+                            <div @click="showchat(x.empid,x.empname,x.headimg)">
+                                <span>{{x.empname}}</span>
+                                ({{x.loginstate}})
+                                <!--<i>{{x.unreadcount}}</i>-->
+                            </div>
                         </div>
                         <br>
                     </li>
@@ -118,21 +131,26 @@
         </div>
     </div>
 </div>
-<!--</body>-->
+</body>
 <script src="__JS__/jquery-2.1.4.js"></script>
 <script src="__JS__/vue.js"></script>
 <script>
    var getServiceMsgUrl = "<?php echo url('home/publishpro/getServiceMsg'); ?>";
+   var staticUrl='__STATIC__';
+   var getHisUrl = "<?php echo url('admin/Chat/showChat'); ?>";
 </script>
+<script src="__JS__/qqface.js"></script>
+<script src="__JS__/page.js"></script>
+<script src="__JS__/myChat.js"></script>
 <script src="__JS__/zzsc.js" ></script>
 <!--</html>-->
 <!--nav-->
 <!--公共nav-->
-<!--<link rel="stylesheet" href="__CSS__/bootstrap.min.css">-->
+<link rel="stylesheet" href="__CSS__/bootstrap.min.css">
 <link rel="stylesheet" href="__CSS__/home/goTop.css">
-<link rel="stylesheet" href="__CSS__/home/mainView.css">
-<!--<script src="__JS__/jquery-2.1.4.js"></script>-->
-<!--<script src="__JS__/bootstrap.min.js"></script>-->
+<!--<link rel="stylesheet" href="__CSS__/home/mainView.css">-->
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/bootstrap.min.js"></script>
 
 <nav class="navbar navbar-default" style="margin-bottom: 0" role="navigation">
     <div class="navbar-header">
@@ -142,22 +160,23 @@
         </button>
         <a class="navbar-brand my_logo" href="<?php echo url('/home/Index/index'); ?>">众筹网</a>
     </div>
-
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav my_nav">
-            <li <?php if(!session('?current')): ?> class="active"<?php endif; ?>><!--||session('current')=='index'-->
-                <a href="<?php echo url('/home/Index/index'); ?>">首页</a>
+            <li <?php if(in_array(($do), explode(',',"home/index/index,home/,home/index,index/"))): ?> class="active"<?php endif; ?>><!--||session('current')=='index'-->
+            <a href="<?php echo url('home/Index/index'); ?>">首页</a>
             </li>
-            <li <?php if(session('current')=='proindex'): ?> class="active"<?php endif; ?>>
-                <a href="<?php echo url('/home/Project/proindex'); ?>">更多众筹</a>
+            <li <?php if($do=='home/project/proindex'): ?> class="active"<?php endif; ?>>
+                <a href="<?php echo url('home/Project/proindex'); ?>">更多众筹</a>
             </li>
-            <li>
-                <a href="<?php echo url('/home/Project/prolimit'); ?>">限时众筹</a>
+            <li <?php if($do=='home/project/prolimit'): ?> class="active"<?php endif; ?>>
+                <a href="<?php echo url('home/Project/prolimit'); ?>">限时众筹</a>
             </li>
-            <li <?php if(session('current')=='proBaseMsg'): ?> class="active"<?php endif; ?>>
-                <a href="<?php echo url('/home/Publishpro/jumpToProBaseMsg'); ?>">发起项目</a>
+            <?php if(session('?zc_user')): ?>
+            <li <?php if(in_array(($do), explode(',',"home/publishpro/jumptoprobasemsg,home/publishpro/jumptoaddreturn"))): ?>  class="active"<?php endif; ?>>
+                <a href="<?php echo url('home/Publishpro/jumpToProBaseMsg'); ?>">发起项目</a>
                 <!--<a href="#">联系我们</a>-->
             </li>
+            <?php endif; ?>
             <!--<li class="dropdown">-->
             <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>-->
             <!--<ul class="dropdown-menu">-->
@@ -189,23 +208,25 @@
             </div> <button type="submit" class="btn btn-default">搜索</button>
         </form>
         <ul class="nav navbar-nav navbar-right">
-            <!--<li>-->
-            <!--<a href="<?php echo url('/home/Index/index'); ?>"><span class="glyphicon glyphicon-log-in"></span> 登录</a>-->
-            <!--</li>-->
-            <!--<li>-->
-            <!--<a href="<?php echo url('/home/Index/index'); ?>"><span class="glyphicon glyphicon-user"></span> 注册</a>-->
-            <!--</li>-->
+            <?php if(!session('?zc_user')): ?>
+            <li>
+            <a href="<?php echo url('home/User/showLogin'); ?>"><span class="glyphicon glyphicon-log-in"></span> 登录</a>
+            </li>
+            <li>
+            <a href="<?php echo url('home/User/showRegister'); ?>"><span class="glyphicon glyphicon-user"></span> 注册</a>
+            </li>
+            <?php else: ?>
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">admin<strong class="caret"></strong></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo session('zc_user')['username'] ?><strong class="caret"></strong></a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="<?php echo url('/home/User/user'); ?>">个人设置</a>
+                        <a href="<?php echo url('home/User/user'); ?>">个人设置</a>
                     </li>
                     <li>
-                        <a href="<?php echo url('/home/User/user'); ?>">项目管理(用户)</a>
+                        <a href="<?php echo url('home/User/user'); ?>">项目管理(用户)</a>
                     </li>
                     <li>
-                        <a href="<?php echo url('/home/User/test'); ?>">查看通知(测试)</a>
+                        <a href="<?php echo url('home/User/test'); ?>">查看通知(测试)</a>
                     </li>
                     <li class="divider">
                     </li>
@@ -215,12 +236,23 @@
                 </ul>
             </li>
             <li>
-                <a href="<?php echo url('/home/Index/index'); ?>"><span class="glyphicon glyphicon-log-in"></span> 退出</a>
+                <a href="javascript:void(0)" onclick="exitLogin()"><span class="glyphicon glyphicon-log-in"></span> 退出</a>
             </li>
+            <?php endif; ?>
         </ul>
     </div>
 
 </nav>
+<script>
+    function exitLogin(){
+        if(confirm("确认退出？")){
+            if(localStorage.userMsg!=undefined){
+                localStorage.removeItem('userMsg');
+            }
+            location.href="<?php echo url('home/User/exitLogin'); ?>";
+        }
+    }
+</script>
 <div class="container" id="vueDiv" style="margin-top: 25px;margin-bottom: 25px;">
     <!--<div class="row-fluid">-->
 <!--左边-->
@@ -357,8 +389,15 @@
 <!--公共footer-->
 <link rel="stylesheet" href="__CSS__/home/goTop.css">
 <link rel="stylesheet" href="__CSS__/home/mainView.css">
-
-<div class="">
+<script src="__JS__/home/gotop.js"></script>
+<div>
+    <!-- GOTOP -->
+    <div>
+        <div id="code"></div>
+        <div id="code_img"></div>
+        <a id="gotop" href="javascript:void(0)"></a>
+    </div>
+    <!-- GOTOP -->
     <div class="footer">
         <div class="container">
             <div class="col-sm-6">
@@ -387,7 +426,7 @@
     </div>
 </div>
 </body>
-<script src="__JS__/jquery-2.1.4.js"></script>
+<!--<script src="__JS__/jquery-2.1.4.js"></script>-->
 <script src="__JS__/vue.js"></script>
 
 <!-- 配置文件 -->

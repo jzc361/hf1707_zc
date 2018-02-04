@@ -99,6 +99,9 @@
 <script>
     function exitLogin(){
         if(confirm("确认退出？")){
+            if(localStorage.userMsg!=undefined){
+                localStorage.removeItem('userMsg');
+            }
             location.href="{:url('home/User/exitLogin')}";
         }
     }

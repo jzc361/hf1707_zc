@@ -1,6 +1,13 @@
-*{margin:0;padding:0;list-style:none;border:none;}
+*{margin:0;padding:0;list-style:none;}
 body{font-size:12px;}
 a{color:#666;text-decoration:none;}
+.chatBox-info1{
+    width: 100%;
+    height: 354px;
+    background: #fff;
+    text-align: left;
+    position: absolute;
+}
 /*客服代码部分*/
 .qqserver .qqserver-header:after,.qqserver .qqserver-header:before,.qqserver li a:after,.qqserver li a:before{display:table;content:' '}
 .qqserver .qqserver-header:after,.qqserver li a:after{clear:both}

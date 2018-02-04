@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:74:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\login\index.html";i:1517540074;}*/ ?>
-=======
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:74:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\login\index.html";i:1517554623;}*/ ?>
->>>>>>> 34ad97babe0adaf2628f386c5232ea510c7e3b79
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:74:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\login\index.html";i:1517631753;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
