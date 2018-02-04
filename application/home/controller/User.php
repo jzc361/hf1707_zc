@@ -124,14 +124,39 @@ class User extends Auth
     public function support()
     {
         //获取分页项目
-        $supportList=db('orders a,zc_project b')
-            ->where('a.projectid=b.projectid')
+        $supportList=db('orders a,zc_prodetails b,zc_project c')
+            ->where('a.prodetailsid=b.prodetailsid')
+            ->where('b.projectid=c.projectid')
             ->where('a.userid',$this->zc_user['userid'])
             ->order('a.orderstime desc')
             ->paginate(5);
         $this->assign('supportList',$supportList);
         return $this->fetch('support');
     }
+    //支持的项目页面--项目详情
+    public function supportDetail(){
+        $orderid=input('?get.id')?input('id'):'';
+        $order=db('orders a')
+            ->where('a.ordersid',$orderid)
+            ->join('zc_prodetails b','a.prodetailsid=b.prodetailsid')
+            ->join('zc_project c','b.projectid=c.projectid')
+            ->field('a.*,b.introduce,c.projectname')
+            ->find();
+
+        $condition=['a.projectid'=>$orderid];
+        $log=db('prolog a')
+            ->join('zc_user b','a.userid=b.userid')
+            ->where($condition)
+            ->order('logtime','desc')
+            ->field('a.*,b.userid,b.username')
+            ->select();
+
+        //项目进度
+        $this->assign('order',$order);
+        $this->assign('prolog',$log);
+        return $this->fetch('supportDetail');
+    }
+
     //我的项目页面
     public function myProject()
     {
@@ -270,6 +295,7 @@ class User extends Auth
     public function updateLog(){
         $userid=session('zc_user')['userid'];
         $proid=input('?get.projectid')?input('get.projectid'):"";
+        //var_dump($proid);exit;
         //上传图片
         $file = request()->file('imgFile');
         $logMsg=input('post.');
@@ -309,7 +335,7 @@ class User extends Auth
                 $condition['logimg']='img/home/logimg/pro'.$proid.'/'.$imgPath;
             }
         }
-        //var_dump($condition);
+//        var_dump($condition);exit;
         $res=db('prolog')->insert($condition);
         if($res){
             //更新成功
@@ -391,19 +417,22 @@ class User extends Auth
         $this->assign('orderList',$orderList);
         return $this->fetch('proSupRecord');
     }
-
     //关注的项目页面
     public function focus(){
+        var_dump(input());
+        $page=input('?get.page')?input('page'):"";
         //获取分页项目
         $focusList=db('focuspro a')
             ->field('*,count(d.ordersid) surport_count,datediff(b.endtime,NOW()) resttime')
             ->join('zc_project b','a.projectid=b.projectid','left')
             ->join('zc_prodetails c','a.projectid=c.projectid','left')
-            ->join('zc_orders d','a.projectid=d.projectid','left')
+            ->join('zc_orders d','c.prodetailsid=d.prodetailsid','left')
             ->where('a.userid',$this->zc_user['userid'])
             ->group('a.projectid')
             ->order('a.focustime desc')
-            ->paginate(5);
+            ->paginate(3,false,[
+
+            ]);
         $this->assign('focusList',$focusList);
         return $this->fetch('focus');
     }
@@ -412,30 +441,132 @@ class User extends Auth
         $this->assign('money',$this->zc_user['money']);
         return $this->fetch('money');
     }
-    public function charge(){
-        $chargeNum=input('?post.chargeNum')?input('chargeNum'):'';
-        $res=Validate::regex($chargeNum,'/^(-)?(([1-9]{1}\d*)|([0]{1}))(\.(\d){1,2})?$/');
-
-//        $data=db('user')
-//            ->where('userid',$this->zc_user['userid'])
-//            ->find();
-//        Session::set('zc_user',$data);
-//        $this->zc_user=$data;
-        $res=db("user")
-            ->where('userid',$this->zc_user['userid'])
-            ->setInc('money', $chargeNum);
-        if($res>0){
-            $this->zc_user['money']+=$chargeNum;
-            Session::set('zc_user',$this->zc_user);
-            $msgResp=[
-                'code'=>20007,
-                'msg'=>config('msg')['oper']['update'],
-                'data'=>$this->zc_user['money']
-            ];
+    //资金管理页面-充值
+    public function recharge(){
+        $rechargeNum=input('?post.rechargeNum')?input('rechargeNum'):'';
+//        var_dump($rechargeNum);
+        $validate=Validate::regex($rechargeNum,'/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/');
+//        var_dump($rechargeNum,$validate);exit;
+        if($validate) {
+            // 启动事务
+            Db::startTrans();
+            try {
+                //更新用户信息
+                db("user")
+                    ->where('userid', $this->zc_user['userid'])
+                    ->setInc('money', $rechargeNum);
+                //添加充值记录
+                $data = [
+                    'r_time' => date('Y-m-d H:i:s'),
+                    'r_amount' => "{$rechargeNum}",
+                    'r_method' => '微信支付',
+                    'r_state' => '1',
+                    'userid' => "{$this->zc_user['userid']}",
+                ];
+                db("recharge")
+                    ->insert($data);
+                // 提交事务
+                Db::commit();
+                $this->zc_user['money'] += $rechargeNum;
+                Session::set('zc_user', $this->zc_user);
+                $msgResp = [
+                    'code' => 20005,
+                    'msg' => config('msg')['oper']['update'],
+                    'data' => $this->zc_user['money']
+                ];
+            } catch (\Exception $e) {
+                // 回滚事务
+                Db::rollback();
+                $msgResp = [
+                    'code' => 20006, //更新失败
+                    'msg' => config('msg')['oper']['updateFail'],
+                    'data' => []
+                ];
+            }
         }else{
             $msgResp=[
                 'code'=>20006, //更新失败
                 'msg'=>config('msg')['oper']['updateFail'],
+                'data'=>[]
+            ];
+        }
+        return json($msgResp);
+
+//            $res=db("user")
+//                ->where('userid',$this->zc_user['userid'])
+//                ->setInc('money', $rechargeNum);
+//
+//            if($res>0){
+//                $data=[
+//                    'r_time'=>'now()',
+//                    'r_amount'=>"{$rechargeNum}",
+//                    'r_method'=>'微信支付',
+//                    'r_state'=>'1',
+//                    'userid'=>"{$this->zc_user['userid']}",
+//                ];
+//                $res2=db("recharge")
+//                    ->where('userid',$this->zc_user['userid'])
+//                    ->insert($data);
+//                if($res2>0){
+//
+//                }
+//
+//                $this->zc_user['money']+=$rechargeNum;
+//                Session::set('zc_user',$this->zc_user);
+//                $msgResp=[
+//                    'code'=>20005,
+//                    'msg'=>config('msg')['oper']['update'],
+//                    'data'=>$this->zc_user['money']
+//                ];
+//            }else{
+//                $msgResp=[
+//                    'code'=>20006, //更新失败
+//                    'msg'=>config('msg')['oper']['updateFail'],
+//                    'data'=>[]
+//                ];
+//            }
+//        }else{
+//            $msgResp=[
+//                'code'=>20006, //更新失败
+//                'msg'=>config('msg')['oper']['updateFail'],
+//                'data'=>[]
+//            ];
+//        }
+
+//        return json($msgResp);
+    }
+    //资金管理页面-获取充值记录表
+    public function getRechargeList(){
+        $current=input('?get.pageNow')?input('pageNow'):1;
+        $showItem=5;
+        $pageSize=5;
+        $rowCount=db('recharge')
+            ->where('userid',$this->zc_user['userid'])
+            ->count();
+        $allPage=ceil($rowCount/$pageSize);
+        if($allPage<$current){
+            $current=$allPage;
+        }
+        $pageData=[
+            'current'=>$current,
+            'showItem'=>$showItem,
+            'allPage'=>$allPage
+        ];
+        $data=db('recharge')
+            ->where('userid',$this->zc_user['userid'])
+            ->order('r_id desc')
+            ->page("{$current},{$pageSize}")
+            ->select();
+        if($data){
+            $msgResp=[
+                'code'=>20007,
+                'msg'=>config('msg')['oper']['select'],
+                'data'=>[$data,$pageData]
+            ];
+        }else{
+            $msgResp=[
+                'code'=>20008,
+                'msg'=>config('msg')['oper']['selectFail'],
                 'data'=>[]
             ];
         }

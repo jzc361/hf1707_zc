@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>回报内容</title>
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+</head>
+<style>
+    .center{
+        width: 90%;
+    }
+    .center div{
+        display: inline-block;
+    }
+</style>
+<body>
+    <div class="center container" style="margin-top: 30px">
+        <div>
+            <img src="__STATIC__/{$prodetails.imgs}" alt="" style="width: 80px;height: 80px;border: 1px solid gainsboro">
+        </div>
+        <div style="margin-left: 20px">
+            <h4>{$prodetails.projectname}(档位￥{$prodetails.price})</h4>
+            <p>{$prodetails.introduce}</p>
+        </div>
+        <hr>
+        <div align="center" class="container" style="width: 100%;margin: auto">
+            <button type="button" class="btn btn-info" onclick="addOrder({$prodetails.prodetailsid})">去结算</button>
+        </div>
+
+    </div>
+</body>
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/bootstrap.min.js"></script>
+<script>
+    function addOrder(prodetailsid){
+        //console.log(prodetailsid);
+        $.ajax({
+            url:'{:url("Order/isOrder")}',
+            data:{prodetailsid:prodetailsid},
+            dataType:'json',
+            success:function(res){
+                if(res.code=='00000'){
+                    //未登录，进入登录页面
+                    alert(res.msg);
+                    window.open(res.data);
+                }else if(res.code=='11111'){
+                    //支持数达上限，关闭窗口
+                    alert(res.msg);
+                    parent.closeIframe();
+                    //window.close();
+                }else {
+                    parent.location.href='{:url("home/Order/order")}?prodetailsid='+prodetailsid;
+                }
+            }
+        });
+    }
+</script>
+</html>

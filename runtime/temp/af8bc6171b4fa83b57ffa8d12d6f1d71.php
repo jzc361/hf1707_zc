@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:88:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\myProject.html";i:1517581102;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:88:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\myProject.html";i:1517635396;}*/ ?>
 
 
 <!DOCTYPE html>
@@ -76,11 +76,11 @@
                     </tr>
                     <?php if(is_array($proList) || $proList instanceof \think\Collection || $proList instanceof \think\Paginator): $i = 0; $__LIST__ = $proList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$val): $mod = ($i % 2 );++$i;?>
                     <tr>
-                         <td>
-                             <img style="width: 150px;height: 150px;float: left" src="<?php echo $val['projectimg']; ?>" alt="">
-                             <span style="height: 150px;line-height: 150px;"><?php echo $val['projectname']; ?></span>
-                         </td>
-                         <td><?php echo $val['statename']; ?></td>
+                        <td>
+                            <img style="width: 150px;height: 150px;float: left" src="__STATIC__/<?php echo $val['projectimg']; ?>" alt="">
+                            <span style="height: 150px;line-height: 150px;"><?php echo $val['projectname']; ?></span>
+                        </td>
+                        <td><?php echo $val['statename']; ?></td>
                         <td>
                             <?php if($val['statename']=='待审核'): ?>
                             <span>等待审核</span>
@@ -89,7 +89,7 @@
                                 <span data-toggle="modal" data-target="#starttime" onclick="selectStarttime(<?php echo $val['projectid']; ?>)" style="cursor: pointer">选择开始时间</span>
                                 <br>
                                 <a href="javascript:;"
-                                    onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
+                                   onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
                                 <br>
                                 <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
                             </span>
@@ -110,10 +110,11 @@
                                 <a href="javascript:;"
                                    onclick='x_admin_show("项目日志","showLog?id="+<?php echo $val['projectid']; ?>)'>项目日志</a>
                                 <br>
-                                <a href="">支持记录</a>
+                                <a href="javascript:;"
+                                   onclick='x_admin_show("支持记录","showSupRecord?id="+<?php echo $val['projectid']; ?>)'>支持记录</a>
                                 <br>
                                 <a href="javascript:;"
-                                     onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
+                                   onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
                                 <br>
                                 <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
                             </span>
@@ -125,7 +126,7 @@
                                 <a href="">支持记录</a>
                                 <br>
                                 <a href="javascript:;"
-                                    onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
+                                   onclick='x_admin_show("项目详情","showDetails?id="+<?php echo $val['projectid']; ?>)'>查看详情</a>
                                 <br>
                                 <span style="cursor: pointer" onclick="deletePro(<?php echo $val['projectid']; ?>)">删除</span>
                             </span>
@@ -174,18 +175,18 @@
     function deletePro(id){
         if(confirm("删除该项目？")){
             $.ajax({
-                 type: "get",
-                 url: "<?php echo url('home/User/deletePro'); ?>",
-                 data: {projectid:id},
-                 dataType: "json",
-                 success: function (responseData){
-                     console.log(responseData);
-                     alert(responseData.msg);
-                     location.reload(true);
-                 },
-                 error:function(){
-                     alert("error");
-                 }
+                type: "get",
+                url: "<?php echo url('home/User/deletePro'); ?>",
+                data: {projectid:id},
+                dataType: "json",
+                success: function (responseData){
+                    console.log(responseData);
+                    alert(responseData.msg);
+                    location.reload(true);
+                },
+                error:function(){
+                    alert("error");
+                }
             });
         }
     }
@@ -201,18 +202,18 @@
         var starttime=$("#start").val();
         console.log(projectid,starttime);
         $.ajax({
-             type: "post",
-             url: "<?php echo url('home/User/updateStartTime'); ?>",
-             data: {projectid:projectid,starttime:starttime},
-             dataType: "json",
-             success: function (responseData){
-                 console.log(responseData);
-                 alert(responseData.msg);
-                 location.reload(true);
-             },
-             error:function(){
-                 alert("error");
-             }
+            type: "post",
+            url: "<?php echo url('home/User/updateStartTime'); ?>",
+            data: {projectid:projectid,starttime:starttime},
+            dataType: "json",
+            success: function (responseData){
+                console.log(responseData);
+                alert(responseData.msg);
+                location.reload(true);
+            },
+            error:function(){
+                alert("error");
+            }
         });
     });
     //开始时间选择

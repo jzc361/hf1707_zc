@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:90:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\project\proindex.html";i:1517467836;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517471035;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:90:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\project\proindex.html";i:1517707187;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517471035;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>产品项目</title>
     <!--<link rel="stylesheet" href="__CSS__/bootstrap.min.css">-->
-    <link rel="stylesheet" href="__CSS__/project.css">
+    <!--<link rel="stylesheet" href="__CSS__/project.css">-->
     <!--<style>
         .center{
             margin-top: 30px;
@@ -74,7 +74,7 @@
     </style>-->
 </head>
 <body style="background: #f9f9f9;">
-    <!--公共nav-->
+<!--公共nav-->
 <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
 <link rel="stylesheet" href="__CSS__/home/goTop.css">
 <!--<link rel="stylesheet" href="__CSS__/home/mainView.css">-->
@@ -179,7 +179,9 @@
         }
     }
 </script>
-    <div class="center container">
+<link rel="stylesheet" href="__CSS__/project.css">
+<div class="center container">
+    <div class="list" style="background-color: #fff">
         <div style="background-color: #fff">
             <div class="list sortList">
                 <!--分类列表-->
@@ -211,13 +213,17 @@
                 </div>
             </div>
         </div>
+
         <div class="showPro">
-            <?php if(is_array($pro) || $pro instanceof \think\Collection || $pro instanceof \think\Paginator): $i = 0; $__LIST__ = $pro;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?>
+            <!--项目不存在-->
+            <?php if(!$pro): ?>
+            <div class="searchNull">无查询结果</div>
+            <?php else: if(is_array($pro) || $pro instanceof \think\Collection || $pro instanceof \think\Paginator): $i = 0; $__LIST__ = $pro;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?>
             <div class="proList col-sm-2">
                 <!--项目图片-->
                 <div class="proimg">
                     <a href="prodetails?proid=<?php echo $value['projectid']; ?>">
-                        <img src="<?php echo $value['projectimg']; ?>" alt="" class="img-responsive" style="margin: auto">
+                        <img src="__STATIC__/<?php echo $value['projectimg']; ?>" alt="" class="img-responsive" style="margin: auto">
                     </a>
                 </div>
                 <!--项目名-->
@@ -256,10 +262,13 @@
             </div>
             <div class="space col-sm-1"></div>
             <?php endforeach; endif; else: echo "" ;endif; ?>
+
         </div>
     </div>
-    <div align="center"><?php echo $pro->render(); ?></div>
-    <!--公共footer-->
+</div>
+<div align="center"><?php echo $pro->render(); ?></div>
+<?php endif; ?>
+<!--公共footer-->
 <link rel="stylesheet" href="__CSS__/home/goTop.css">
 <link rel="stylesheet" href="__CSS__/home/mainView.css">
 <script src="__JS__/home/gotop.js"></script>
@@ -302,30 +311,37 @@
 <!--<script src="__JS__/jquery-2.1.4.js"></script>-->
 <!--<script src="__JS__/bootstrap.min.js"></script>-->
 <script>
+    //console.log($(".footer").height);
+    $(window).on("load resize",function(){
+        //var w=window.innerWidth||document.body.clientWidth||document.documentElement.clientWidth;
+        var h=window.innerHeight||document.body.clientHeight||document.documentElement.clientHeight;
 
-    //分类
-/*    $('.sortList').find('li').click(function(){
-        $('.sortList').find('li').attr('class','');
-        $(this).attr('class','active');
+        //$(".footer").css("width",w);
+        $(".searchNull").css("height",h-$(".nav").height()-$(".footer").height()-$(".list").height());
     });
+    //分类
+    /*    $('.sortList').find('li').click(function(){
+     $('.sortList').find('li').attr('class','');
+     $(this).attr('class','active');
+     });
 
-    //状态
-    $('.stateList').find('li').click(function(){
-        $('.stateList').find('li').attr('class','');
-        $(this).attr('class','active');
-    });*/
+     //状态
+     $('.stateList').find('li').click(function(){
+     $('.stateList').find('li').attr('class','');
+     $(this).attr('class','active');
+     });*/
 
-/*    function order(){
-        var order=$('#order option:selected').val();
-        console.log(order);
-        $('#order').href=order;
-        /!*$.ajax({
-            url:'proindex',
-            data:{order:order},
-            success:function(res){
-                //location.href="proindex?order="+order;
-            }
-        });*!/
-    }*/
+    /*    function order(){
+     var order=$('#order option:selected').val();
+     console.log(order);
+     $('#order').href=order;
+     /!*$.ajax({
+     url:'proindex',
+     data:{order:order},
+     success:function(res){
+     //location.href="proindex?order="+order;
+     }
+     });*!/
+     }*/
 </script>
 </html>

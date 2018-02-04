@@ -363,10 +363,16 @@
                 }
             },
             editAddress:function(){
-                if(this.editId==''){
-                    this.addAddress();
-                }else{
-                    this.updateAddress(this.editId);
+                $('#defaultForm').bootstrapValidator('validate');
+                if($('#defaultForm').data('bootstrapValidator').isValid()){
+                    if(this.editId==''){
+                        this.addAddress();
+                    }else{
+                        this.updateAddress(this.editId);
+                    }
+                }
+                else{
+                    alert('请正确填写表单')
                 }
             },
             updateAddress:function(id){
@@ -417,32 +423,28 @@
             },
             addAddress:function(){
                 var that=this;
-                $('#defaultForm').bootstrapValidator('validate');
-                if($('#defaultForm').data('bootstrapValidator').isValid()){
-                    var formData =$("#defaultForm").serialize();
-                    $.ajax({
-                        url: "{:url('home/User/insertAddress')}",
-                        type: "POST",
-                        data: formData,
-                        dataType: "json",
-                        success: function(res) {
-                            console.log(res);
-                            if(res.code==20001){
-                                that.getAddrList();
+                var formData =$("#defaultForm").serialize();
+                console.log(263,formData);
+                $.ajax({
+                    url: "{:url('home/User/insertAddress')}",
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    success: function(res) {
+                        console.log(res);
+                        if(res.code==20001){
+                            that.getAddrList();
 //                                window.location.reload();
-                                $('#myModal').modal('hide');
-                                alert(res.msg);
-                            }else{
-                                alert(res.msg);
-                            }
-                        },
-                        error: function(res) {
+                            $('#myModal').modal('hide');
+                            alert(res.msg);
+                        }else{
+                            alert(res.msg);
                         }
-                    });
-                }
-                else{
-                    alert('请正确填写表单')
-                }
+                    },
+                    error: function(res) {
+                    }
+                });
+
             },
             setDefault:function(id,isDefault){
                 console.log(333,id,isDefault);
@@ -476,61 +478,53 @@
                 this.current=index;
                 this.getAddrList();
             }.bind(this))
-        }
-
-
-    });
-
-
-</script>
-<script>
-
-    $(function(){
-        //正则校验
-        $('#defaultForm').bootstrapValidator({
+        },
+        updated: function(){
+            //正则校验
+            $('#defaultForm').bootstrapValidator({
 //        live: 'disabled',
-            message: '该值不能为空',
-            feedbackIcons: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-                reverName: {
-                    validators: {
-                        notEmpty: {
-                            message: '收货人不能为空'
-                        }
-                    }
+                message: '该值不能为空',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
                 },
-                province: {
-                    validators: {
-                        notEmpty: {
-                            message: '省份不能为空'
+                fields: {
+                    reverName: {
+                        validators: {
+                            notEmpty: {
+                                message: '收货人不能为空'
+                            }
                         }
-                    }
-                },
-                city: {
-                    validators: {
-                        notEmpty: {
-                            message: '城市不能为空'
+                    },
+                    province: {
+                        validators: {
+                            notEmpty: {
+                                message: '省份不能为空'
+                            }
                         }
-                    }
-                },
-                county: {
-                    validators: {
-                        notEmpty: {
-                            message: '地区不能为空'
+                    },
+                    city: {
+                        validators: {
+                            notEmpty: {
+                                message: '城市不能为空'
+                            }
                         }
-                    }
-                },
-                detailAddr: {
-                    validators: {
-                        notEmpty: {
-                            message: '详细地址不能为空'
+                    },
+                    county: {
+                        validators: {
+                            notEmpty: {
+                                message: '地区不能为空'
+                            }
                         }
-                    }
-                },
+                    },
+                    detailAddr: {
+                        validators: {
+                            notEmpty: {
+                                message: '详细地址不能为空'
+                            }
+                        }
+                    },
 //                Postcode: {
 //                    validators: {
 //                        notEmpty: {
@@ -538,22 +532,25 @@
 //                        }
 //                    }
 //                },
-                telephone: {
-                    validators: {
-                        notEmpty: {
-                            message: '电话号码不能为空'
-                        },
-                        regexp: {
+                    telephone: {
+                        validators: {
+                            notEmpty: {
+                                message: '电话号码不能为空'
+                            },
+                            regexp: {
 //                            regexp: /^[a-zA-Z0-9_\.]+$/,
-                            regexp:/^1[3|4|5|8][0-9]\d{4,8}$/,
-                            message: '电话号码格式不正确'
+                                regexp:/^1[3|4|5|8][0-9]\d{4,8}$/,
+                                message: '电话号码格式不正确'
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
+
+
     });
 
-</script>
 
+</script>
 </html>

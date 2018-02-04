@@ -76,93 +76,109 @@
 {include file="public/nav"}
 <link rel="stylesheet" href="__CSS__/project.css">
 <div class="center container">
-    <div style="background-color: #fff">
-        <div class="list sortList">
-            <!--分类列表-->
-            <ul class="nav nav-pills">
-                {volist name="sortList" id="sort"}
-                <li role="presentation" class="{if cookie('pro_sortid')==$sort.sortid}active{/if}"><a href="proindex?sortid={$sort.sortid}{if cookie('pro_search')}&search={$search}{/if}" class="{$sort.sortid}">{$sort.sortname}</a></li>
-                {/volist}
-            </ul>
-        </div>
-        <div class="list stateList">
-            <!--<div class="col-sm-7"></div>-->
-            <!--状态列表-->
-            <ul class="nav nav-pills col-xs-4" style="font-size: 12px">
-                <li role="presentation" class="{if !cookie('pro_stateid')}active{/if}"><a href="proindex">所有项目({$pronum})</a></li>
-                {volist name="stateList" id="state"}
-                <li role="presentation" class="{if cookie('pro_stateid')==$state.stateid}active{/if}"><a href="proindex?stateid={$state.stateid}{if cookie('pro_sortid')}&sortid={$sortid}{/if}{if cookie('pro_search')}&search={$search}{/if}">{$state.statename}</a></li>
-                {/volist}
-            </ul>
-            <div class="col-xs-6"></div>
-            <div class="col-xs-2">
-                <span>排序</span>
-                <select name="order" onchange="window.location=this.value">
-                    <option value="proindex?sortid={$sortid}&stateid={$stateid}" {if !cookie('order')}echo selected{/if}>请选择</option>
-                    <option value="proindex?order=1&sortid={$sortid}&stateid={$stateid}" {if cookie('order')==1}echo selected{/if}>热度</option>
-                    <option value="proindex?order=2&sortid={$sortid}&stateid={$stateid}" {if cookie('order')==2}echo selected{/if}>最新上线</option>
-                    <option value="proindex?order=3&sortid={$sortid}&stateid={$stateid}" {if cookie('order')==3}echo selected{/if}>金额最多</option>
-                    <!--<option value="proindex?order=4&sortid={$sortid}" {if cookie('order')==4}echo selected{/if}>支持最多</option>-->
-                </select>
+    <div class="list" style="background-color: #fff">
+        <div style="background-color: #fff">
+            <div class="list sortList">
+                <!--分类列表-->
+                <ul class="nav nav-pills">
+                    {volist name="sortList" id="sort"}
+                    <li role="presentation" class="{if cookie('pro_sortid')==$sort.sortid}active{/if}"><a href="proindex?sortid={$sort.sortid}{if cookie('pro_search')}&search={$search}{/if}" class="{$sort.sortid}">{$sort.sortname}</a></li>
+                    {/volist}
+                </ul>
             </div>
-        </div>
-    </div>
-    <div class="showPro">
-        {volist name="pro" id="value"}
-        <div class="proList col-sm-2">
-            <!--项目图片-->
-            <div class="proimg">
-                <a href="prodetails?proid={$value.projectid}">
-                    <img src="__STATIC__/{$value.projectimg}" alt="" class="img-responsive" style="margin: auto">
-                </a>
-            </div>
-            <!--项目名-->
-            <div class="proname">
-                <h4><a href="prodetails?proid={$value.projectid}">{$value.projectname}</a></h4>
-            </div>
-            <!--目标-->
-            <div>
-                <span>目标：{$value.daysnumber}天</span>
-                <span>￥{$value.tolamount}</span>
-                <!--显示众筹状态-->
-                <div style="float: right">
-                    {if $value.stateid==5}<span class="common-sprite">众筹中</span>{/if}
-                    {if $value.stateid==6}<span class="common-success">众筹成功</span>{/if}
-                    {if $value.stateid==7}<span class="common-fail">众筹失败</span> {/if}
-                </div>
-            </div>
-            <div class="progress progress-striped active" style="width: 85%">
-                <div class="progress-bar progress-bar-success" role="progressbar"aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:{$value.curamount/$value.tolamount*100}%;">
-                    <span class="sr-only">{$value.curamount/$value.tolamount*100}%完成</span>
-                </div>
-            </div>
-            <!--脚-->
-            <div class="intro">
-                <div class="col-xs-3">
-                    <p>{$value.curamount/$value.tolamount*100}%</p>
-                    <p>已达</p>
-                </div>
-                <div class="col-sm-3">
-                    <p>{$value.curamount}</p>
-                    <p>已筹集</p>
-                </div>
-                <div class="col-sm-6">
-                    <p>{$value.endtime|substr=0,10}</p>
-                    <p>结束时间</p>
+            <div class="list stateList">
+                <!--<div class="col-sm-7"></div>-->
+                <!--状态列表-->
+                <ul class="nav nav-pills col-xs-4" style="font-size: 12px">
+                    <li role="presentation" class="{if !cookie('pro_stateid')}active{/if}"><a href="proindex">所有项目({$pronum})</a></li>
+                    {volist name="stateList" id="state"}
+                    <li role="presentation" class="{if cookie('pro_stateid')==$state.stateid}active{/if}"><a href="proindex?stateid={$state.stateid}{if cookie('pro_sortid')}&sortid={$sortid}{/if}{if cookie('pro_search')}&search={$search}{/if}">{$state.statename}</a></li>
+                    {/volist}
+                </ul>
+                <div class="col-xs-6"></div>
+                <div class="col-xs-2">
+                    <span>排序</span>
+                    <select name="order" onchange="window.location=this.value">
+                        <option value="proindex?sortid={$sortid}&stateid={$stateid}" {if !cookie('order')}echo selected{/if}>请选择</option>
+                        <option value="proindex?order=1&sortid={$sortid}&stateid={$stateid}" {if cookie('order')==1}echo selected{/if}>热度</option>
+                        <option value="proindex?order=2&sortid={$sortid}&stateid={$stateid}" {if cookie('order')==2}echo selected{/if}>最新上线</option>
+                        <option value="proindex?order=3&sortid={$sortid}&stateid={$stateid}" {if cookie('order')==3}echo selected{/if}>金额最多</option>
+                        <!--<option value="proindex?order=4&sortid={$sortid}" {if cookie('order')==4}echo selected{/if}>支持最多</option>-->
+                    </select>
                 </div>
             </div>
         </div>
-        <div class="space col-sm-1"></div>
-        {/volist}
+
+        <div class="showPro">
+            <!--项目不存在-->
+            {if !$pro}
+            <div class="searchNull">无查询结果</div>
+            {else}
+            {volist name="pro" id="value"}
+            <div class="proList col-sm-2">
+                <!--项目图片-->
+                <div class="proimg">
+                    <a href="prodetails?proid={$value.projectid}">
+                        <img src="__STATIC__/{$value.projectimg}" alt="" class="img-responsive" style="margin: auto">
+                    </a>
+                </div>
+                <!--项目名-->
+                <div class="proname">
+                    <h4><a href="prodetails?proid={$value.projectid}">{$value.projectname}</a></h4>
+                </div>
+                <!--目标-->
+                <div>
+                    <span>目标：{$value.daysnumber}天</span>
+                    <span>￥{$value.tolamount}</span>
+                    <!--显示众筹状态-->
+                    <div style="float: right">
+                        {if $value.stateid==5}<span class="common-sprite">众筹中</span>{/if}
+                        {if $value.stateid==6}<span class="common-success">众筹成功</span>{/if}
+                        {if $value.stateid==7}<span class="common-fail">众筹失败</span> {/if}
+                    </div>
+                </div>
+                <div class="progress progress-striped active" style="width: 85%">
+                    <div class="progress-bar progress-bar-success" role="progressbar"aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:{$value.curamount/$value.tolamount*100}%;">
+                        <span class="sr-only">{$value.curamount/$value.tolamount*100}%完成</span>
+                    </div>
+                </div>
+                <!--脚-->
+                <div class="intro">
+                    <div class="col-xs-3">
+                        <p>{$value.curamount/$value.tolamount*100}%</p>
+                        <p>已达</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p>{$value.curamount}</p>
+                        <p>已筹集</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p>{$value.endtime|substr=0,10}</p>
+                        <p>结束时间</p>
+                    </div>
+                </div>
+            </div>
+            <div class="space col-sm-1"></div>
+            {/volist}
+
+        </div>
     </div>
 </div>
 <div align="center">{$pro->render()}</div>
+{/if}
 {include file="public/footer"}
 </body>
 <!--<script src="__JS__/jquery-2.1.4.js"></script>-->
 <!--<script src="__JS__/bootstrap.min.js"></script>-->
 <script>
+    //console.log($(".footer").height);
+    $(window).on("load resize",function(){
+        //var w=window.innerWidth||document.body.clientWidth||document.documentElement.clientWidth;
+        var h=window.innerHeight||document.body.clientHeight||document.documentElement.clientHeight;
 
+        //$(".footer").css("width",w);
+        $(".searchNull").css("height",h-$(".nav").height()-$(".footer").height()-$(".list").height());
+    });
     //分类
     /*    $('.sortList').find('li').click(function(){
      $('.sortList').find('li').attr('class','');

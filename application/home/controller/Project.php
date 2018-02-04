@@ -106,6 +106,13 @@ class Project extends Auth
             ->paginate(4, false, $pageParam);
         var_dump($pro);exit;*/
         $pro=db('project')->where($condition)->where($stateType)->order($ord,$ordertype)->paginate(4, false, $pageParam);//->whereOr($or)
+        if($pro->isEmpty()){
+            //查询项目不存在
+            $this->assign('pro',null);
+        }else{
+            $this->assign('pro',$pro);
+        }
+        //exit;
         //var_dump($pro);exit;
         $pronum=db('project')->where($condition)->where($stateType)->count('projectid');//->whereOr($or)
         $this->assign('sortid',cookie('pro_sortid'));//给前端返回搜索的分类id
@@ -119,14 +126,15 @@ class Project extends Auth
         //$this->assign('sortList',$sort);
 
         $this->assign('pronum',$pronum);
-        $this->assign('pro',$pro);
+        //$this->assign('pro',$pro);
         $this->assign('do',$this->do);
         return $this->fetch();
     }
 
     //限时众筹（列表）
     public function prolimit(){
-        cookie( null,'limit_');//清空前缀为pro_的cookie
+        $this->updateProState();//更新商品状态
+        //cookie( null,'limit_');//清空前缀为pro_的cookie
         //$limitstateid=$this->getlimitstateid('众筹中');
         $sortid=input('?get.sortid')?input('get.sortid'):"";//分类id
         $stateid=input('?get.stateid')?input('get.stateid'):"";//状态id
@@ -166,7 +174,6 @@ class Project extends Auth
             ->paginate(4);
         //var_dump($pro);exit;
         $this->assign('pro',$pro);
-
         $this->assign('sortList',$sort);//分类列表
         $this->assign('do',$this->do);
 
@@ -375,6 +382,19 @@ class Project extends Auth
                 return json($reMsg);
             }
         }
+    }
+
+    //确认回报内容
+    public function prorepay(){
+        $prodetailsid=input('get.prodetailsid');
+        $prodetails=db('prodetails a')
+            ->join('zc_project b','a.projectid=b.projectid')
+            ->where('prodetailsid',$prodetailsid)
+            ->field('a.*,b.projectname')
+            ->find();
+        //var_dump($prodetails);
+        $this->assign('prodetails',$prodetails);
+        return $this->fetch();
     }
 
     //获取分类列表
