@@ -8,7 +8,7 @@
         body{
             background: white;
             border: none;
-            height: 800px;
+            height: 1000px;
         }
         .setlist_new {
             padding: 5px 0;
@@ -101,7 +101,7 @@
             width: 150px;
             height: 150px;
             line-height: 18px;
-            background: url('__STATIC__/img/home/userView/security_icon.png') no-repeat;
+            /*background: url('__STATIC__/img/home/userView/security_icon.png') no-repeat;*/
             color: #666;
             cursor:pointer;
             font-family: "SimSun";
@@ -227,17 +227,17 @@
                         <form class="ajax_form_password" action="" id="save_pass" >
                             <div class="form_row control-group select_contetn" >
                                 <label class="form_lable">旧密码:</label>
-                                <input type="password" value="" class="small_textbox" name="user_old_pwd" />
+                                <input type="password" value="" id="oldPsw" class="small_textbox" name="user_old_pwd" />
                             </div>
                             <div class="blank0"></div>
                             <div class="form_row control-group">
                                 <label class="form_lable">新密码:</label>
-                                <input type="password" value="" class="small_textbox" name="user_pwd" />
+                                <input type="password" value="" id="newPsw" class="small_textbox" name="user_pwd" />
                             </div>
                             <div class="blank0"></div>
                             <div class="form_row control-group">
                                 <label class="form_lable">确认密码:</label>
-                                <input type="password" value="" class="small_textbox" name="confirm_user_pwd" />
+                                <input type="password" value="" id="rePsw" class="small_textbox" name="confirm_user_pwd" />
                             </div>
 
                             <div class="blank20"></div>
@@ -257,23 +257,24 @@
                         {if $userInfo['telephone']}
                         <p>已绑定</p>
                         <div class="update">
-                            <a href="javascript:void(0)" class="J_setting" id="J_setting_mobile">修改</a>
+                            <a onclick="setTelDiv()" href="javascript:void(0)" class="J_setting" id="J_setting_mobile">修改</a>
                         </div>
                         {else}
                         <p class="f_red">未绑定</p>
                         <div class="update">
-                            <a href="javascript:void(0)" class="J_setting f_red" id="J_setting_mobile">绑定</a>
+                            <a  onclick="setTelDiv()" href="javascript:void(0)" class="J_setting f_red" id="J_setting_mobile">绑定</a>
                         </div>
                         {/if}
                     </div>
                     <!--修改或设置手机号div-->
-                    <div class="setting_box" id="setting-mobile-box">
+                    <div class="setting_box" style="display: none" id="setting-mobile-box">
                         <form class="ajax_form_mobile" action="" >
                             {if $userInfo['telephone']}
                             <div class="form_row control-group">
                                 <label class="form_lable smaller_form_lable">原手机号:</label>
-                                <div class="smaller_form_cont">130****1093</div>
+                                <div class="smaller_form_cont" id="beforeTel"></div>
                                 <input type="hidden" id="settings-mobile-type" name="step" value="2">
+                                <input type="hidden" id="tel" name="step" value="{$userInfo['telephone']}">
                             </div>
                             <div class="blank0"></div>
                             <div class="form_row control-group">
@@ -284,12 +285,12 @@
                             <div class="blank0"></div>
                             <div class="form_row control-group">
                                 <label class="form_lable small_form_lable">新机号:</label>
-                                <input type="text" id="settings-new-mobile" value="" class="small_textbox" name="mobile"  style="width:310px;"/>
+                                <input type="text" id="settings-new-mobile" onblur="checkTel()" value="" class="small_textbox" name="mobile"  style="width:310px;"/>
                             </div>
                             {else}
                             <div class="form_row control-group">
                                 <label class="form_lable small_form_lable">手机号:</label>
-                                <input type="text" id="settings-mobile" value="" class="small_textbox" name="mobile"  style="width:310px;"/>
+                                <input type="text" id="settings-mobile" value="" onblur="checkTel()" class="small_textbox" name="mobile"  style="width:310px;"/>
                                 <input type="hidden" id="settings-mobile-type" name="step" value="1">
                             </div>
                             <div class="blank0"></div>
@@ -316,20 +317,22 @@
                         {if $userInfo['telephone']}
                         {if $userInfo['certstate']=='认证中'}
                         <p>已提交</p>
-                        <div class="update"><a href="javascript:void(0)" id="J_setting_paypwd">认证中</a></div>
+                        <div class="update"><a href="javascript:void(0)" id="">认证中</a></div>
                         {elseif $userInfo['certstate']=='认证成功'}
                         <p>已设置</p>
-                        <div class="update"><a href="javascript:void(0)" id="J_setting_paypwd">认证成功</a></div>
+                        <div class="update"><a href="javascript:void(0)" id="">认证成功</a></div>
                         {elseif $userInfo['certstate']=='未通过'}
+                        <input type="hidden" id="certFlag" name="step" value="1">
                         <p class="f_red">未通过</p>
                         <div class="update">
-                            <a href="javascript:void(0)" class="J_setting" id="J_setting_paypwd">重新认证</a>
+                            <a href="javascript:void(0)" class="J_setting" onclick="showCertDiv()" id="J_setting_paypwd">重新认证</a>
                             <br>
-                            <a href="javascript:void(0)" class="J_setting" id="J_setting_paypwd">查看原因</a>
+                            <a href="javascript:void(0)" class="J_setting" id="">查看原因</a>
                         </div>
                         {elseif $userInfo['certstate']=='未认证'}
+                        <input type="hidden" id="certFlag" name="step" value="0">
                         <p class="f_red">未认证</p>
-                        <div class="update"><a href="javascript:void(0)" class="J_setting" id="J_setting_paypwd">设置</a></div>
+                        <div class="update"><a href="javascript:void(0)" onclick="showCertDiv()" class="J_setting" id="J_setting_paypwd">认证</a></div>
                         {/if}
                         {else}
                         <p class="f_red">请先设置手机号</p>
@@ -375,7 +378,7 @@
 
                             <div class="form_row control-group">
                                 <label class="form_lable smaller_form_lable">手机号:</label>
-                                <div class="smaller_form_cont">130157210894</div>
+                                <div class="smaller_form_cont" id="beforeTel1"></div>
                             </div>
                             <div class="blank0"></div>
                             <div class="form_row control-group">
@@ -404,9 +407,100 @@
     </div>
 </div>
 </body>
+<script src="__JS__/jquery-2.1.4.js"></script>
 <script>
+    //点击修改登录密码
     function updatePswDiv(){
-        $("#setting-pwd-box").toggle();
+        var settingPwdBox= $("#setting-pwd-box");
+        var setPwdBtn= $("#J_setting_pwd");
+        if(settingPwdBox.css("display")=='none' ){
+            setPwdBtn.text("取消修改");
+        }
+        else if(settingPwdBox.css("display")=='block' ){
+            setPwdBtn.text("修改");
+        }
+        settingPwdBox.slideToggle(500);
+
     }
+    //确认修改登录密码
+    $("#pass").click(function(){
+        var oldPsw=$("#oldPsw").val();
+        var newPsw=$("#newPsw").val();
+        var rePsw=$("#rePsw").val();
+        console.log(oldPsw,newPsw,rePsw);
+    });
+    //点击绑定、修改手机号
+     function setTelDiv(){
+         var settingMobileBox=$("#setting-mobile-box");
+         var settingsMobileType=$("#settings-mobile-type");
+         var settingMobileBtn=$("#J_setting_mobile");
+         if(settingsMobileType.attr('value')==2){ //修改手机号
+             if(settingMobileBox.css("display")=='none' ){
+                 settingMobileBtn.text("取消修改");
+             }
+             else if(settingMobileBox.css("display")=='block' ){
+                 settingMobileBtn.text("修改");
+             }
+         }
+         else {
+             if(settingMobileBox.css("display")=='none' ){
+                 settingMobileBtn.text("取消绑定");
+             }
+             else if(settingMobileBox.css("display")=='block' ){
+                 settingMobileBtn.text("绑定");
+             }
+         }
+         settingMobileBox.slideToggle(500);
+     }
+    //提交手机号
+    function checkTel(){
+        var re=/^[1][34587]\d{9}$/;//手机号码验证正则表达式
+      // console.log(event.target);
+        var temp=event.target;
+        if(re.test(temp.value)){
+
+        }else{
+            $(temp).val('');
+            console.log("请输入有效的手机号");
+
+        }
+
+    }
+    //认证div
+    function showCertDiv(){
+        var settingCertDiv=$("#setting-id-box");
+        var settingCertBtn=$("#J_setting_paypwd");
+        var certFlag=$("#certFlag");
+        if(certFlag.attr("value")==1){ //认证失败
+            if(settingCertDiv.css("display")=='none' ){
+                settingCertBtn.text("取消认证");
+            }
+            else if(settingCertDiv.css("display")=='block' ){
+                settingCertBtn.text("重新认证");
+            }
+        }
+        else {
+            if(settingCertDiv.css("display")=='none' ){
+                settingCertBtn.text("取消认证");
+            }
+            else if(settingCertDiv.css("display")=='block' ){
+                settingCertBtn.text("认证");
+            }
+        }
+
+        settingCertDiv.slideToggle(500);
+    }
+    $(function(){
+        var settingsMobileType=$("#settings-mobile-type");
+        if(settingsMobileType.attr('value')==2){ //修改手机号
+            var tel=$("#tel").attr("value");
+            var myphone=tel.substr(3,4);
+            var lphone=tel.replace(myphone,"****");
+            console.log(tel);
+            $("#beforeTel").html(lphone);
+            $("#beforeTel1").html(lphone);
+        }
+    });
+
 </script>
 </html>
