@@ -583,6 +583,16 @@ class User extends Auth
         $this->assign('zc_user',$data);
         return $this->fetch('settings');
     }
+    //安全信息页面
+    public function security()
+    {
+        //获取用户信息
+        $userid=$this->zc_user['userid'];
+        $userInfo=db('user')->where('userid',$userid)->find();
+        $this->assign('userInfo',$userInfo);
+       // var_dump($userInfo);
+        return $this->fetch('security');
+    }
     //收货地址页面
     public function address()
     {
