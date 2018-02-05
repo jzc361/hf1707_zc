@@ -18,6 +18,7 @@ MyChat.prototype.draw=function(){
     this.$head.append(this.$userMsg);
     //关闭
     this.$close=$("<div class='chat-close' style='margin: 10px 10px 0 0;font-size: 14px'>关闭</div>");
+    //this.$close=$("<input class='chat-close' style='margin: 10px 10px 0 0;font-size: 14px' value='关闭'>");
     this.$head.append(this.$userMsg,this.$close);
     //点击关闭
     this.$close.click(function(){
