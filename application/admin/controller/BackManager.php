@@ -101,6 +101,63 @@ class Backmanager extends Controller
         }
     }
 
+    //角色信息修改
+    public function roleEdit(){
+        //角色id
+        $roleid = isset($_POST['roleid'])?$_POST['roleid']:'';
+
+        //角色名
+        $rolename = isset($_POST['rolename'])?$_POST['rolename']:'';
+
+        //角色介绍
+        $roledetails = isset($_POST['roledetails'])?$_POST['roledetails']:'';
+
+        //返回值
+        $res = [
+            'code'=>'20006',
+            'msg'=>config('msg')['oper']['updateFail'],
+            'data'=>''
+        ];
+        //菜单id
+        $menuid = isset($_POST['menuid'])?$_POST['menuid']:'';
+        if($roleid==''||$rolename==''||$roledetails==''){
+            return $res;
+        }else{
+
+            //删除旧数据
+            $delRes = db('limit')
+                ->where('roleid',$roleid)
+                ->delete();
+            //更新数据
+            //插入数据
+            if($delRes!=0) {
+                $newmenudata = [];
+                foreach ($menuid as $val) {
+
+                    $newmenudata[] = ['roleid' => $roleid, 'menuid' => $val['menuid']];
+                }
+                $updatemenu = db('limit')->insertAll($newmenudata);
+
+                //更新角色表
+                $updaterole = db('role')->where('roleid', $roleid)->update(['rolename' => $rolename, 'roledetails' => $roledetails]);
+                //
+
+                    if ($updatemenu != 0) {
+                        $res = [
+                            'code' => '20005',
+                            'msg' => config('msg')['oper']['update'],
+                            'data' => ''
+                        ];
+                        return $res;
+                    }
+            }
+            else{
+                return $res;
+            }
+
+        }
+    }
+
     //角色/////////////////////////////
 
     //员工//////////////////////////////
