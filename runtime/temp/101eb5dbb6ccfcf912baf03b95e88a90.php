@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:86:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\backmanager\rolemanager.html";i:1517562504;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:86:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\backmanager\rolemanager.html";i:1517820923;}*/ ?>
 <!DOCTYPE html>
 <html>
   
@@ -137,7 +137,7 @@
               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                   <h4 class="modal-title" id="modalLabelEdit">权限修改</h4>
-                  <!--------------------------添加角色------------------------------>
+                  <!--------------------------修改角色------------------------------>
               </div>
               <div class="modal-body">
                   <!--角色名-->
@@ -150,10 +150,10 @@
                                  autocomplete="off" class="layui-input">
                       </div>
                       <div class="layui-form-mid layui-word-aux">
-                          <span class="x-red">*</span>必填
+                          <span class="x-red">*</span>
                       </div>
                   </div>
-                  <!--权限添加-->
+                  <!--权限修改-->
                   <div class="layui-form-item">
                       <label class="layui-form-label">
                           <span class="x-red">*</span>权限选择
@@ -161,7 +161,7 @@
 
                       <div class="content_wrap layui-input-inline">
                           <div class="zTreeDemoBackground left">
-                              <ul id="treeDemo" class="ztree"  style="background-color: whitesmoke;width: 192px;height: 100%;border-color: #e6e6e6"></ul>
+                              <ul id="roleEdit" class="ztree"  style="background-color: whitesmoke;width: 192px;height: 100%;border-color: #e6e6e6"></ul>
                           </div>
                       </div>
 
@@ -175,9 +175,7 @@
                       </label>
                       <div class="layui-input-inline">
 
-                          <textarea style="overflow-y:visible" id="introEdit" lay-verify="" autocomplete="off" class="layui-input">
-
-                          </textarea>
+                          <input type="text" style="overflow-y:visible" id="introEdit" lay-verify="" autocomplete="off" class="layui-input"/>
 
                       </div>
                       <div class="layui-form-mid layui-word-aux">
@@ -188,7 +186,7 @@
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                  <button type="button" class="btn layui-btn">确认修改</button>
+                  <button type="button" id="saveEdit" class="btn layui-btn">确认修改</button>
               </div>
           </div>
       </div>
@@ -225,26 +223,27 @@
 
   <script>
       $(
-              $.ajax({
-                  url:"<?php echo url('admin/backmanager/allRole'); ?>",
-                  data:'',
-                  type:'post',
-                  dataType:'json',
-                  success:function($res){
-                      var roleVue = new Vue({
-                          el:"#allrole",
-                          data:{
-                              'allrole':$res.data
-                          },
-                          created: function () {
+              //获取权限
+          $.ajax({
+              url:"<?php echo url('admin/backmanager/allRole'); ?>",
+              data:'',
+              type:'post',
+              dataType:'json',
+              success:function($res){
+                  var roleVue = new Vue({
+                      el:"#allrole",
+                      data:{
+                          'allrole':$res.data
+                      },
+                      created: function () {
 
-                          }
-                      })
-                  }
-              })
+                      }
+                  })
+              }
+          })
       );
 
-
+//Ztree插件方法
       function zTree($treeData){
           var setting = {
               check: {
@@ -254,7 +253,7 @@
                   simpleData: {
                       enable: true
                   }
-              }
+              },
           };
           //点击权限修改后绑定该角色所有权限数据
 
@@ -268,9 +267,9 @@
               code.empty();
               code.append("<li>"+str+"</li>");
           }
-
+          //ztree数据绑定与标签绑定
           $(document).ready(function(){
-              $.fn.zTree.init($("#treeDemo"), setting,$treeData);
+              $.fn.zTree.init($("#roleEdit"), setting,$treeData);
               setCheck();
               $("#py").bind("change", setCheck);
               $("#sy").bind("change", setCheck);
@@ -313,41 +312,96 @@
               success:function(res){
 
                     if(res!=''){
-                        var zNodes =[
-                            { id:1, pId:0, name:"随意勾选 1", open:true},//open展开//checked//勾选
-                            { id:11, pId:1, name:"随意勾选 1-1", open:true},
-                            { id:111, pId:11, name:"随意勾选 1-1-1"},
-                            { id:112, pId:11, name:"随意勾选 1-1-2"},
-                            { id:12, pId:1, name:"随意勾选 1-2", open:true},
-                            { id:121, pId:12, name:"随意勾选 1-2-1"},
-                            { id:122, pId:12, name:"随意勾选 1-2-2"},
-                            { id:2, pId:0, name:"随意勾选 2", checked:true, open:true},
-                            { id:21, pId:2, name:"随意勾选 2-1"},
-                            { id:22, pId:2, name:"随意勾选 2-2", open:true},
-                            { id:221, pId:22, name:"随意勾选 2-2-1", checked:true},
-                            { id:222, pId:22, name:"随意勾选 2-2-2"},
-                            { id:23, pId:2, name:"随意勾选 2-3"}
-                        ];
-                        console.log(JSON.stringify(zNodes));
-                        for(var $j = 0;$j<zNodes.length;$j++){
-                            console.log(zNodes[$j]);
-                        }
+                        //
                         var zNodes = [];
-                        var str = '';
-                        console.log(res.data[0]);
+                        //循环遍历菜单添加数据
                         for(var $i = 0;$i<res.data[0].length;$i++){
-                            console.log(res.data[0][$i]);
-                            console.log(res.data[0][$i]['menuname']);
-                            zNodes += res.data[0][$i];
+                            //显示主枝
+                            if (res.data[0][$i]['menufid'] == 0) {
+                                zNodes.push({
+                                    id: res.data[0][$i]['menuid'],
+                                    pId: res.data[0][$i]['menufid'],
+                                    name: res.data[0][$i]['menuname'],
+                                    open: true,
+                                    checked: false
+                                })
+                            } else if (res.data[0][$i]['menuid'] == 8 || res.data[0][$i]['menuid'] == 10) {
+                                zNodes.push({
+                                    id: res.data[0][$i]['menuid'],
+                                    pId: res.data[0][$i]['menufid'],
+                                    name: res.data[0][$i]['menuname'],
+                                    open: true,
+                                    checked: false
+                                })
+                            } else {
+                                zNodes.push({
+                                    id: res.data[0][$i]['menuid'],
+                                    pId: res.data[0][$i]['menufid'],
+                                    name: res.data[0][$i]['menuname'],
+                                    checked: false
+                                })
+                            }
                         }
-                        //zTree(zNodes);
-                        console.log(JSON.stringify(zNodes));
+
+                        //把有权限的选项给勾选
+                        for(var $j=0;$j<res.data[1].length;$j++){
+
+                            for(var $z =0;$z<zNodes.length;$z++){
+                                if(zNodes[$z]['id']==res.data[1][$j]['menuid']){
+                                    zNodes[$z]['checked']=true;
+                                }
+                            }
+                        }
+
+                        //给对应得文本框绑定内容
+                        $("#nameEdit").val(res.data[1][0]['rolename']);
+                        $("#introEdit").val(res.data[1][0]['roledetails']);
+
+                        //给当前的元素增加属性'',属性值为''
+                        $("#nameEdit").attr("roleid",res.data[1][0]['roleid']);
+
+                        //调用ztree
+                        zTree(zNodes);
                     }
 
                 //zTree(res);
               }
           });
       }
+      //保存修改
+      $("#saveEdit").click(function(){
+          //获取对应ztree(id)节点的选中数据
+          var roleEdit = $.fn.zTree.getZTreeObj("roleEdit");
+          //获取选中(true)的所有属性
+          var newmenu = roleEdit.getCheckedNodes(true);
+          var newmenuid = [];
+          for(var $i = 0;$i<newmenu.length;$i++){
+              newmenuid.push({
+                  menuid:newmenu[$i]['id']
+              })
+          }
+          //获取当前被修改角色得id
+          var editId = $("#nameEdit").attr('roleId');
+
+          var editName = $('#nameEdit').val();
+
+          var editDetails = $('#introEdit').val();
+          //删除数据+//插入数据
+          $.ajax({
+              url:"<?php echo url('admin/backmanager/roleEdit'); ?>",
+              //data数据角色id,角色名,角色介绍
+              //复数数据使用json
+              data:{'roleid':editId,'rolename':editName,'roledetails':editDetails,'menuid':newmenuid},
+              type:'post',
+              dataType:'json',
+              success:function(res) {
+                    alert(res.msg);
+                    window.location.reload();
+              }
+          })
+
+      });
+
   </script>
   <script>
 

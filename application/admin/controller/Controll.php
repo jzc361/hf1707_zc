@@ -17,6 +17,7 @@ class Controll extends Controller
         return $this->fetch('person');
     }
 
+    //注销
     public function quit(){
         //用户注销删除SESSION
         $onlineEmp = Session::get('adminEmp');
