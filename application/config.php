@@ -240,6 +240,7 @@ return [
         'var_page'  => 'page',
         'list_rows' => 15,
     ],
+
     //验证码配置
 /*    'captcha'               =>  [
         // 验证码字体大小
