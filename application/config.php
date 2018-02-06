@@ -240,6 +240,7 @@ return [
         'var_page'  => 'page',
         'list_rows' => 15,
     ],
+
     //验证码配置
 /*    'captcha'               =>  [
         // 验证码字体大小
@@ -335,6 +336,18 @@ return [
         'signOut'=>[
             'signOut'=>'已退出',//90011
             'outFail'=>'注销失败'//90010
+        ],
+        //短信验证码
+        'telCode'=>[
+            'fail'=>'操作频繁，请隔5分钟再发送请求',//90012
+            'success'=>'成功发送验证码'//90013
+        ],
+        //绑定手机号
+        'boundTel'=>[
+            'fail'=>'绑定失败',//90014
+            'success'=>'绑定成功',//90015
+            'relievefail'=>'解绑失败',//90016
+            'relievesuccess'=>'解绑成功'//90017
         ]
     ]
 

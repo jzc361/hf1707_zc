@@ -18,7 +18,7 @@ class Index extends Controller
     public function menuctrl(){
         //获取当前登陆者信息
         $online = Session::get('adminEmp');
-        //获当前登陆者角色
+        //获当前登陆者员工
         $empRole = $online[0]['roleid'];
         //联表查询后的数据为二(多)维数组
         $menuDate = Db::name('backmenu')

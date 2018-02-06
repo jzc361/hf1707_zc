@@ -109,6 +109,11 @@ ws.onclose=function()
     console.log("服务器已关闭");
 };
 
+//点击关闭
+$(".chat-close").click(function(){
+    //console.log(choiceUser);
+    choiceUser=''
+});
 //用户列表显示
 function showUserList(userList){
     var chatBoxList=$(".chatBox-list");

@@ -1,7 +1,7 @@
 if(localStorage.userMsg!=undefined){
 	var userMsg=JSON.parse(localStorage.userMsg);
 	var userid=userMsg[0]['userid'];
-	var userimg=userMsg[0]['headimg'];
+	var userimg=staticUrl+"/"+userMsg[0]['headimg'];
 }
 var choiceServerId='';
 var choiceServerImg='';
