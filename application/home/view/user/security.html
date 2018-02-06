@@ -257,7 +257,7 @@
                         {if $userInfo['telephone']}
                         <p>已绑定</p>
                         <div class="update">
-                            <a onclick="setTelDiv()" href="javascript:void(0)" class="J_setting" id="J_setting_mobile">修改</a>
+                            <a onclick="setTelDiv()" href="javascript:void(0)" class="J_setting" id="J_setting_mobile">解绑</a>
                         </div>
                         {else}
                         <p class="f_red">未绑定</p>
@@ -271,39 +271,35 @@
                         <form class="ajax_form_mobile" action="" >
                             {if $userInfo['telephone']}
                             <div class="form_row control-group">
-                                <label class="form_lable smaller_form_lable">原手机号:</label>
-                                <div class="smaller_form_cont" id="beforeTel"></div>
+                                <label class="form_lable smaller_form_lable">手机号:</label>
+                                <div class="smaller_form_cont" id="oldTelNumber"></div>
                                 <input type="hidden" id="settings-mobile-type" name="step" value="2">
                                 <input type="hidden" id="tel" name="step" value="{$userInfo['telephone']}">
                             </div>
                             <div class="blank0"></div>
                             <div class="form_row control-group">
                                 <label class="form_lable small_form_lable">验证码:</label>
-                                <input type="text" value="" class="small_textbox mr10" name="verify_coder"  style="width:188px;"/>
-                                <input type="button" value="获取验证码" class="ui_button send_sms_verify small_send_sms_verify bg_red" id="J_send_sms_verify" />
+                                <input type="text" value="" class="small_textbox mr10" id="telCode1" name="verify_coder"  style="width:188px;"/>
+                                <input type="button" value="获取验证码" onclick="getNewTelCode()" class="ui_button send_sms_verify small_send_sms_verify bg_red" id="J_send_sms_verify" />
                             </div>
                             <div class="blank0"></div>
-                            <div class="form_row control-group">
-                                <label class="form_lable small_form_lable">新机号:</label>
-                                <input type="text" id="settings-new-mobile" onblur="checkTel()" value="" class="small_textbox" name="mobile"  style="width:310px;"/>
-                            </div>
                             {else}
                             <div class="form_row control-group">
                                 <label class="form_lable small_form_lable">手机号:</label>
-                                <input type="text" id="settings-mobile" value="" onblur="checkTel()" class="small_textbox" name="mobile"  style="width:310px;"/>
+                                <input type="text" id="telNumber" value="" onblur="checkTel()" class="small_textbox" name="mobile"  style="width:310px;"/>
                                 <input type="hidden" id="settings-mobile-type" name="step" value="1">
                             </div>
                             <div class="blank0"></div>
                             <div class="form_row control-group">
                                 <label class="form_lable small_form_lable">验证码:</label>
-                                <input type="text" value="" class="small_textbox mr10" name="verify_coder"  style="width:188px;"/>
-                                <input type="button" value="获取验证码" class="ui_button send_sms_verify small_send_sms_verify bg_red" id="J_send_sms_verify" />
+                                <input type="text" value="" class="small_textbox mr10" name="verify_coder" id="telCode"  style="width:188px;"/>
+                                <input type="button" value="获取验证码" class="ui_button send_sms_verify small_send_sms_verify bg_red" onclick="getTelCode()" id="J_send_sms_verify" />
                             </div>
                             {/if}
                             <div class="blank15"></div>
                             <div class="submit_btn_row control-group">
                                 <label class="form_lable"></label>
-                                <input type="button" value="提交" name="setting_mobile" class="ui-button theme_bgcolor" id="setting_mobile"  />
+                                <input type="button" value="提交" onclick="submitTel()" name="setting_mobile" class="ui-button theme_bgcolor" id="setting_mobile"/>
                             </div>
                             <div class="blank15"></div>
                         </form>
@@ -383,7 +379,7 @@
                             <div class="blank0"></div>
                             <div class="form_row control-group">
                                 <label class="form_lable small_form_lable">验证码:</label>
-                                <input type="text" value="" class="small_textbox mr10" name="verify"  style="width:188px;"/>
+                                <input type="text" value="" class="small_textbox mr10" id="" name="verify"  style="width:188px;"/>
                                 <input type="button" value="获取验证码" class="ui_button send_sms_verify small_send_sms_verify bg_red" id="J_send_sms_verify_iden" />
                             </div>
                             <div class="blank15"></div>
@@ -409,6 +405,122 @@
 </body>
 <script src="__JS__/jquery-2.1.4.js"></script>
 <script>
+    //处理验证码
+    function dealTelCode(telNumber,$this){
+        if(telNumber!=''){
+//                sendTime=new Date().getTime();
+            $.ajax({
+                type: "post",
+                url: "{:url('home/User/getTelCode')}",
+                data: {telNumber:telNumber},
+                dataType: "json",
+                success: function (responseData){
+                    console.log(responseData);
+                    if(responseData['code']==90012){
+                        alert(responseData['msg']);
+                    }
+                    else {
+                        $this.attr("value","已发送，请查收");
+                        var reverMsg=responseData['data'];
+                        //console.log(reverMsg);
+                        var reverTelCode=reverMsg[0];
+                        var reverTelNumber=reverMsg[1];
+                        localStorage.reverTelCode=reverTelCode;
+                        localStorage.reverTelNumber=reverTelNumber;
+                        // console.log(reverTelCode);
+                        // console.log(reverTelNumber);
+                    }
+                },
+                error:function(){
+                    alert("error");
+                }
+            });
+        }
+        else {
+            alert("请填写手机号");
+        }
+    }
+    //绑定手机号--获取手机验证码
+    function getTelCode(){
+        var telNumber=$("#telNumber").val();
+        var $this =$(event.target);
+        if($(event.target).attr("value")=='已发送，请查收'){
+            alert("操作频繁，请隔5分钟再发送请求");
+        }
+        else {
+            dealTelCode(telNumber,$this);
+        }
+    }
+
+    //解绑手机号-获取验证码
+    function getNewTelCode(){
+        var telNumber=$("#tel").attr("value");
+        var $this =$(event.target);
+        if($(event.target).attr("value")=='已发送，请查收'){
+            alert("操作频繁，请隔5分钟再发送请求");
+        }
+        else {
+            console.log(telNumber,$this);
+            dealTelCode(telNumber,$this);
+        }
+    }
+$(function(){
+//    var atime=sendTime+10;
+//
+//    setTimeout(function(){alert("Hello")},3000);
+});
+    //确认更新手机号
+    function submitTel(){
+        var settingsMobileType=$("#settings-mobile-type");
+        if(settingsMobileType.attr('value')==1){ //绑定手机号
+            var telNumber=$("#telNumber").val();
+            var telCode=$("#telCode").val();
+            realSubmitTel(telCode,telNumber,0);
+        }
+        else {
+            //修改手机号
+            var oldTelNumber=$("#tel").attr("value");
+            var telCode1=$("#telCode1").val();
+            realSubmitTel(telCode1,oldTelNumber,1);
+            console.log("xiugai");
+        }
+    }
+    //更新手机号
+    function realSubmitTel(telCode,telNumber,isUpdate){
+        if(localStorage.reverTelCode!=undefined){
+            var reverTelCode=localStorage.reverTelCode;
+        }
+        if(localStorage.reverTelNumber!=undefined){
+            var reverTelNumber=localStorage.reverTelNumber;
+        }
+        console.log(telCode,telNumber);
+        if(localStorage.reverTelNumber!=undefined && localStorage.reverTelCode!=undefined){
+            if(telCode==reverTelCode && telNumber==reverTelNumber){
+                //发送ajax，绑定手机号
+                $.ajax({
+                    type: "post",
+                    url: "{:url('home/User/addTel')}?isUpdate="+isUpdate,
+                    data: {telNumber:telNumber},
+                    dataType: "json",
+                    success: function (responseData){
+                        console.log(responseData);
+                        alert(responseData.msg);
+                        location.reload(true);
+                    },
+                    error:function(){
+                        alert("error");
+                    }
+                });
+                //alert("成功");
+            }
+            else if(telCode!=reverTelCode){
+                alert("验证码不正确");
+            }
+            else if(telNumber!=reverTelCode){
+                alert("手机号有误，请输入手机号并重新获取验证码");
+            }
+        }
+    }
     //点击修改登录密码
     function updatePswDiv(){
         var settingPwdBox= $("#setting-pwd-box");
@@ -436,10 +548,10 @@
          var settingMobileBtn=$("#J_setting_mobile");
          if(settingsMobileType.attr('value')==2){ //修改手机号
              if(settingMobileBox.css("display")=='none' ){
-                 settingMobileBtn.text("取消修改");
+                 settingMobileBtn.text("取消解绑");
              }
              else if(settingMobileBox.css("display")=='block' ){
-                 settingMobileBtn.text("修改");
+                 settingMobileBtn.text("解绑");
              }
          }
          else {
@@ -497,10 +609,11 @@
             var myphone=tel.substr(3,4);
             var lphone=tel.replace(myphone,"****");
             console.log(tel);
-            $("#beforeTel").html(lphone);
+            $("#oldTelNumber").html(lphone);
             $("#beforeTel1").html(lphone);
         }
     });
+
 
 </script>
 </html>
