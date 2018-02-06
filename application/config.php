@@ -328,7 +328,7 @@ return [
         ],
         'nologin'=>['nologin'=>'请先登录'],//00000
         'order'=>[
-            'addOrder'=>'提交订单成功',//60001
+            'addOrder'=>'提交订单成功，请于30分钟内付款',//60001
             'addOrderFail'=>'提交订单失败',//60003
             'orderFull'=>'支持数达上限'//60002
         ],

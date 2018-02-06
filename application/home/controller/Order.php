@@ -64,7 +64,7 @@ class Order extends Auth
             ->where('prodetailsid',$prodetailsid)
             ->field('a.*,b.projectname')
             ->find();
-        //var_dump($prodetails);
+        //var_dump($prodetails);exit;
         //默认地址信息
         $condition=[
             'userid'=>$this->zc_user['userid'],
@@ -79,7 +79,7 @@ class Order extends Auth
             ->order('a.isdefault desc,a.addressid')
             ->select();
             //->find();
-        //var_dump($defaultAdd);
+        //var_dump($addList);exit;
         $this->assign('prodetails',$prodetails);
         $this->assign('addList',$addList);
         $this->assign('do',$this->do);
@@ -90,7 +90,10 @@ class Order extends Auth
     public function addOrder(){
         $addressid=input('post.addressid');
         $prodetailsid=input('post.prodetailsid');
+        $projectid=$this->getProjectid($prodetailsid);//项目id
+        //var_dump($projectid);exit;
         $order=$this->getOrder($prodetailsid,$this->zc_user['userid']);
+        //echo $addressid;exit;
         //var_dump($order);exit;
         //已支持
         if(!empty($order)){
@@ -102,6 +105,7 @@ class Order extends Auth
             return $reMsg;
         }
         //echo $addressid,$prodetailsid;
+        //详情信息
         $data=db('prodetails a')
             ->join('zc_project b','a.projectid=b.projectid')
             ->where('prodetailsid',$prodetailsid)
@@ -121,9 +125,12 @@ class Order extends Auth
         //var_dump($condition);exit;
         //$res=db('orders')->insert($condition);
         $orderid=db('orders')->insertGetId($condition);
-        //var_dump($res);exit;
+        //var_dump($orderid);exit;
         if($orderid){
             //提交成功
+            //$res=db('prodetails')->where('prodetailsid',$prodetailsid)->setInc('curcount');//支持数+1
+            $this->updateCurcount($projectid);//更新支持数
+            //var_dump($res);exit;
             $reMsg=[
                 'code'=>60001,
                 'msg'=>config('msg')['order']['addOrder'],
@@ -132,7 +139,7 @@ class Order extends Auth
         }else{
             //提交失败
             $reMsg=[
-                'code'=>60001,
+                'code'=>60002,
                 'msg'=>config('msg')['order']['addOrderFail'],
                 'data'=>''
             ];
@@ -149,5 +156,32 @@ class Order extends Auth
         //var_dump($condition);exit;
         $order=db('orders')->where($condition)->select();
         return $order;
+    }
+
+    //获取其他地址信息
+    public function getAddress(){
+        $condition=[
+            'userid'=>$this->zc_user['userid'],
+            //'isdefault'=>0
+        ];
+        $address=db('address a')
+            ->field('a.*,b.name province_name,c.name city_name,d.name county_name')
+            ->join('zc_region b','a.province=b.id')
+            ->join('zc_region c','a.city=c.id')
+            ->join('zc_region d','a.county=d.id')
+            ->where($condition)
+            //->order('a.isdefault desc,a.addressid')
+            ->select();
+        //var_dump($address);
+        return $address;
+    }
+
+    //获取项目id
+    public function getProjectid($prodetailsid){
+        $projectid=db('prodetails')
+            ->where('prodetailsid',$prodetailsid)
+            ->field('projectid')
+            ->find();
+        return $projectid['projectid'];
     }
 }

@@ -368,7 +368,8 @@ class User extends Auth
         //$prodetails=db('prodetails')->where($condition)->select();
         //var_dump($prodetails);exit;
         //项目下的所有订单
-        $orderList=db('orders')
+        $orderList=db('orders a')
+            ->join('zc_prodetails b','a.prodetailsid=b.prodetailsid')
             ->where($condition)
             //->paginate(2);
             ->select();
@@ -854,12 +855,12 @@ class User extends Auth
             'addressdetails'=>$detailAddr,
             'revertel'=>$telephone
         ];
-        $res=db('address')->insert($data);
+        $res=db('address')->insertGetId($data);//地址id
         if($res>0){
             $msgResp=[
                 'code'=>20001,
                 'msg'=>config('msg')['oper']['add'],
-                'data'=>''
+                'data'=>$res
             ];
         }else{
             $msgResp=[

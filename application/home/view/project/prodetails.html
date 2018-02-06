@@ -232,8 +232,8 @@
                 {volist name="proList" id="value"}
                 <!--<p class="pro-have">金额</p>-->
                 <p class="pro-amount"><span style="font-size: 24px">￥</span>{$value.price}</p>
+                <button type="button" style="width: 85%;margin-bottom: 5%" class="btn btn-info" onclick="limitSup({$value.prodetailsid})" {if $pro.limitstateid!=1}disabled{/if}>立即支持</button>
                 {/volist}
-                <button type="button" style="width: 85%;margin-bottom: 5%" class="btn btn-info" onclick="limitSup({$pro.projectid})" {if $pro.limitstateid!=1}disabled{/if}>立即支持</button>
                 <!--滑块验证-->
                 <div>
                     <div id="mpanel1" ></div>
@@ -355,9 +355,11 @@
             //alert('验证成功，添加你自己的代码！');
             //......后续操作
             r=true;
+            console.log(r);
         },
         error : function() {
-//		        	alert('验证失败！');
+//		    alert('验证失败！');
+            console.log(r);
         }
 
     });
@@ -393,12 +395,37 @@
     }
 
     //限时项目支持
-    function limitSup(){
+    function limitSup(prodetailsid){
         if(!r){
-            console.log(1);
+            alert('请先完成验证');
         }else {
-            console.log(2);
+            console.log(prodetailsid,2);
+            checkOrder(prodetailsid);
         }
+    }
+
+    //限时--检查订单
+    function checkOrder(prodetailsid){
+        //console.log(prodetailsid);
+        $.ajax({
+            url:'{:url("Order/isOrder")}',
+            data:{prodetailsid:prodetailsid},
+            dataType:'json',
+            success:function(res){
+                if(res.code=='00000'){
+                    //未登录，进入登录页面
+                    alert(res.msg);
+                    window.open('{:url("home/User/showLogin")}');
+                }else if(res.code=='60002'){
+                    //支持数达上限，关闭窗口
+                    alert(res.msg);
+                    //parent.closeIframe();
+                    //window.close();
+                }else {
+                    location.href='{:url("home/Order/checkOrder")}?prodetailsid='+prodetailsid;
+                }
+            }
+        });
     }
 
     //提示
@@ -409,18 +436,15 @@
         });
     }
 
-    function showLogin(){
-        x_admin_show('登录','{:url("home/Userop/showLogin")}')
-    }
-
     //layui.use('showPrompt');
 
     //关闭iframe窗口
     function closeIframe(){
-        $('div[type="iframe"]').css('display','none');
+        layer.closeAll();
+        /*$('div[type="iframe"]').css('display','none');
         for(var i=0;i<10;i++){
             $('#layui-layer-shade'+i).css('display','none');
-        }
+        }*/
 
     }
 
