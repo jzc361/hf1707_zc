@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\userView.html";i:1517471253;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517471035;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\userView.html";i:1517813180;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517885691;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,6 +97,9 @@
                     <li>
                         <a href="<?php echo url('home/User/test'); ?>">查看通知(测试)</a>
                     </li>
+                    <li>
+                        <a href="<?php echo url('home/Letter/letter'); ?>">查看私信</a>
+                    </li>
                     <li class="divider">
                     </li>
                     <li>
@@ -183,7 +186,7 @@
                     </a>
                 </li>
                 <li >
-                    <a href="/zc4/index.php?ctl=settings&act=security" class="a12">
+                    <a href="javascript:void(0)" mySrc="<?php echo url('/home/User/security'); ?>" class="a12">
                         <i></i>安全信息
                     </a>
                 </li>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <title>发送私信</title>
+</head>
+<body>
+<div class="container ">
+    <form id="letterForm" action="{:url('home/User/sendLetter')}?rever={$rever}" method="post">
+        <div class="form-group">
+            <textarea name="letter" id="introduction" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-4">
+                <input name="sendCode" class="form-control" type="text" placeholder="请输入验证码">
+            </div>
+            <div  class="col-xs-4">
+                <img src="{:captcha_src()}" alt="captcha" onclick="this.src='{:captcha_src()}?'+Math.random()"/>
+            </div>
+            <div>
+                <input type="hidden" name="rever" value="{$rever}">
+            </div>
+            <!--<div  class="col-xs-6"><img src=":url('home/User/captcha')}"  alt="captcha" /></div>-->
+            <div class="col-xs-4">
+                <button id="sendBtn" type="button"  class="btn btn-success">发送</button>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+</body>
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script>
+    $(function(){
+        $("#sendBtn").click(function(){
+            $.ajax({
+                type:'post',
+                url:"{:url('home/Letter/sendLetter')}?rever={$rever}",
+                data:$("#letterForm").serialize(),
+                dataType:'json',
+                success:function(res){
+                    console.log(res);
+                    if(res.code==70001){
+                        alert(res.msg);
+                        parent.closeIframe();
+                    }else{
+                        alert(res.msg);
+                    }
+                }
+            });
+        })
+    })
+
+</script>
+</html>

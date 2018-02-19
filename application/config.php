@@ -281,11 +281,13 @@ return [
             'home/user/showregister',
             'home/user/userlogin',
             'home/user/userregister',
-            'home/user/exitlogin'
+            'home/user/exitlogin',
+            'home/order/isorder',
+            'home/letter/openletter'
         ],
         'login'=>[
             'error'=>'登录失败，请从稍后再试',  //10000
-            'success'=>'恭喜您，登录成功',  //10001
+            'success'=>'登录成功',  //10001
             'codeFail'=>'验证码错误，请重新输入',  //10002
             'fail'=>'账号或密码错误，请重新输入',  //10004
             'usestateFail'=>'账号被锁定，请联系客服'//10005
@@ -327,11 +329,25 @@ return [
             'null'=>'内容不能为空'//30004
         ],
         'nologin'=>['nologin'=>'请先登录'],//00000
-
         'signOut'=>[
             'signOut'=>'已退出',//90011
             'outFail'=>'注销失败'//90010
+        ],
+        'order'=>[
+            'success'=>'购买成功',//60001
+            'error'=>'购买失败',//60002
+            'toOrder'=>'前往订单详情',//60003
+            'toPay'=>'前往订单详情',//60004
+            'excess'=>'超过支持限额'//60005
+        ],
+        'letter'=>[
+            'success'=>'发送成功',//70001
+            'error'=>'发送失败',//70002
+            'codeFail'=>'验证码错误，请重新输入',  //70003
+            'selfError'=>'不能给自己发私信',//70004
+            'open'=>'打开私信窗口',//70005
         ]
+
     ]
 
 ];

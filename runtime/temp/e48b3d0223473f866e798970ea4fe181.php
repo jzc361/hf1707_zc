@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:86:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\address.html";i:1517575317;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:86:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\address.html";i:1517624528;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -266,7 +266,6 @@
             },
             updateModel:function(data){
                 console.log(data);
-                this.resetModel();
                 this.editId=data.addressid;
                 this.provinceId=data.province;
                 this.cityId=data.city;

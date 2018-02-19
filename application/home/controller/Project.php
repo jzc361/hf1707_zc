@@ -212,6 +212,7 @@ class Project extends Auth
             $username=db('user')->where('userid',$pro['userid'])->column('username,username');
             $headimg=db('user')->where('userid',$pro['userid'])->column('headimg,headimg');
             $this->assign("username",$username[0]);//发起人姓名
+            $this->assign("userid",$pro['userid']);//发起人id
             $this->assign('headimg',$headimg[0]);//发起人头像
         }
         //项目进度

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>回报内容</title>
     <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <script src="__JS__/vue.js"></script>
 </head>
 <style>
     .center{
@@ -12,19 +13,46 @@
     .center div{
         display: inline-block;
     }
+    .td_input1{
+        height: 22px;width: 22px;
+        text-align: center;
+        border: 1px solid #6a6a6a;
+        background-color: white;
+        float: left;
+    }
+    .td_input2{
+        height: 22px;width: 22px;
+        text-align: center;
+        border: 1px solid #6a6a6a;
+        border-left: none;
+        border-right: none;
+        float: left;
+    }
+    .disabled{
+
+    }
 </style>
 <body>
-    <div class="center container" style="margin-top: 30px">
+    <div id="app" class="center container" style="margin-top: 30px">
         <div>
             <img src="__STATIC__/{$prodetails.imgs}" alt="" style="width: 80px;height: 80px;border: 1px solid gainsboro">
         </div>
         <div style="margin-left: 20px">
             <h4>{$prodetails.projectname}(档位￥{$prodetails.price})</h4>
             <p>{$prodetails.introduce}</p>
+            <p>
+                <span>数量:</span>
+                <label>
+                    <input id="minusBtn" class="td_input1" :disabled="disMinus" @click="minus" type="button" value="-"/>
+                    <input id="buyNum" class="td_input2" type="text" v-model='num'/>
+                    <input id="addBtn" class="td_input1"  :disabled="disAdd"  @click="add" type="button" value="+"/>
+                </label>
+            </p>
         </div>
+
         <hr>
         <div align="center" class="container" style="width: 100%;margin: auto">
-            <button type="button" class="btn btn-info" onclick="addOrder({$prodetails.prodetailsid})">去结算</button>
+            <button type="button" class="btn btn-info" @click="addOrder">去结算</button>
         </div>
 
     </div>
@@ -32,27 +60,57 @@
 <script src="__JS__/jquery-2.1.4.js"></script>
 <script src="__JS__/bootstrap.min.js"></script>
 <script>
-    function addOrder(prodetailsid){
-        //console.log(prodetailsid);
-        $.ajax({
-            url:'{:url("Order/isOrder")}',
-            data:{prodetailsid:prodetailsid},
-            dataType:'json',
-            success:function(res){
-                if(res.code=='00000'){
-                    //未登录，进入登录页面
-                    alert(res.msg);
-                    window.open(res.data);
-                }else if(res.code=='11111'){
-                    //支持数达上限，关闭窗口
-                    alert(res.msg);
-                    parent.closeIframe();
-                    //window.close();
-                }else {
-                    parent.location.href='{:url("home/Order/order")}?prodetailsid='+prodetailsid;
+    var app = new Vue({
+        el: '#app',
+        data: {
+            num:1,
+            p_id:{$prodetails.prodetailsid},
+            disAdd:false,
+            disMinus:true
+        },
+        methods: {
+            add: function(){
+                if(this.num<3){
+                    this.disAdd=false;
+                    this.num++;
+                    this.disMinus=false;
+                }else{
+                    this.disAdd=true;
                 }
+            },
+            minus: function() {
+                if(this.num>1){
+                    this.disMinus=false;
+                    this.num--;
+                    this.disAdd=false;
+                }else{
+                    this.disMinus=true;
+                }
+            },
+            addOrder: function () {
+                var that=this;
+                $.ajax({
+                    url:'{:url("Order/isOrder")}',
+                    data:that.p_id,
+                    dataType:'json',
+                    success:function(res){
+                        if(res.code=='00000'){
+                            //未登录，进入登录页面
+                            alert(res.msg);
+                            window.open('{:url("home/User/showLogin")}');
+                        }else if(res.code=='60005'){
+                            //支持数达上限，关闭窗口
+                            alert(res.msg);
+                            parent.closeIframe();
+                            //window.close();
+                        }else {
+                            parent.location.href='{:url("home/Order/order")}?prodetailsid='+that.p_id+'&num='+that.num;
+                        }
+                    }
+                });
             }
-        });
-    }
+        }
+    });
+
 </script>
 </html>
