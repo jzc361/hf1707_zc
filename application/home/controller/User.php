@@ -63,7 +63,7 @@ class User extends Auth
             $reMsg=[
                 'code'=>10001,
                 'msg'=>config('Msg')['login']['success'],
-                'data'=>[]
+                'data'=>[$data]
             ];
             return json($reMsg);
         }
@@ -396,7 +396,8 @@ class User extends Auth
         //$prodetails=db('prodetails')->where($condition)->select();
         //var_dump($prodetails);exit;
         //项目下的所有订单
-        $orderList=db('orders')
+        $orderList=db('orders a')
+            ->join('zc_prodetails b','a.prodetailsid=b.prodetailsid')
             ->where($condition)
             //->paginate(2);
             ->select();
@@ -631,8 +632,197 @@ class User extends Auth
     //安全信息页面
     public function security()
     {
+<<<<<<< HEAD
         return $this->fetch('security');
     }
+=======
+        //获取用户信息
+        $userid=$this->zc_user['userid'];
+        $userInfo=db('user')->where('userid',$userid)->find();
+        $this->assign('userInfo',$userInfo);
+       // var_dump($userInfo);
+        return $this->fetch('security');
+    }
+    //获取验证码
+    public function getTelCode(){
+       // Session::delete('sendTime');exit();
+        if(Session::has('sendTime')){
+            //echo Session::get('sendTime');
+            //echo time();
+            if(Session::get('sendTime')>time()){ //时间还没到，不能重复获取
+                $msgResp=[
+                    'code'=>90012,
+                    'msg'=>config('msg')['telCode']['fail'],
+                    'data'=>[]
+                ];
+
+                //exit("请不要重复获取验证码");
+            }
+            else{
+                $telNumber=input('?post.telNumber')?input('post.telNumber'):'';
+                if(!empty($telNumber)){
+                    //获取验证码
+                    $mobile_code = $this->random(4,1);
+                    $url="http://106.ihuyi.com/webservice/sms.php?method=Submit&account=C58487377&password=25d7001a93f3521a1e726f67e335f7a3&mobile=".$telNumber."&content=您的验证码是：".$mobile_code."。请不要把验证码泄露给其他人。";
+                    $postData=[];
+                    $postType="GET";
+                    $gets = $this->xml_to_array($this->curlHttp($url,$postData,$postType));
+                    if($gets['SubmitResult']['code']==2){
+                        //$_SESSION['mobile'] = $telNumber;
+                        Session::set('sendTime',time()+5*60);
+                       // $_SESSION['sendTime'] = time()+100000;
+                        //返回$mobile_code
+                        $msgResp=[
+                            'code'=>90013,
+                            'msg'=>config('msg')['telCode']['success'],
+                            'data'=>[$mobile_code,$telNumber]
+                        ];
+                    }
+                }
+            }
+        }
+        else{
+            $telNumber=input('?post.telNumber')?input('post.telNumber'):'';
+            if(!empty($telNumber)){
+                //获取验证码
+                $mobile_code = $this->random(4,1);
+                $url="http://106.ihuyi.com/webservice/sms.php?method=Submit&account=C58487377&password=25d7001a93f3521a1e726f67e335f7a3&mobile=".$telNumber."&content=您的验证码是：".$mobile_code."。请不要把验证码泄露给其他人。";
+                $postData=[];
+                $postType="GET";
+                $gets = $this->xml_to_array($this->curlHttp($url,$postData,$postType));
+                if($gets['SubmitResult']['code']==2){
+                    //$_SESSION['mobile'] = $telNumber;
+                    Session::set('sendTime',time()+5*60);
+                    //返回$mobile_code
+                    $msgResp=[
+                        'code'=>90013,
+                        'msg'=>config('msg')['telCode']['success'],
+                        'data'=>[$mobile_code,$telNumber]
+                    ];
+                }
+            }
+        }
+        return json($msgResp);
+    }
+    //绑定手机号
+    public function addTel(){
+        $userid=$this->zc_user['userid'];
+        $telNumber=input('?post.telNumber')?input('post.telNumber'):'';
+        if(input('get.isUpdate')==0){ //绑定
+            if(!empty($telNumber)){
+                $res=db('user')->where('userid',$userid)->update(['telephone'=>$telNumber]);
+                if($res==1){
+                    $msgResp=[
+                        'code'=>90015,//绑定成功
+                        'msg'=>config('msg')['boundTel']['success'],
+                        'data'=>[]
+                    ];
+                }
+                else{
+                    $msgResp=[
+                        'code'=>90014, //绑定失败
+                        'msg'=>config('msg')['boundTel']['fail'],
+                        'data'=>[]
+                    ];
+                }
+            }
+            else{
+                $msgResp=[
+                    'code'=>90014, //绑定失败
+                    'msg'=>config('msg')['boundTel']['fail'],
+                    'data'=>[]
+                ];
+            }
+        }
+        else{
+            //echo "jss";
+            //解绑
+            if(!empty($telNumber)){
+                $res=db('user')->where('userid',$userid)->update(['telephone'=>null]);
+                if($res==1){
+                    $msgResp=[
+                        'code'=>90017,//解绑成功
+                        'msg'=>config('msg')['boundTel']['relievesuccess'],
+                        'data'=>[]
+                    ];
+                }
+                else{
+                    $msgResp=[
+                        'code'=>90016, //解绑失败
+                        'msg'=>config('msg')['boundTel']['relievefail'],
+                        'data'=>[]
+                    ];
+                }
+            }
+            else{
+                $msgResp=[
+                    'code'=>90016, //解绑失败
+                    'msg'=>config('msg')['boundTel']['relievefail'],
+                    'data'=>[]
+                ];
+            }
+        }
+
+
+        return json($msgResp);
+    }
+
+  //发送curl
+    public function curlHttp($url='',$postData=[],$postType="GET"){
+        //初始化curl，才能使用curl的扩展函数,$curl即相当于句柄
+        $curl=curl_init();
+        //设置常用选项：
+        //1.请求的url
+        curl_setopt($curl,CURLOPT_URL,$url);
+        //2.设置请求的类型
+        curl_setopt($curl,CURLOPT_CUSTOMREQUEST,$postType);
+        //3.请求的数据体结构
+//        curl_setopt($curl,CURLOPT_POSTFIELDS,$data);
+//        curl_setopt($curl,CURLOPT_COOKIE,$cookie);
+        curl_setopt($curl,CURLOPT_POSTFIELDS,$postData);
+        //跳过https检查
+        curl_setopt($curl,CURLOPT_SSL_VERIFYPEER,false);
+
+        //4.将请求的结果原样返回
+        curl_setopt($curl,CURLOPT_RETURNTRANSFER,true);
+        $result=curl_exec($curl);
+       // curl_close($curl);
+        return $result;
+    }
+    //将 xml数据转换为数组格式。
+    public function xml_to_array($xml){
+        $reg = "/<(\w+)[^>]*>([\\x00-\\xFF]*)<\\/\\1>/";
+        if(preg_match_all($reg, $xml, $matches)){
+            $count = count($matches[0]);
+            for($i = 0; $i < $count; $i++){
+                $subxml= $matches[2][$i];
+                $key = $matches[1][$i];
+                if(preg_match( $reg, $subxml )){
+                    $arr[$key] = $this->xml_to_array( $subxml );
+                }else{
+                    $arr[$key] = $subxml;
+                }
+            }
+        }
+        return $arr;
+    }
+    //random() 函数返回随机整数。
+    public function random($length = 6 , $numeric = 0) {
+        PHP_VERSION < '4.2.0' && mt_srand((double)microtime() * 1000000);
+        if($numeric) {
+            $hash = sprintf('%0'.$length.'d', mt_rand(0, pow(10, $length) - 1));
+        } else {
+            $hash = '';
+            $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789abcdefghjkmnpqrstuvwxyz';
+            $max = strlen($chars) - 1;
+            for($i = 0; $i < $length; $i++) {
+                $hash .= $chars[mt_rand(0, $max)];
+            }
+        }
+        return $hash;
+    }
+
+>>>>>>> origin/master
     //收货地址页面
     public function address()
     {
@@ -905,12 +1095,12 @@ class User extends Auth
             'addressdetails'=>$detailAddr,
             'revertel'=>$telephone
         ];
-        $res=db('address')->insert($data);
+        $res=db('address')->insertGetId($data);//地址id
         if($res>0){
             $msgResp=[
                 'code'=>20001,
                 'msg'=>config('msg')['oper']['add'],
-                'data'=>''
+                'data'=>$res
             ];
         }else{
             $msgResp=[

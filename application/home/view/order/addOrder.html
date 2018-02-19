@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>确认订单</title>
+    <link rel="stylesheet" href="__CSS__/proBaseMsg.css">
+    <link rel="stylesheet" href="__CSS__/addOrder.css">
+    <link rel="stylesheet" href="__CSS__/bootstrapValidator.min.css">
 </head>
 <style>
     .center{
@@ -12,25 +15,539 @@
 </style>
 <body style="background: #f9f9f9;">
 {include file="public/nav"}
-<div class="center container">
-    <div>
-        <div>
-            <img src="" alt="" style="width: 80px;height: 80px;border: 1px solid gainsboro">图片
+<div class="blank20"></div>
+<div id="app" class="shadow_bg" style="height: 760px">
+    <div class="white_box">
+
+        <div class="page_title">
+            {$prodetails.projectname}
+            <div class="support_price">
+                <input name="is_delivery" id="is_delivery" type="hidden" value="" />
+                支持金额 <span>¥{$prodetails.price}</span> 元
+
+                <font class="delivery_fee">
+                    包邮
+                </font>
+
+            </div>
         </div>
-        <div style="margin-left: 20px">
-            <h4>项目名(档位￥价格)</h4>
-            <p>回报介绍</p>
-        </div>
-    </div>
-    <hr>
-    <div>
-        <div><h5>收货地址</h5></div>
-        <div>地址列表</div>
-        <hr>
-        <div><h5>支付信息</h5></div>
+        <div class="switch_nav" style="height:1px;"></div>
+        <div class="blank10"></div>
+
+        <!--<form id="cart_form" action="" method="post">-->
+        <div class="public_left" style="padding:20px;">
+
+            <div class="form_title">
+                <div class="f_l">收件地址</div>
+
+                <div class="f_r" style="margin-top:7px">
+                    <div class="ui-small-button theme_bgcolor" rel="green" id="add_consignee">
+                        <div>
+                            <span class="f14" @click="addModel">添加配送地址</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="blank20"></div>
+
+            {volist name="addList" id="addList"}
+            <div class="consignee_radio_row">
+                <div class="cbo">
+                    <input type="radio" name="consignee_id" {if $addList.isdefault} checked="checked" {/if} value="{$addList.addressid}"/>
+                </div>
+                <div class="cnt">
+                    <span>{$addList.province_name}{$addList.city_name}{$addList.county_name}{$addList.addressdetails}</span>
+                    <span>{$addList.county}</span>
+                    <span>{$addList.revername}</span>
+                    <span class="phone">{$addList.revertel}</span>
+                    {if $addList.isdefault}<span>(默认地址)</span>{/if}
+                </div>
+            </div>
+            {/volist}
+
+            <!--end conignee-->
+
+            <div class="blank10"></div>
+            <div class="form_title">
+                回报内容
+            </div>
+            <div class="form_content">
+                {$prodetails.introduce}
+            </div>
+
+            <div class="blank20"></div>
+            <div>
+                <div class="ui-button theme_bgcolor" rel="green" id="stand_by" onclick="addOrder({$prodetails.prodetailsid})">
+                    <div>
+                        <span>确定，提交</span>
+                    </div>
+                </div>
+                <input type="hidden" name="id" value="" />
+                <input type="hidden" name="ajax" value="1" />
+                <div class="blank15"></div>
+            </div>
+
+        <!--</form>-->
+
     </div>
 
+    <div class="public_right" style="padding:20px;width:305px">
+
+        <div class="deal_item_box" style="height:auto">
+            <div class="deal_content_box">
+                <a href="" style="display:block;overflow:hidden">
+                <img  src="__STATIC__/{$prodetails.imgs}" />
+                </a>
+                <!--<div class="blank"></div>
+                <a href="" class="deal_title" ></a>
+                <div class="blank"></div>
+                <a href="" style="padding-left:12px;"></a></a>&nbsp;&nbsp;(<span><a href="" title=""></a></span><span><a href="" title=""></a></span>)
+                <div class="blank"></div>
+                <div style="padding:12px;"></div>-->
+            </div>
+
+        </div>
+
+
+
+    </div>
+    <div class="blank"></div>
+
+
 </div>
+
+<div class="blank20"></div>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">添加配送地址</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="defaultForm" method="post" class="form-horizontal" action="{:url('/home/User/addAddr')}">
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label">收货人姓名：</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" name="reverName" v-model="reverName"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label">地区：</label>
+                            <div class="col-xs-3">
+                                <select name="province" id="province" v-model="provinceId" @change="getCity" class="form-control">
+                                    <option value="" >请选择省份</option>
+                                    <option v-for="x in provinceList" v-bind:value="x.id">{{x.name}}</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-3">
+                                <select name="city" id="city" v-model="cityId" @change="getCounty" class="form-control">
+                                    <option value="">请选择城市</option>
+                                    <option v-for="x in cityList" v-bind:value="x.id">{{x.name}}</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-3">
+                                <select name="county" id="county" v-model="countyId" class="form-control">
+                                    <option value="">请选择地区</option>
+                                    <option v-for="x in countyList" v-bind:value="x.id">{{x.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label">详细地址：</label>
+                            <div class="col-xs-8">
+                                <textarea name="detailAddr" id="detailAddr" class="form-control" rows="3" v-model="detailAddr"></textarea>
+                            </div>
+                        </div>
+                        <!--<div class="form-group">-->
+                        <!--<label class="col-xs-3 control-label">邮编：</label>-->
+                        <!--<div class="col-xs-4">-->
+                        <!--<input type="text" class="form-control" name="Postcode"/>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label">手机：</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control" name="telephone" v-model="telephone"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary"  id="submitBtn" @click="editAddress">保存</button>
+                    <button type="button" class="btn btn-default" id="resetBtn"  @click="resetModel">重置</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+</div>
+
+
 {include file="public/footer"}
 </body>
+<script src="__JS__/vue.js"></script>
+<script src="__JS__/bootstrapValidator.min.js"></script>
+<script>
+    //var phone = $('.phone').text();
+    //console.log(phone);
+    //var mphone = phone.substr(0, 3) + '****' + phone.substr(7);
+    //$('.phone').text(mphone)
+    //提交订单
+    function addOrder(prodetailsid){
+        var addressid=$(':checked').val();
+        console.log(addressid,prodetailsid);
+        $.ajax({
+            url:'{:url("Order/addOrder")}',
+            type:"POST",
+            data:{prodetailsid:prodetailsid,addressid:addressid},
+            dataType:'json',
+            success:function(res){
+                if(res.code=='60001'){
+                    //提交订单成功
+                    var orderid=res.data;//订单id
+                    console.log(orderid);
+                    alert(res.msg);
+                }else {
+                    alert(res.msg);
+                }
+            }
+        });
+    }
+</script>
+<script>
+    var $province=$("#province");
+    var $county=$("#county");
+    var $city=$("#city");
+    var address=new Vue();
+
+    //更多地址
+    Vue.component('addlist',{
+        props:['item'],
+        template:'<div id="list" >\
+                        <div v-for="(vo,key) in addList">\
+                            <div class="consignee_radio_row">\
+                                <div class="cbo">\
+                                    <input type="radio" name="consignee_id" v-model="addressid"  v-bind:value="{addressid}"/>\
+                                </div>\
+                                <div class="cnt">\
+                                    <span>{{vo.province_name}}{{vo.city_name}}{{vo.county_name}}{{vo.addressdetails}}</span>\
+                                    <span>{{vo.county}}</span>\
+                                    <span>{{vo.revername}}</span>\
+                                    <span class="phone">{{vo.revertel}}</span>\
+                                </div>\
+                            </div>\
+                        </div>\
+                    </div>',
+        data:function(){
+            return{
+                addList:[],
+                res:false,
+                addressid:[]
+            }
+        },
+        methods:{
+            /*otherAdd:function(){
+                var that=this;
+                $.ajax({
+                    url: "{:url('home/User/getAddrList')}",
+                    type: "get",
+                    //data:{'pageNow':that.current},
+                    dataType: "json",
+                    success: function(res) {
+                        console.log(res);
+                        if(res.code==20007){
+                            that.addrList=res.data[0];
+                            console.log(that.addrList);
+                            //bus.$emit('all',res.data[1]);
+                        }else{
+                            alert(res.msg);
+                        }
+                    },
+                    error: function(res) {
+                    }
+                });
+            }*/
+        },
+        mounted:function(){
+            //this.otherAdd();
+            address.$on('getAddlist',function(){
+                this.res=!this.res;
+                var that = this;
+                if(this.res){
+                    $.ajax({
+                        url: "{:url('home/Order/getAddress')}",
+                        type: "get",
+                        dataType: "json",
+                        success: function(res) {
+                            /*if(res.code==20007){
+                                that.addrList=res.data[0];
+                                console.log(that.addrList);
+                                //bus.$emit('all',res.data[1]);
+                            }else{
+                                alert(res.msg);
+                            }*/
+                            for(var i=0;i<res.length;i++){
+                                //console.log(res[i]);
+                                //that.addressid.push(res[i].addressid);
+                                that.addList.push(res[i]);
+
+                            }
+                            //that.addrList.push(res);
+                            console.log(that.addressid);
+
+                        },
+                        error: function(res) {
+                            console.log(1);
+                        }
+                    });
+                }else {
+                    that.addrList=[];
+                }
+            }.bind(this));
+        }
+    });
+
+    var app=new Vue({
+        el:'#app',
+        data:{
+            //text:'更多地址'
+            //addList:[],
+            //res:false,
+            provinceList:[],
+            cityList:[],
+            countyList:[],
+            provinceId:'',
+            cityId:'',
+            countyId:'',
+            reverName:'',
+            detailAddr:'',
+            telephone:'',
+            current:1,
+            editId:''
+
+        },
+        methods:{
+            /*otherAdd:function(){
+                $('#list').empty();
+                address.$emit('getAddlist');
+            },*/
+            addModel: function () {
+                this.editId='';
+                this.resetModel();
+                $('#myModal').modal('show');
+            },
+            updateModel:function(data){
+                console.log(data);
+                this.editId=data.addressid;
+                this.provinceId=data.province;
+                this.cityId=data.city;
+                this.countyId=data.county;
+                this.reverName=data.revername;
+                this.detailAddr=data.addressdetails;
+                this.telephone=data.revertel;
+                this.getCityCounty();
+//                this.getCityCounty(data.province,data.city,data.county);
+            },
+            getCityCounty:function(){ //provinceId,cityId,countyId
+                var that=this;
+                $.ajax({
+                    type:'post',
+                    url:"{:url('home/User/getCityCounty')}",
+                    data:{province:that.provinceId,city:that.cityId},
+                    dataType:'json',
+                    success:function(res){
+                        console.log(res);
+                        if(res.code==20007){
+                            that.cityList=res.data[0];
+                            that.countyList=res.data[1];
+                            console.log(234,res.data);
+//                            console.log(235,cityId,countyId);
+//                            that.cityId=cityId;
+//                            that.countyId=countyId;
+                            $('#myModal').modal('show');
+                        }else{
+                            alert(res.msg);
+                        }
+                    }
+                });
+            },
+            resetModel:function(){
+                console.log("重置表单");
+                $('#defaultForm').data('bootstrapValidator').resetForm(true);
+            },
+            getProvince:function(){
+                console.log('获取省份');
+                var that=this;
+                $.ajax({
+                    type:'get',
+                    url:"{:url('home/User/getProvince')}",
+                    dataType:'json',
+                    success:function(res){
+                        console.log(res);
+                        if(res.code==20007){
+                            that.provinceList=res.data;
+                            console.log(that.provinceList);
+                        }else{
+                            alert(res.msg);
+                        }
+                    }
+                });
+            },
+            getCity:function(){
+                var that=this;
+                console.log('获取城市',that.provinceId);
+                if (that.provinceId!=''){
+                    $.ajax({
+                        type:'get',
+//                    url:'index.php?type=Question&do=createQuestionnaire',
+                        url:"{:url('home/User/getCity')}?province="+that.provinceId,
+                        dataType:'json',
+//            data:{'q_title':$("#q_title").val()},
+                        success:function(res){
+                            console.log(res);
+                            if(res.code==20007){
+                                that.cityList=res.data;
+                            }else{
+                                alert(res.msg);
+                            }
+                        }
+                    });
+                }
+            },
+            getCounty:function(){
+                var that=this;
+                console.log('获取地区',that.cityId);
+                if (that.cityId!=''){
+                    $.ajax({
+                        type:'get',
+                        url:"{:url('home/User/getCounty')}?city="+that.cityId,
+                        dataType:'json',
+//            data:{'q_title':$("#q_title").val()},
+                        success:function(res){
+                            console.log(res);
+                            if(res.code==20007){
+                                that.countyList=res.data;
+                                $('#myModal').modal('show');
+                            }else{
+                                alert(res.msg);
+                            }
+                        }
+                    });
+
+                }
+            },
+            editAddress:function(){
+                $('#defaultForm').bootstrapValidator('validate');
+                if($('#defaultForm').data('bootstrapValidator').isValid()){
+                    if(this.editId==''){
+                        this.addAddress();
+                    }else{
+                        this.updateAddress(this.editId);
+                    }
+                }
+                else{
+                    alert('请正确填写表单')
+                }
+            },
+            addAddress:function(){
+                var that=this;
+                var formData =$("#defaultForm").serialize();
+                console.log(263,formData);
+                $.ajax({
+                    url: "{:url('home/User/insertAddress')}",
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    success: function(res) {
+                        console.log(res);
+                        if(res.code==20001){
+                            console.log(res.data);//新地址id
+                            //that.getAddrList();
+//                                window.location.reload();
+                            //$('#myModal').modal('hide');
+                            alert(res.msg);
+                            location.reload(true);
+                        }else{
+                            alert(res.msg);
+                        }
+                    },
+                    error: function(res) {
+                    }
+                });
+
+            },
+        },
+        mounted:function(){
+            //获取省份
+            this.getProvince();
+            /*bus.$on('go',function(index){
+                this.current=index;
+                this.getAddrList();
+            }.bind(this))*/
+        },
+        updated: function(){
+            //正则校验
+            $('#defaultForm').bootstrapValidator({
+//        live: 'disabled',
+                message: '该值不能为空',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    reverName: {
+                        validators: {
+                            notEmpty: {
+                                message: '收货人不能为空'
+                            }
+                        }
+                    },
+                    province: {
+                        validators: {
+                            notEmpty: {
+                                message: '省份不能为空'
+                            }
+                        }
+                    },
+                    city: {
+                        validators: {
+                            notEmpty: {
+                                message: '城市不能为空'
+                            }
+                        }
+                    },
+                    county: {
+                        validators: {
+                            notEmpty: {
+                                message: '地区不能为空'
+                            }
+                        }
+                    },
+                    detailAddr: {
+                        validators: {
+                            notEmpty: {
+                                message: '详细地址不能为空'
+                            }
+                        }
+                    },
+                    telephone: {
+                        validators: {
+                            notEmpty: {
+                                message: '电话号码不能为空'
+                            },
+                            regexp: {
+//                            regexp: /^[a-zA-Z0-9_\.]+$/,
+                                regexp:/^1[3|4|5|8][0-9]\d{4,8}$/,
+                                message: '电话号码格式不正确'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+
+</script>
 </html>

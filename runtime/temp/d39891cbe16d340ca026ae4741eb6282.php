@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:75:"D:\AppServ\www\hf1707_zc\public/../application/home\view\user\settings.html";i:1517361243;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:75:"D:\AppServ\www\hf1707_zc\public/../application/home\view\user\settings.html";i:1517759348;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -113,7 +113,7 @@
     </div>
     <div class="col-xs-4">
         <p style="font-size:14px">个人头像</p>
-        <img id="avatar" style="width: 120px;height: 120px" src="<?php echo $zc_user['headimg']; ?>" />
+        <img id="avatar" style="width: 120px;height: 120px" src="__STATIC__/<?php echo $zc_user['headimg']; ?>" />
         <div style="margin-top: 10px">
             <form id="img_form" action="<?php echo url('home/User/headImg'); ?>" method="post" enctype="multipart/form-data">
                 <label class="fileupload">

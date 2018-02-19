@@ -44,9 +44,9 @@
             this.loadDom();
             this.options.ready();
 
-            this.$element[0].onselectstart = document.body.ondrag = function(){
+            /*this.$element[0].onselectstart = document.body.ondrag = function(){
                 return false;
-            };
+            };*/
 
             //按下
             this.htmlDoms.move_block.on('touchstart', function(e) {

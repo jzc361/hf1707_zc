@@ -40,15 +40,17 @@
           <div class="layui-field-box" id="allrole">
               <table class="layui-table" lay-even>
                   <tbody>
-
+                  <tr v-for="roleInfo in allrole" v-if="roleInfo.roleid==1">
+                      <th>角色id</th><th>角色名</th><th>角色简介</th><th>角色状态</th><th>权限管理/修改</th><th>角色删除</th>
+                  </tr>
                   <!--角色管理操作-->
                   <tr v-for="roleInfo in allrole" v-if="roleInfo.roleid==1">
-                      <td>{{roleInfo.rolename}}</td><td>{{roleInfo.roledetails}}</td><td>--</td><td>--</td>
+                      <td>{{roleInfo.roleid}}</td><td>{{roleInfo.rolename}}</td><td>{{roleInfo.roledetails}}</td><td>{{roleInfo.empstate}}</td><td>--</td><td>--</td>
                   </tr>
                   <tr v-for="roleInfo in allrole" v-if="roleInfo.roleid!=1">
-                      <td>{{roleInfo.rolename}}</td><td>{{roleInfo.roledetails}}</td>
+                      <td>{{roleInfo.roleid}}</td><td>{{roleInfo.rolename}}</td><td>{{roleInfo.roledetails}}</td><td>{{roleInfo.empstate}}</td>
                       <td>
-                        <a :rid="roleInfo.roleid" data-toggle="modal" data-target="#modalEdit" onclick="roleEdit(this)" href="#">权限修改</a>
+                        <a :rid="roleInfo.roleid" data-toggle="modal" data-target="#modalEdit" onclick="roleEdit(this)" href="#">权限/修改</a>
                       </td>
                      <td>
                          <a :rid="roleInfo.roleid" onclick="roleDel(this)" href="#">删除</a>
@@ -61,7 +63,7 @@
       <!--<blockquote class="layui-elem-quote layui-quote-nm"></blockquote>-->
   </div>
   <div style="text-align: center" class="layui-form-item">
-      <button class="btn layui-btn" data-toggle="modal" data-target="#modalAdd" style="width: 30%" id="roleAdd" lay-filter="add">
+      <button class="btn layui-btn" data-toggle="modal" data-target="#modalAdd" style="width: 30%" id="showAdd" lay-filter="add">
           添加角色
       </button>
   </div>
@@ -96,14 +98,33 @@
                       <label for="gradeAdd" class="layui-form-label">
                           <span class="x-red">*</span>权限选择
                       </label>
-                      <div class="layui-input-inline">
-                          <input type="text" id="gradeAdd" name="gradeAdd" required="" lay-verify=""
-                                 autocomplete="off" class="layui-input">
+                      <div class="content_wrap layui-input-inline">
+                          <div class="zTreeDemoBackground left">
+                              <ul id="gradeAdd" class="ztree"  style="background-color: whitesmoke;width: 192px;height: 100%;border-color: #e6e6e6"></ul>
+                          </div>
                       </div>
                       <div class="layui-form-mid layui-word-aux">
                           <span class="x-red">*</span>请合理分配权限
                       </div>
                   </div>
+
+                  <!--角色状态-->
+
+                  <div class="layui-form-item">
+                      <label for="stateAdd" class="layui-form-label">
+                          <span class="x-red">*</span>角色状态
+                      </label>
+                      <div class="layui-input-inline">
+                          <select name="stateAdd" id="stateAdd">
+                              <option value="使用">使用</option>
+                              <option value="停用">停用</option>
+                          </select>
+                      </div>
+                      <div class="layui-form-mid layui-word-aux">
+                          <span class="x-red">*</span>
+                      </div>
+                  </div>
+
                   <div class="layui-form-item">
                       <label for="introAdd" class="layui-form-label">
                           <span class="x-red">*</span>角色详情/介绍
@@ -120,7 +141,7 @@
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                  <button type="button" class="btn layui-btn">确认添加</button>
+                  <button id="roleAdd" type="button" class="btn layui-btn">确认添加</button>
               </div>
           </div>
       </div>
@@ -136,7 +157,7 @@
               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                   <h4 class="modal-title" id="modalLabelEdit">权限修改</h4>
-                  <!--------------------------添加角色------------------------------>
+                  <!--------------------------修改角色------------------------------>
               </div>
               <div class="modal-body">
                   <!--角色名-->
@@ -149,10 +170,10 @@
                                  autocomplete="off" class="layui-input">
                       </div>
                       <div class="layui-form-mid layui-word-aux">
-                          <span class="x-red">*</span>必填
+                          <span class="x-red">*</span>
                       </div>
                   </div>
-                  <!--权限添加-->
+                  <!--权限修改-->
                   <div class="layui-form-item">
                       <label class="layui-form-label">
                           <span class="x-red">*</span>权限选择
@@ -160,7 +181,7 @@
 
                       <div class="content_wrap layui-input-inline">
                           <div class="zTreeDemoBackground left">
-                              <ul id="treeDemo" class="ztree"  style="background-color: whitesmoke;width: 192px;height: 100%;border-color: #e6e6e6"></ul>
+                              <ul id="roleEdit" class="ztree"  style="background-color: whitesmoke;width: 192px;height: 100%;border-color: #e6e6e6"></ul>
                           </div>
                       </div>
 
@@ -168,15 +189,31 @@
                           <span class="x-red">*</span>请合理分配权限
                       </div>
                   </div>
+
+                  <!--角色状态-->
+
+                  <div class="layui-form-item">
+                      <label for="stateEdit" class="layui-form-label">
+                          <span class="x-red">*</span>角色状态
+                      </label>
+                      <div class="layui-input-inline">
+                          <select name="stateEdit" id="stateEdit">
+                              <option value="使用">使用</option>
+                              <option value="停用">停用</option>
+                          </select>
+                      </div>
+                      <div class="layui-form-mid layui-word-aux">
+                          <span class="x-red">*</span>
+                      </div>
+                  </div>
+
                   <div class="layui-form-item">
                       <label for="introEdit" class="layui-form-label">
                           <span class="x-red">*</span>角色详情/介绍
                       </label>
                       <div class="layui-input-inline">
 
-                          <textarea style="overflow-y:visible" id="introEdit" lay-verify="" autocomplete="off" class="layui-input">
-
-                          </textarea>
+                          <input type="text" style="overflow-y:visible" id="introEdit" lay-verify="" autocomplete="off" class="layui-input"/>
 
                       </div>
                       <div class="layui-form-mid layui-word-aux">
@@ -187,7 +224,7 @@
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                  <button type="button" class="btn layui-btn">确认修改</button>
+                  <button type="button" id="saveEdit" class="btn layui-btn">确认修改</button>
               </div>
           </div>
       </div>
@@ -217,34 +254,36 @@
   <script type="text/javascript" src="__JS__/admin/jquery-1.4.4.min.js"></script>
   <script type="text/javascript" src="__JS__/admin/jquery.ztree.core-3.5.js"></script>
   <script type="text/javascript" src="__JS__/admin/jquery.ztree.excheck-3.5.js"></script>
-
+  <script type="text/javascript" src="__JS__/jquery.cookie.js"></script>
 
 
 
 
   <script>
       $(
-              $.ajax({
-                  url:"{:url('admin/backmanager/allRole')}",
-                  data:'',
-                  type:'post',
-                  dataType:'json',
-                  success:function($res){
-                      var roleVue = new Vue({
-                          el:"#allrole",
-                          data:{
-                              'allrole':$res.data
-                          },
-                          created: function () {
+              //获取权限
+          $.ajax({
+              url:"{:url('admin/backmanager/allRole')}",
+              data:'',
+              type:'post',
+              dataType:'json',
+              success:function($res){
+                  var roleVue = new Vue({
+                      el:"#allrole",
+                      data:{
+                          'allrole':$res.data
+                      },
+                      created: function () {
 
-                          }
-                      })
-                  }
-              })
+                      }
+                  })
+              }
+          })
       );
 
-
-      function zTree($treeData){
+//Ztree插件方法
+      //封装1.0.3
+      function zTree($treeData,$div){
           var setting = {
               check: {
                   enable: true
@@ -253,7 +292,7 @@
                   simpleData: {
                       enable: true
                   }
-              }
+              },
           };
           //点击权限修改后绑定该角色所有权限数据
 
@@ -267,9 +306,9 @@
               code.empty();
               code.append("<li>"+str+"</li>");
           }
-
+          //ztree数据绑定与标签绑定
           $(document).ready(function(){
-              $.fn.zTree.init($("#treeDemo"), setting,$treeData);
+              $.fn.zTree.init($("#"+$div+""), setting,$treeData);
               setCheck();
               $("#py").bind("change", setCheck);
               $("#sy").bind("change", setCheck);
@@ -278,13 +317,143 @@
           });
 
       }
+      //动态添加ztree数据
+      //封装1.0.2
+      function ztreeCreate($ztreeData){
+          zNodes = [];
+          for(var $i = 0;$i<$ztreeData.length;$i++) {
+              //显示主枝
+              if ($ztreeData[$i]['menufid'] == 0) {
+                  zNodes.push({
+                      id: $ztreeData[$i]['menuid'],
+                      pId: $ztreeData[$i]['menufid'],
+                      name: $ztreeData[$i]['menuname'],
+                      open: true,
+                      checked: false
+                  })
+              } else if ($ztreeData[$i]['menuid'] == 8 || $ztreeData[$i]['menuid'] == 10) {
+                  zNodes.push({
+                      id: $ztreeData[$i]['menuid'],
+                      pId: $ztreeData[$i]['menufid'],
+                      name: $ztreeData[$i]['menuname'],
+                      open: true,
+                      checked: false
+                  })
+              } else {
+                  zNodes.push({
+                      id: $ztreeData[$i]['menuid'],
+                      pId: $ztreeData[$i]['menufid'],
+                      name: $ztreeData[$i]['menuname'],
+                      checked: false
+                  })
+              }
+          }
+          return zNodes;
+      }
 
+      //获取菜单
+      $('#showAdd').click(function(){
+          $.ajax({
+              url:"{:url('admin/backmanager/getRoleMenu')}",
+              data:'',
+              type:'post',
+              dataType:'json',
+              success:function(res){
+                  ztreeCreate(res.data);
+                  $div = 'gradeAdd';
+                  zTree(zNodes,$div);
+              }
+          })
+      });
       //添加角色
-      $("#roleAdd").click(function (){
+        //角色名字不能为空
+      $("#nameAdd").blur(function(){
+          $newRoleName = $("#nameAdd").val();
 
+          $newRoleName=$newRoleName.replace(/(^\s*)|(\s*$)/g, "");
+          //$.trim($newRoleName)
+
+          if($newRoleName==''){
+              alert('角色名不能为空,也不能为全空格');
+          }else {
+              //判断重复
+              $.ajax({
+                  url:"{:url('admin/backmanager/checkRole')}",
+                  data:'rolename='+$newRoleName,
+                  type:'post',
+                  dataType:'json',
+                  success:function(res){
+                      if(res.code==20007){
+                          alert('该角色已存在');
+                      }
+                  }
+              })
+          }
+      });
+      $("#roleAdd").click(function (){
+          //获取对应ztree(id)节点的选中数据
+          var roleAdd = $.fn.zTree.getZTreeObj("gradeAdd");
+          //获取选中(true)的所有属性获取该角色被给予的所有权限信息
+          var newmenu = roleAdd.getCheckedNodes(true);
+          //对获取的数据处理得到需要的数据
+          var newmenuid = [];
+          for(var $i = 0;$i<newmenu.length;$i++){
+              newmenuid.push({
+                  menuid:newmenu[$i]['id']
+              })
+          };
+          //新角色名称
+          var nameAdd = $("#nameAdd").val();
+          nameAdd=nameAdd.replace(/(^\s*)|(\s*$)/g, "");
+
+          //新角色介绍
+          var introAdd = $("#introAdd").val();
+
+          //设置判断值用于在Ajax返回值判断后是启用下一层Ajax
+          var $AjaxCheck = 0;
+
+          //新角色名称不能为空
+          if(nameAdd==""){
+              alert('角色名不能为空,也不能为全空格');
+          }else{
+              $.ajax({
+                  url:"{:url('admin/backmanager/checkRole')}",
+                  data:'rolename='+nameAdd,
+                  type:'post',
+                  dataType:'json',
+                  async:false,
+                  success:function(res){
+                      if(res.code==20007){
+                          alert('该角色已存在');
+                      }
+                      else{
+                          $AjaxCheck = 1;
+                      }
+                  }
+              })
+          }
+          if($AjaxCheck==1){
+              $.ajax({
+                  url:"{:url('admin/backmanager/roleAdd')}",
+                  data:{
+                      'rolename':nameAdd,
+                      'roleintro':introAdd,
+                      'rolemenu':newmenuid
+                  },
+                  type:'post',
+                  dataType:'json',
+                  async:false,
+                  success:function(res){
+                    if(res.code==20005){
+                        alert("新角色添加成功");
+                        window.location.reload();
+                    }
+                  }
+              })
+          }
       });
 
-      //删除角色
+      //删除角色//完成
       function roleDel(obj){
         $rid = $(obj).attr('rid');
           $checkDel = confirm('您确定要删除该角色吗？');
@@ -295,6 +464,7 @@
                   type:'post',
                   dataType:'json',
                   success:function(res){
+                      console.log(res);
                       alert(res.msg);
                       window.location.reload();
                   }
@@ -312,42 +482,69 @@
               success:function(res){
 
                     if(res!=''){
-                        var zNodes =[
-                            { id:1, pId:0, name:"随意勾选 1", open:true},//open展开//checked//勾选
-                            { id:11, pId:1, name:"随意勾选 1-1", open:true},
-                            { id:111, pId:11, name:"随意勾选 1-1-1"},
-                            { id:112, pId:11, name:"随意勾选 1-1-2"},
-                            { id:12, pId:1, name:"随意勾选 1-2", open:true},
-                            { id:121, pId:12, name:"随意勾选 1-2-1"},
-                            { id:122, pId:12, name:"随意勾选 1-2-2"},
-                            { id:2, pId:0, name:"随意勾选 2", checked:true, open:true},
-                            { id:21, pId:2, name:"随意勾选 2-1"},
-                            { id:22, pId:2, name:"随意勾选 2-2", open:true},
-                            { id:221, pId:22, name:"随意勾选 2-2-1", checked:true},
-                            { id:222, pId:22, name:"随意勾选 2-2-2"},
-                            { id:23, pId:2, name:"随意勾选 2-3"}
-                        ];
+                        //调用创建ztree的方法
+                        var zNodes = ztreeCreate(res.data[0]);
+                        //把有权限的选项给勾选
+                        for(var $j=0;$j<res.data[1].length;$j++){
 
+                            for(var $z =0;$z<zNodes.length;$z++){
+                                if(zNodes[$z]['id']==res.data[1][$j]['menuid']){
+                                    zNodes[$z]['checked']=true;
+                                }
+                            }
+                        }
 
-                        console.log(JSON.stringify(zNodes));
-                        for(var $j = 0;$j<zNodes.length;$j++){
-                            console.log(zNodes[$j]);
-                        }
-                        var zNodes = [];
-                        var str = '';
-                        console.log(res.data[0]);
-                        for(var $i = 0;$i<res.data[0].length;$i++){
-                            console.log(res.data[0][$i]);
-                            console.log(res.data[0][$i]['menuname']);
-                        }
-                        //zTree(zNodes);
-                        console.log(zNodes);
+                        //给对应得文本框绑定内容
+                        $("#nameEdit").val(res.data[1][0]['rolename']);
+                        $("#introEdit").val(res.data[1][0]['roledetails']);
+
+                        //给当前的元素增加属性'',属性值为''
+                        $("#nameEdit").attr("roleid",res.data[1][0]['roleid']);
+
+                        //调用ztree
+                        $div = 'roleEdit';
+                        zTree(zNodes,$div);
+
                     }
 
                 //zTree(res);
               }
           });
       }
+      //保存修改
+      $("#saveEdit").click(function(){
+          //获取对应ztree(id)节点的选中数据
+          var roleEdit = $.fn.zTree.getZTreeObj("roleEdit");
+          //获取选中(true)的所有属性
+          var newmenu = roleEdit.getCheckedNodes(true);
+          var newmenuid = [];
+          for(var $i = 0;$i<newmenu.length;$i++){
+              newmenuid.push({
+                  menuid:newmenu[$i]['id']
+              })
+          }
+          //获取当前被修改角色得id
+          var editId = $("#nameEdit").attr('roleId');
+
+          var editName = $('#nameEdit').val();
+
+          var editDetails = $('#introEdit').val();
+          //删除数据+//插入数据
+          $.ajax({
+              url:"{:url('admin/backmanager/roleEdit')}",
+              //data数据角色id,角色名,角色介绍
+              //复数数据使用json
+              data:{'roleid':editId,'rolename':editName,'roledetails':editDetails,'menuid':newmenuid},
+              type:'post',
+              dataType:'json',
+              success:function(res) {
+                    alert(res.msg);
+                    window.location.reload();
+              }
+          })
+
+      });
+
   </script>
   <script>
 

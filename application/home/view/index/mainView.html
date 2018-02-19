@@ -15,9 +15,8 @@
 
 </head>
 <body>
-{include file="public/nav"}
-<!--聊天客服-->
 {include file="public/chatDiv"}
+{include file="public/nav"}
 <div class="row clearfix">
     <div class="col-sm-12 column">
         <div class="banner">
@@ -352,7 +351,7 @@
 </body>
 <script>
     $(function(){
-        console.log('加载完成');
+
         $(".hotList>img").load(function(){
             console.log(333,$(this).width());
 //            $(this).css("height",$(this).width()*0.78);

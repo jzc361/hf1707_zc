@@ -52,7 +52,11 @@
 
         <hr>
         <div align="center" class="container" style="width: 100%;margin: auto">
+<<<<<<< HEAD
             <button type="button" class="btn btn-info" @click="addOrder">去结算</button>
+=======
+            <button type="button" class="btn btn-info" onclick="checkOrder({$prodetails.prodetailsid})">去结算</button>
+>>>>>>> origin/master
         </div>
 
     </div>
@@ -60,6 +64,7 @@
 <script src="__JS__/jquery-2.1.4.js"></script>
 <script src="__JS__/bootstrap.min.js"></script>
 <script>
+<<<<<<< HEAD
     var app = new Vue({
         el: '#app',
         data: {
@@ -85,6 +90,27 @@
                     this.disAdd=false;
                 }else{
                     this.disMinus=true;
+=======
+    //检查订单
+    function checkOrder(prodetailsid){
+        //console.log(prodetailsid);
+        $.ajax({
+            url:'{:url("Order/isOrder")}',
+            data:{prodetailsid:prodetailsid},
+            dataType:'json',
+            success:function(res){
+                if(res.code=='00000'){
+                    //未登录，进入登录页面
+                    alert(res.msg);
+                    window.open('{:url("home/User/showLogin")}');
+                }else if(res.code=='60002'){
+                    //支持数达上限，关闭窗口
+                    alert(res.msg);
+                    parent.closeIframe();
+                    //window.close();
+                }else {
+                    parent.location.href='{:url("home/Order/checkOrder")}?prodetailsid='+prodetailsid;
+>>>>>>> origin/master
                 }
             },
             addOrder: function () {
