@@ -1,4 +1,3 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:85:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\backmanager\empmanager.html";i:1517906579;}*/ ?>
 <!DOCTYPE html>
 <html>
 
@@ -226,7 +225,7 @@
     $(
             //获取权限
             $.ajax({
-                url:"<?php echo url('admin/backmanager/allEmp'); ?>",
+                url:"{:url('admin/backmanager/allEmp')}",
                 data:'',
                 type:'post',
                 dataType:'json',
@@ -317,7 +316,7 @@
     //获取菜单
     $('#showAdd').click(function(){
         $.ajax({
-            url:"<?php echo url('admin/backmanager/getEmpMenu'); ?>",
+            url:"{:url('admin/backmanager/getEmpMenu')}",
             data:'',
             type:'post',
             dataType:'json',
@@ -341,7 +340,7 @@
         }else {
             //判断重复
             $.ajax({
-                url:"<?php echo url('admin/backmanager/checkEmp'); ?>",
+                url:"{:url('admin/backmanager/checkEmp')}",
                 data:'empname='+$newEmpName,
                 type:'post',
                 dataType:'json',
@@ -380,7 +379,7 @@
             alert('角色名不能为空,也不能为全空格');
         }else{
             $.ajax({
-                url:"<?php echo url('admin/backmanager/checkEmp'); ?>",
+                url:"{:url('admin/backmanager/checkEmp')}",
                 data:'empname='+nameAdd,
                 type:'post',
                 dataType:'json',
@@ -397,7 +396,7 @@
         }
         if($AjaxCheck==1){
             $.ajax({
-                url:"<?php echo url('admin/backmanager/EmpAdd'); ?>",
+                url:"{:url('admin/backmanager/EmpAdd')}",
                 data:{
                     'empname':nameAdd,
                     'empintro':introAdd,
@@ -422,7 +421,7 @@
         $checkDel = confirm('您确定要删除该角色吗？');
         if($checkDel){
             $.ajax({
-                url:"<?php echo url('admin/backmanager/empDel'); ?>",
+                url:"{:url('admin/backmanager/empDel')}",
                 data:'rid='+$rid,
                 type:'post',
                 dataType:'json',
@@ -438,7 +437,7 @@
     function empEdit(obj){
         $rid = $(obj).attr('rid');//获取角色ID
         $.ajax({
-            url:"<?php echo url('admin/backmanager/empEditData'); ?>" ,
+            url:"{:url('admin/backmanager/empEditData')}" ,
             data:'rid='+$rid,
             type:'post',
             dataType:'json',
@@ -494,7 +493,7 @@
         var editDetails = $('#introEdit').val();
         //删除数据+//插入数据
         $.ajax({
-            url:"<?php echo url('admin/backmanager/empEdit'); ?>",
+            url:"{:url('admin/backmanager/empEdit')}",
             //data数据角色id,角色名,角色介绍
             //复数数据使用json
             data:{'empid':editId,'empname':editName,'headimg':editDetails,'menuid':newmenuid},
