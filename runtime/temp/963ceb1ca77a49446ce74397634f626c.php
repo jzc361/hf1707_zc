@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\money.html";i:1517625756;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\money.html";i:1517625803;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -342,59 +342,4 @@
 
 
 </script>
-<script>
-    $(function(){
-        //正则校验
-//        $('#rechargeForm').bootstrapValidator({
-////        live: 'disabled',
-//            message: '该值不能为空',
-//            feedbackIcons: {
-//                valid: 'glyphicon glyphicon-ok',
-//                invalid: 'glyphicon glyphicon-remove',
-//                validating: 'glyphicon glyphicon-refresh'
-//            },
-//            fields: {
-//                rechargeNum: {
-//                    validators: {
-//                        notEmpty: {
-//                            message: '充值金额不能为空'
-//                        },
-//                        regexp: {
-////                            regexp: /^[a-zA-Z0-9_\.]+$/,
-//                            regexp:/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/,
-////                            regexp:/(^[1-9](\d+)?(\.\d{1,2})?$)|(^(0){1}$)|(^\d\.\d{1,2}?$)/,
-//                            message: '充值金额格式不正确'
-//                        }
-//                    }
-//                }
-//            }
-//        });
-        //
-//        $("#charge_btn").click(function(){
-//            if(confirm("确认付款？")){
-//                var formData=$('#rechargeForm').serialize();
-//                $.ajax({
-//                    url: "<?php echo url('home/User/recharge'); ?>",
-//                    type: "post",
-//                    data:formData,
-//                    dataType: "json",
-//                    success: function(res) {
-//                        console.log(res);
-//                        if(res.code==20007){
-//                            alert('充值成功');
-//                            $('#rechargeForm').data('bootstrapValidator').resetForm(true);
-//                            $("#money_span").text('￥'+res.data);
-//                            $('#my_tabs li:eq(0) a').tab('show')
-//                        }else{
-//                            alert(res.msg);
-//                        }
-//                    },
-//                    error: function() {
-//                    }
-//                });
-//            }
-//        });
-    });
-</script>
-
 </html>

@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:92:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\project\prodetails.html";i:1517707187;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517471035;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:92:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\project\prodetails.html";i:1518268306;s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\nav.html";i:1517885691;s:87:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\public\footer.html";i:1517462875;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -286,6 +286,9 @@
                     <li>
                         <a href="<?php echo url('home/User/test'); ?>">查看通知(测试)</a>
                     </li>
+                    <li>
+                        <a href="<?php echo url('home/Letter/letter'); ?>">查看私信</a>
+                    </li>
                     <li class="divider">
                     </li>
                     <li>
@@ -395,7 +398,14 @@
                         <div class="initiator-peo"><p><?php echo $username; ?></p></div>
                     </div>
                     <div>
-                        <button type="button">消息</button>
+                        <div class="row">
+                            <div class="col-xs-offset-2 col-xs-4">
+                                <button type="button" class="btn btn-default" onclick="openLetter()">发送私信</button>
+                            </div>
+                            <div class="col-xs-4">
+                                <button type="button" class="btn btn-default">联系我们</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!--分额度众筹-->
@@ -461,6 +471,7 @@
         </div>
     </div>
 </div>
+
 </body>
 <!--<script src="__JS__/jquery-2.1.4.js"></script>-->
 <!--<script src="__JS__/bootstrap.min.js"></script>-->
@@ -549,7 +560,7 @@
     }
 
     function showLogin(){
-        x_admin_show('登录','<?php echo url("home/Userop/showLogin"); ?>')
+        x_admin_show('登录','<?php echo url("home/User/showLogin"); ?>')
     }
 
     //layui.use('showPrompt');
@@ -560,7 +571,34 @@
         for(var i=0;i<10;i++){
             $('#layui-layer-shade'+i).css('display','none');
         }
-
+    }
+    //发送私信
+    function openLetter(){
+        $.ajax({
+            url:'<?php echo url("home/Letter/openLetter"); ?>?rever=<?php echo $userid; ?>',
+            type:'get',
+            dataType:'json',
+            success:function(res){
+                if(res.code=='00000'){ //未登录
+                    alert(res.msg);
+                    window.open('<?php echo url("home/user/showLogin"); ?>');
+                }else if(res.code==70004){ //给自己发私信
+                    alert(res.msg);
+                }else{
+                    // x_admin_show("发送私信(收信人：$username})",'<?php echo url("home/User/sendLetter"); ?>',auto,auto);
+                    layer.open({
+                        type: 2,
+                        fix: false, //不固定
+                        area:['500px','300px'],
+                        maxmin: true,
+                        shadeClose: true,
+                        shade:0.4,
+                        title: '发送私信(收信人：<?php echo $username; ?>)',
+                        content: '<?php echo url("home/Letter/letterWindow"); ?>?rever=<?php echo $userid; ?>'
+                    });
+                }
+            }
+        });
     }
 
 </script>

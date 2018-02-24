@@ -233,8 +233,8 @@
                 {volist name="proList" id="value"}
                 <!--<p class="pro-have">金额</p>-->
                 <p class="pro-amount"><span style="font-size: 24px">￥</span>{$value.price}</p>
+                <button type="button" style="width: 85%;margin-bottom: 5%" class="btn btn-info" onclick="limitSup({$value.prodetailsid})" {if $pro.limitstateid!=1}disabled{/if}>立即支持</button>
                 {/volist}
-                <button type="button" style="width: 85%;margin-bottom: 5%" class="btn btn-info" onclick="limitSup({$pro.projectid})" {if $pro.limitstateid!=1}disabled{/if}>立即支持</button>
                 <!--滑块验证-->
                 <div>
                     <div id="mpanel1" ></div>
@@ -295,7 +295,14 @@
                         <div class="initiator-peo"><p>{$username}</p></div>
                     </div>
                     <div>
-                        <button type="button">消息</button>
+                        <div class="row">
+                            <div class="col-xs-offset-2 col-xs-4">
+                                <button type="button" class="btn btn-default" onclick="openLetter()">发送私信</button>
+                            </div>
+                            <div class="col-xs-4">
+                                <button type="button" class="btn btn-default">联系我们</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!--分额度众筹-->
@@ -323,6 +330,7 @@
         </div>
     </div>
     {include file="public/footer"}
+
 </body>
 <!--<script src="__JS__/jquery-2.1.4.js"></script>-->
 <!--<script src="__JS__/bootstrap.min.js"></script>-->
@@ -356,9 +364,11 @@
             //alert('验证成功，添加你自己的代码！');
             //......后续操作
             r=true;
+            console.log(r);
         },
         error : function() {
-//		        	alert('验证失败！');
+//		    alert('验证失败！');
+            console.log(r);
         }
 
     });
@@ -394,12 +404,37 @@
     }
 
     //限时项目支持
-    function limitSup(){
+    function limitSup(prodetailsid){
         if(!r){
-            console.log(1);
+            alert('请先完成验证');
         }else {
-            console.log(2);
+            console.log(prodetailsid,2);
+            checkOrder(prodetailsid);
         }
+    }
+
+    //限时--检查订单
+    function checkOrder(prodetailsid){
+        //console.log(prodetailsid);
+        $.ajax({
+            url:'{:url("Order/isOrder")}',
+            data:{prodetailsid:prodetailsid},
+            dataType:'json',
+            success:function(res){
+                if(res.code=='00000'){
+                    //未登录，进入登录页面
+                    alert(res.msg);
+                    window.open('{:url("home/User/showLogin")}');
+                }else if(res.code=='60002'){
+                    //支持数达上限，关闭窗口
+                    alert(res.msg);
+                    //parent.closeIframe();
+                    //window.close();
+                }else {
+                    location.href='{:url("home/Order/checkOrder")}?prodetailsid='+prodetailsid;
+                }
+            }
+        });
     }
 
     //提示
@@ -410,19 +445,55 @@
         });
     }
 
+<<<<<<< HEAD
     function showLogin(){
-        x_admin_show('登录','{:url("home/Userop/showLogin")}')
+        x_admin_show('登录','{:url("home/User/showLogin")}')
     }
 
+=======
+>>>>>>> origin/master
     //layui.use('showPrompt');
 
     //关闭iframe窗口
     function closeIframe(){
-        $('div[type="iframe"]').css('display','none');
+        layer.closeAll();
+        /*$('div[type="iframe"]').css('display','none');
         for(var i=0;i<10;i++){
             $('#layui-layer-shade'+i).css('display','none');
+<<<<<<< HEAD
         }
+    }
+    //发送私信
+    function openLetter(){
+        $.ajax({
+            url:'{:url("home/Letter/openLetter")}?rever={$userid}',
+            type:'get',
+            dataType:'json',
+            success:function(res){
+                if(res.code=='00000'){ //未登录
+                    alert(res.msg);
+                    window.open('{:url("home/user/showLogin")}');
+                }else if(res.code==70004){ //给自己发私信
+                    alert(res.msg);
+                }else{
+                    // x_admin_show("发送私信(收信人：$username})",'{:url("home/User/sendLetter")}',auto,auto);
+                    layer.open({
+                        type: 2,
+                        fix: false, //不固定
+                        area:['500px','300px'],
+                        maxmin: true,
+                        shadeClose: true,
+                        shade:0.4,
+                        title: '发送私信(收信人：{$username})',
+                        content: '{:url("home/Letter/letterWindow")}?rever={$userid}'
+                    });
+                }
+            }
+        });
+=======
+        }*/
 
+>>>>>>> origin/master
     }
 
 </script>

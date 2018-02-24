@@ -212,6 +212,7 @@ class Project extends Auth
             $username=db('user')->where('userid',$pro['userid'])->column('username,username');
             $headimg=db('user')->where('userid',$pro['userid'])->column('headimg,headimg');
             $this->assign("username",$username[0]);//发起人姓名
+            $this->assign("userid",$pro['userid']);//发起人id
             $this->assign('headimg',$headimg[0]);//发起人头像
         }
         //项目进度
@@ -342,7 +343,11 @@ class Project extends Auth
             return json($reMsg);
         }
         //查看用户订单表，用户是否支持过该项目
-        $res1=db('orders')->where($condition)->select();
+        $res1=db('orders a')
+            ->join('zc_prodetails b','a.prodetailsid=b.prodetailsid')
+            ->where($condition)
+            ->select();
+        //var_dump($res1);exit;
         //判断当前用户是否为项目发起人
         $res2=db('project')->where($condition)->count('projectid');
         //var_dump($res2);exit;

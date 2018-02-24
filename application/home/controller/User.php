@@ -7,6 +7,7 @@ use \think\Request;
 use \think\Session;
 use \think\Cache;
 use \think\Validate;
+use \think\captcha;
 class User extends Auth
 {
     public function __construct(Request $request)
@@ -123,14 +124,41 @@ class User extends Auth
     //支持的项目页面
     public function support()
     {
-        //获取分页项目
-        $supportList=db('orders a,zc_prodetails b,zc_project c')
+        //获取分页全部项目
+        $allList=db('orders a,zc_prodetails b,zc_project c')
             ->where('a.prodetailsid=b.prodetailsid')
             ->where('b.projectid=c.projectid')
             ->where('a.userid',$this->zc_user['userid'])
             ->order('a.orderstime desc')
             ->paginate(5);
-        $this->assign('supportList',$supportList);
+        //获取分页已支付项目
+        $paidList=db('orders a,zc_prodetails b,zc_project c')
+            ->where('a.prodetailsid=b.prodetailsid')
+            ->where('b.projectid=c.projectid')
+            ->where('a.userid',$this->zc_user['userid'])
+            ->where('a.orderstate','in',"已支付,交易成功,已发货")
+            ->order('a.orderstime desc')
+            ->paginate(5);
+        //获取分页未支付项目
+        $unpaidList=db('orders a,zc_prodetails b,zc_project c')
+            ->where('a.prodetailsid=b.prodetailsid')
+            ->where('b.projectid=c.projectid')
+            ->where('a.userid',$this->zc_user['userid'])
+            ->where('a.orderstate','in',"未支付,交易关闭")
+            ->order('a.orderstime desc')
+            ->paginate(5);
+        //30分钟后未支付交易失败
+        foreach($allList as &$value){
+            if($value['orderstate']=="未支付" && strtotime($value['orderstime'].' +30 min')<time()){
+                db('orders')
+                    ->where('ordersid',$value['ordersid'])
+                    ->update(['orderstate'=>'交易关闭']);
+                $value['orderstate']="交易关闭";
+            }
+        }
+        $this->assign('allList',$allList);
+        $this->assign('paidList',$paidList);
+        $this->assign('unpaidList',$unpaidList);
         return $this->fetch('support');
     }
     //支持的项目页面--项目详情
@@ -368,7 +396,8 @@ class User extends Auth
         //$prodetails=db('prodetails')->where($condition)->select();
         //var_dump($prodetails);exit;
         //项目下的所有订单
-        $orderList=db('orders')
+        $orderList=db('orders a')
+            ->join('zc_prodetails b','a.prodetailsid=b.prodetailsid')
             ->where($condition)
             //->paginate(2);
             ->select();
@@ -419,7 +448,7 @@ class User extends Auth
     }
     //关注的项目页面
     public function focus(){
-        var_dump(input());
+//        var_dump(input());
         $page=input('?get.page')?input('page'):"";
         //获取分页项目
         $focusList=db('focuspro a')
@@ -433,6 +462,23 @@ class User extends Auth
             ->paginate(3,false,[
 
             ]);
+        $lastPage=$focusList->lastPage();
+        $current=$focusList->getCurrentPage();
+        if($current>$lastPage){
+            $focusList=db('focuspro a')
+                ->field('*,count(d.ordersid) surport_count,datediff(b.endtime,NOW()) resttime')
+                ->join('zc_project b','a.projectid=b.projectid','left')
+                ->join('zc_prodetails c','a.projectid=c.projectid','left')
+                ->join('zc_orders d','c.prodetailsid=d.prodetailsid','left')
+                ->where('a.userid',$this->zc_user['userid'])
+                ->group('a.projectid')
+                ->order('a.focustime desc')
+                ->paginate(3,false,[
+                    'page' => $lastPage,
+                ]);
+        }
+//        var_dump($lastPage);
+//        var_dump($current);
         $this->assign('focusList',$focusList);
         return $this->fetch('focus');
     }
@@ -586,6 +632,10 @@ class User extends Auth
     //安全信息页面
     public function security()
     {
+<<<<<<< HEAD
+        return $this->fetch('security');
+    }
+=======
         //获取用户信息
         $userid=$this->zc_user['userid'];
         $userInfo=db('user')->where('userid',$userid)->find();
@@ -775,6 +825,7 @@ class User extends Auth
         return $hash;
     }
 
+>>>>>>> origin/master
     //收货地址页面
     public function address()
     {
@@ -1016,7 +1067,7 @@ class User extends Auth
             Session::set('zc_user',$data);
             $msgResp=[
                 'code'=>20005,
-                'msg'=>config('msg')['oper']['updateFail'],
+                'msg'=>config('msg')['oper']['update'],
                 'data'=>''
             ];
         }else{
@@ -1028,6 +1079,7 @@ class User extends Auth
         }
         return json($msgResp);
     }
+
     //收货地址页面-添加地址
     public function insertAddress(){
         $reverName=input('?post.reverName')?input('reverName'):'';
@@ -1046,12 +1098,12 @@ class User extends Auth
             'addressdetails'=>$detailAddr,
             'revertel'=>$telephone
         ];
-        $res=db('address')->insert($data);
+        $res=db('address')->insertGetId($data);//地址id
         if($res>0){
             $msgResp=[
                 'code'=>20001,
                 'msg'=>config('msg')['oper']['add'],
-                'data'=>''
+                'data'=>$res
             ];
         }else{
             $msgResp=[
@@ -1178,7 +1230,6 @@ class User extends Auth
         }
         return json($msgResp);
     }
-    //
 }
 
 

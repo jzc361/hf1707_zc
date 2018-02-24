@@ -22,7 +22,7 @@ INNER JOIN `zc_region` `c` ON `a`.`city`=`c`.`id`
 INNER JOIN `zc_region` `d` ON `a`.`county`=`d`.`id` 
 WHERE `a`.`userid` = 10001
 
--- 1.角色表
+-- 1.员工表
 DROP TABLE IF EXISTS zc_role;
 CREATE TABLE zc_role(
 	roleid SMALLINT(4) PRIMARY KEY auto_increment,
@@ -65,7 +65,7 @@ CREATE TABLE zc_backmenu (
 
 INSERT INTO zc_backmenu VALUES
 (1,"后台管理",0,""),
-(2,"角色管理",1,""),
+(2,"员工管理",1,""),
 (3,"员工管理",1,""),
 
 (4,"前台管理",0,""),

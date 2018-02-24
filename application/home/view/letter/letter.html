@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge"><!--设置ie内核浏览器下的渲染模式-->
+    <meta name="renderer" content="webkit"><!--设置成网页以webkit(极速模式)来渲染页面-->
+    <meta name="viewport" content="width=device-width,initial-scale=1"><!--设置网页宽度和访问设备宽度保持一致，且显示比例1:1，-->
+    <title>私信</title>
+    <!--<link rel="stylesheet" href="__CSS__/layui.css">-->
+    <!--<link rel="stylesheet" href="__CSS__/layer.css">-->
+
+</head>
+<body>
+{include file="public/nav"}
+<div class="container">
+    <div class="list-group" style="margin: 30px auto;min-height: 600px">
+        <a href="#" class="list-group-item active"><h4>私信</h4></a>
+        <div class="list-group-item">
+            {$listCount}个联系人
+        </div>
+        {volist name="letterList" id="vo"}
+        <div class="list-group-item" style="position: relative">
+            {if $vo.unread>0}
+            <a href="{:url('home/Letter/history')}?l_user={$vo.l_user}"></a>
+            <span style="cursor: pointer" class="badge" onclick='location.href="{:url('home/Letter/history')}?l_user={$vo.l_user}"'>{$vo.unread}</span>
+            {/if}
+            <div style="position: absolute;right:10px;bottom:5px;clear: right;padding: 10px 0">
+                <a href="{:url('home/Letter/history')}?l_user={$vo.l_user}">共{$vo.l_count}条对话</a>|<a href="javascript:;" onclick="openLetter({$vo.l_user},'{$vo.username}')">回复</a>|<a href="javascript:;"  onclick="delLetter({$vo.l_user})">删除</a>
+            </div>
+            <div style="overflow: hidden">
+                <div style="float: left;padding: 5px">
+                    <img src="__STATIC__/{$vo.headimg}" width="50px" class="img-circle">
+                </div>
+                <div style="float: left;padding: 5px">
+                    <p>
+                        {if $vo.l_user==$vo.rever}
+                        <span>发送给</span>
+                        {/if}
+                        {$vo.username}:{$vo.content}
+                    </p>
+                    <p>{$vo.msgTime}</p>
+                </div>
+            </div>
+
+        </div>
+        {/volist}
+        {if $letterList->render()}
+        <div class="list-group-item" style="text-align: center">
+            {$letterList->render()}
+        </div>
+        {/if}
+        <!--<a class="list-group-item active"> <span class="badge">14</span> Help</a>-->
+    </div>
+
+</div>
+{include file="public/footer"}
+</body>
+<!--<script type="text/javascript" src="__JS__/layui.js" charset="utf-8"></script>-->
+<!--<script type="text/javascript" src="__STATIC__/lib/layui/layui.js" charset="utf-8"></script>-->
+<!--<script type="text/javascript" src="__JS__/admin/xadmin.js"></script>-->
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script type="text/javascript" src="__STATIC__/layer/layer.js"></script>
+<!--<script type="text/javascript" src="__JS__/jquery.min.js"></script>-->
+<script>
+    var index;
+    //发送私信
+    function openLetter(id,userName){
+        $.ajax({
+            url:'{:url("home/Letter/openLetter")}?rever='+id,
+            type:'get',
+            dataType:'json',
+            success:function(res){
+                if(res.code=='00000'){ //未登录
+                    alert(res.msg);
+                    window.open('{:url("home/user/showLogin")}');
+                }else if(res.code==70004){ //给自己发私信
+                    alert(res.msg);
+                }else{
+                    index=layer.open({
+                        type: 2,
+                        fix: false, //不固定
+                        area:['500px','300px'],
+                        maxmin: true,
+                        shadeClose: true,
+                        shade:0.4,
+                        title: '发送私信(收信人:'+userName+')',
+                        content: '{:url("home/Letter/letterWindow")}?rever='+id
+                    });
+                }
+            }
+        });
+    }
+    //关闭iframe窗口
+    function closeIframe(){
+        layer.close(index);
+    }
+    //删除私信
+    function delLetter(id){
+        if(confirm('确定要删除与该联系人的私信记录吗？')){
+            $.ajax({
+                url:'{:url("home/Letter/delLetter")}?rever='+id,
+                type:'get',
+                dataType:'json',
+                success:function(res){
+                   if(res.code==20003){
+                       window.location.reload(true);
+                       alert(res.msg)
+                   }else{
+                       alert(res.msg)
+                   }
+                }
+            });
+
+        }
+
+    }
+</script>
+</html>

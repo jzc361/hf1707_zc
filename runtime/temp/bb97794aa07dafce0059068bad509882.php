@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\focus.html";i:1517631693;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:84:"D:\AppServ\www\hf170724_zc\hf1707_zc\public/../application/home\view\user\focus.html";i:1517836116;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,6 +71,9 @@
 <div class="blank"></div>
 </body>
 <script>
+//    if(){
+//        location.href="<?php echo url('home/user/data/'); ?>?page="currenrPage -1;
+//    }
     $(function(){
 
     });
