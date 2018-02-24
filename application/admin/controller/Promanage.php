@@ -216,6 +216,8 @@ class Promanage extends Controller
         //上传预览图
         $file = request()->file('imgFile');
         $proMsg=input('post.');
+         exit(var_dump($proMsg));
+
         if($proMsg['selectVal']==1){ //马上开始众筹
             $proMsg['starttime']=date("Y-m-d H:i:s",time());
             //获取众筹中的id
@@ -237,6 +239,7 @@ class Promanage extends Controller
                 $imgPath=$info->getSaveName();
                 //插入数据
                 //插入众筹项目表
+
                 $data = [
                     'projectname' =>$proMsg['proTitle'],
                     'intro' =>$proMsg['proDetails'],

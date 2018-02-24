@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:88:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\promanage\publishLimitPro.html";i:1517447918;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:88:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\promanage\publishLimitPro.html";i:1519436191;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -155,9 +155,9 @@
                 <!--<textarea name="probrief" id="probrief" class="textareabox textbox w350"></textarea>-->
             </div>
             <div class="blank0"></div>
-            <div>
-                <script id="editor" name="proDetails" type="text/plain"></script>
-            </div>
+            <!--<div>-->
+            <script id="editor" name="proDetails" type="text/plain"></script>
+            <!--</div>-->
             <!---->
             <!--保存-->
             <div class="blank5"></div>
@@ -250,6 +250,13 @@
 <script type="text/javascript"  src="__STATIC__/ueditor/dist/utf8-php/ueditor.all.js"></script>
 <script>
     var ue = UE.getEditor('editor');//富文本
+    ue.ready(function() {
+        //设置编辑器的内容
+//        ue.setContent('hello');
+        //获取html内容，返回: <p>hello</p>
+        prohtml = ue.getContent();
+
+    });
     new Vue({
         el : '#vueDiv',
         //数据
@@ -303,6 +310,7 @@
     });
     //项目提交
     $("#submitpro").click(function(){
+        console.log(prohtml);
         var formData = new FormData($("#project_form")[0]);
         console.log(formData);
         $.ajax({
