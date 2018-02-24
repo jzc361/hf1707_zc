@@ -685,8 +685,11 @@ class User extends Auth
             }
         }
         else{
-            //echo "jss";
             //解绑
+            //删除session
+            if(session('?sendTime')){
+                session('sendTime',null);
+            }
             if(!empty($telNumber)){
                 $res=db('user')->where('userid',$userid)->update(['telephone'=>null]);
                 if($res==1){
