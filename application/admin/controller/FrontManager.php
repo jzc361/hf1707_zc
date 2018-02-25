@@ -28,15 +28,33 @@ class FrontManager extends Controller
     }
     public function adEditData(){
         $editId = isset($_POST['editId'])?$_POST['editId']:"";
+        $where = [
+            'adid'=>$editId
+        ];
         $adList=db('ad')
-            ->where('adid',$editId)
+            ->where($where)
             ->select(); //获取有效期广告
         $res = [
-          'code'=>1001,
-            'msg'=>'查询成功',
-            'data'=>$adList
+            'code'=>1000,
+            'msg'=>'查询失败',
+            'data'=>$editId
         ];
-        return $res;
+        if(count($adList)>0){
+            $res = [
+                'code'=>1001,
+                'msg'=>'查询成功',
+                'data'=>$adList
+            ];
+        }
+        return json($res);
+    }
+
+    public function adUpdate(){
+        $upfile=$_FILES[""];
+
+        $typelist=array("image/jpeg","image/jpg","image/png","image/gif");
+
+        $path="./uploads/";//定义一个上传后的目录
     }
 
     public function adDelete(){

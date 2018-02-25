@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:85:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\backmanager\empmanager.html";i:1517906579;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:85:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\backmanager\empmanager.html";i:1519528641;}*/ ?>
 <!DOCTYPE html>
 <html>
 
@@ -74,7 +74,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modalAdd" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="modalLabelAdd">添加角色</h4>
                 <!--------------------------添加角色------------------------------>
             </div>
@@ -328,8 +328,8 @@
             }
         })
     });
-    //添加角色
-    //角色名字不能为空
+    //添加员工
+    //员工名字不能为空
     $("#nameAdd").blur(function(){
         $newEmpName = $("#nameAdd").val();
 
@@ -356,7 +356,7 @@
     $("#empAdd").click(function (){
         //获取对应ztree(id)节点的选中数据
         var empAdd = $.fn.zTree.getZTreeObj("gradeAdd");
-        //获取选中(true)的所有属性获取该角色被给予的所有权限信息
+        //获取选中(true)的所有属性获取该员工被给予的所有权限信息
         var newmenu = empAdd.getCheckedNodes(true);
         //对获取的数据处理得到需要的数据
         var newmenuid = [];
@@ -365,17 +365,17 @@
                 menuid:newmenu[$i]['id']
             })
         };
-        //新角色名称
+        //新员工名称
         var nameAdd = $("#nameAdd").val();
         nameAdd=nameAdd.replace(/(^\s*)|(\s*$)/g, "");
 
-        //新角色介绍
+        //新员工介绍
         var introAdd = $("#introAdd").val();
 
         //设置判断值用于在Ajax返回值判断后是启用下一层Ajax
         var $AjaxCheck = 0;
 
-        //新角色名称不能为空
+        //新员工名称不能为空
         if(nameAdd==""){
             alert('角色名不能为空,也不能为全空格');
         }else{
@@ -507,9 +507,6 @@
         })
 
     });
-
-</script>
-<script>
 
 </script>
 </html>
