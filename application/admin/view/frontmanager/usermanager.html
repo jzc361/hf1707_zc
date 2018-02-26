@@ -36,7 +36,7 @@
 <body>
 <div class="x-body" id="vueData">
     <fieldset class="layui-elem-field">
-        <legend>员工管理</legend>
+        <legend>用户管理</legend>
         <div class="layui-field-box" id="allemp">
             <table class="layui-table" lay-even>
                 <tbody>
@@ -161,7 +161,7 @@
 
                     <div class="content_wrap layui-input-inline">
                         <div class="zTreeDemoBackground left">
-                            <ul id="empEdit" class="ztree"  style="background-color: whitesmoke;width: 192px;height: 100%;border-color: #e6e6e6"></ul>
+                            <ul id="userEdit" class="ztree"  style="background-color: whitesmoke;width: 192px;height: 100%;border-color: #e6e6e6"></ul>
                         </div>
                     </div>
 
@@ -225,15 +225,15 @@
     $(
             //获取权限
             $.ajax({
-                url:"{:url('admin/backmanager/allEmp')}",
+                url:"{:url('admin/backmanager/allUser')}",
                 data:'',
                 type:'post',
                 dataType:'json',
                 success:function($res){
-                    var empVue = new Vue({
-                        el:"#allemp",
+                    var userVue = new Vue({
+                        el:"#alluser",
                         data:{
-                            'allemp':$res.data
+                            'alluser':$res.data
                         },
                         created: function () {
 
@@ -316,7 +316,7 @@
     //获取菜单
     $('#showAdd').click(function(){
         $.ajax({
-            url:"{:url('admin/backmanager/getEmpMenu')}",
+            url:"{:url('admin/backmanager/getUserMenu')}",
             data:'',
             type:'post',
             dataType:'json',
