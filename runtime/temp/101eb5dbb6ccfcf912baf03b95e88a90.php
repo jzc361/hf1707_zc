@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:86:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\backmanager\rolemanager.html";i:1517907093;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:86:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\backmanager\rolemanager.html";i:1519539504;}*/ ?>
 <!DOCTYPE html>
 <html>
   
@@ -76,7 +76,7 @@
       <div class="modal-dialog" role="document">
           <div class="modal-content">
               <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modalAdd" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                   <h4 class="modal-title" id="modalLabelAdd">添加角色</h4>
                   <!--------------------------添加角色------------------------------>
               </div>
