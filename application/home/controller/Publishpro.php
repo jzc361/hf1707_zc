@@ -78,7 +78,7 @@ class Publishpro extends Auth
                 echo $file->getError();
             }
         }
-        $promsg=input('post.');
+        $promsg=$_POST;
         $promsg['projectimg']=$imgPath;
        // array_push($promsg,$imgPath);
         Session::set('proMsg',$promsg);

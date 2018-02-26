@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:78:"D:\AppServ\www\hf1707_zc\public/../application/home\view\project\prolimit.html";i:1517812780;s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517757175;s:72:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\nav.html";i:1517636030;s:75:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\footer.html";i:1517587242;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:78:"D:\AppServ\www\hf1707_zc\public/../application/home\view\project\prolimit.html";i:1517812780;s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517757175;s:72:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\nav.html";i:1519440615;s:75:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\footer.html";i:1517587242;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -158,6 +158,9 @@
                     </li>
                     <li>
                         <a href="<?php echo url('home/User/test'); ?>">查看通知(测试)</a>
+                    </li>
+                    <li>
+                        <a href="<?php echo url('home/Letter/letter'); ?>">查看私信</a>
                     </li>
                     <li class="divider">
                     </li>

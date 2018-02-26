@@ -632,10 +632,7 @@ class User extends Auth
     //安全信息页面
     public function security()
     {
-<<<<<<< HEAD
-        return $this->fetch('security');
-    }
-=======
+
         //获取用户信息
         $userid=$this->zc_user['userid'];
         $userInfo=db('user')->where('userid',$userid)->find();
@@ -825,7 +822,6 @@ class User extends Auth
         return $hash;
     }
 
->>>>>>> origin/master
     //收货地址页面
     public function address()
     {
