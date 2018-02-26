@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\index\mainView.html";i:1517811472;s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517757175;s:72:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\nav.html";i:1519440615;s:75:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\footer.html";i:1517587242;}*/ ?>
+=======
 <?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\index\mainView.html";i:1517821901;s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517809893;s:72:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\nav.html";i:1519435891;s:75:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\footer.html";i:1517620273;}*/ ?>
+>>>>>>> 12496726749d41a895c531352f7ea7c3496ac4fd
 <!DOCTYPE html>
 <html lang="en">
 <head>
