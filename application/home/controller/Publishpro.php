@@ -19,17 +19,18 @@ class Publishpro extends Auth
             $userid=$user['userid'];
         }
        // $subQuery = db('emp')->where('roleid','3')->buildSql();
-        $serviceList=Db::query("SELECT b.*,SUM(a.unreadcount) unreadcount FROM zc_chats a,
-(select * FROM zc_emp WHERE roleid=3)b WHERE a.sender in(b.empid) AND a.rever=$userid GROUP BY a.sender
-");
+//        $serviceList=Db::query("SELECT b.*,SUM(a.unreadcount) unreadcount FROM zc_chats a,
+//(select * FROM zc_emp WHERE roleid=3)b WHERE a.sender in(b.empid) AND a.rever=$userid GROUP BY a.sender
+//");
+        $serviceList=db('emp')->where('roleid',3)->select();
         //var_dump($serviceList);exit();
         return ($serviceList);
     }
     //跳转到众筹发布页
     public function jumpToProBaseMsg()
     {
-        $serviceList=$this->getServiceMsg();
-        $this->assign('serviceList',$serviceList);
+//        $serviceList=$this->getServiceMsg();
+//        $this->assign('serviceList',$serviceList);
         Session::set('current','proBaseMsg');//当前所在页面
         $id=input('?get.id')?input('get.id'):"";
         $proList = [];
@@ -62,35 +63,46 @@ class Publishpro extends Auth
     }
     //点击下一步，保存项目信息
     public function saveProMsg(){
-        //上传预览图
-        $imgPath='';
-        $file = request()->file('imgFile');
-        // 移动到框架应用根目录/public/uploads/ 目录下
-        if($file){
-            $path = ROOT_PATH . 'public/static/img/home/project';
-            $info = $file->move($path);
-            if($info){
-                // 成功上传后 获取上传信息
-                $imgPath=$info->getSaveName();
-                $imgPath='img/home/project/'.$imgPath;
-            }else{
-                // 上传失败获取错误信息
-                echo $file->getError();
-            }
-        }
         $promsg=$_POST;
-        $promsg['projectimg']=$imgPath;
-       // array_push($promsg,$imgPath);
-        Session::set('proMsg',$promsg);
-        //var_dump($imgFile);
+        if(!isset($promsg['proDetails']) || empty($promsg['proDetails'])){
+            $msgResp=[
+                'code'=>90018, //请填写项目详情
+                'msg'=>config('msg')['details']['empty'],
+                'data'=>[]
+            ];
+            return json($msgResp);
+        }
+        else{
+            //上传预览图
+            $imgPath='';
+            $file = request()->file('imgFile');
+            // 移动到框架应用根目录/public/uploads/ 目录下
+            if($file){
+                $path = ROOT_PATH . 'public/static/img/home/project';
+                $info = $file->move($path);
+                if($info){
+                    // 成功上传后 获取上传信息
+                    $imgPath=$info->getSaveName();
+                    $imgPath='img/home/project/'.$imgPath;
+                }else{
+                    // 上传失败获取错误信息
+                    echo $file->getError();
+                }
+            }
+            //$promsg=$_POST;
+            $promsg['projectimg']=$imgPath;
+            // array_push($promsg,$imgPath);
+            Session::set('proMsg',$promsg);
+            //var_dump($imgFile);
 
-       // Session::set('proImg',$imgFile);
-        $msgResp=[
-            'code'=>20004, //添加成功
-            'msg'=>config('msg')['oper']['add'],
-            'data'=>[]
-        ];
-        return json($msgResp);
+            // Session::set('proImg',$imgFile);
+            $msgResp=[
+                'code'=>20004, //添加成功
+                'msg'=>config('msg')['oper']['add'],
+                'data'=>[]
+            ];
+            return json($msgResp);
+        }
     }
     //跳转到回报详情页
     public function jumpToAddReturn(){

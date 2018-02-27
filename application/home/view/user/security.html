@@ -2,13 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-<<<<<<< HEAD
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-=======
     <title>安全信息</title>
     <link rel="stylesheet" href="__CSS__/proBaseMsg.css">
     <style>
@@ -249,7 +242,7 @@
 
                             <div class="blank20"></div>
                             <div class="submit_btn_row control-group">
-                                <input type="button" value="保存密码" name="pass" class="ui-button theme_bgcolor" id="pass"  />
+                                <input type="button" value="保存密码" name="pass" onclick="updatePsw()" class="ui-button theme_bgcolor" id="pass"  />
                                 <div class="blank15"></div>
                             </div>
                         </form>
@@ -312,99 +305,99 @@
                         </form>
                     </div>
                 </li>
-                <li>
-                    <!--身份验证-->
-                    <div class="it cf clearfix">
-                        <div class="icon verified"></div>
-                        <h3>实名认证</h3>
-                        {if $userInfo['telephone']}
-                        {if $userInfo['certstate']=='认证中'}
-                        <p>已提交</p>
-                        <div class="update"><a href="javascript:void(0)" id="">认证中</a></div>
-                        {elseif $userInfo['certstate']=='认证成功'}
-                        <p>已设置</p>
-                        <div class="update"><a href="javascript:void(0)" id="">认证成功</a></div>
-                        {elseif $userInfo['certstate']=='未通过'}
-                        <input type="hidden" id="certFlag" name="step" value="1">
-                        <p class="f_red">未通过</p>
-                        <div class="update">
-                            <a href="javascript:void(0)" class="J_setting" onclick="showCertDiv()" id="J_setting_paypwd">重新认证</a>
-                            <br>
-                            <a href="javascript:void(0)" class="J_setting" id="">查看原因</a>
-                        </div>
-                        {elseif $userInfo['certstate']=='未认证'}
-                        <input type="hidden" id="certFlag" name="step" value="0">
-                        <p class="f_red">未认证</p>
-                        <div class="update"><a href="javascript:void(0)" onclick="showCertDiv()" class="J_setting" id="J_setting_paypwd">认证</a></div>
-                        {/if}
-                        {else}
-                        <p class="f_red">请先设置手机号</p>
-                        {/if}
-                    </div>
-                    <!--填写验证信息-->
-                    <div class="setting_box" id="setting-id-box">
-                        <form class="ajax_form_identify" action="">
-                            <div class="blank0"></div>
-                            <div class="form_row control-group">
-                                <label class="form_lable small_form_lable" id="identify_name_str">身份证姓名:</label>
-                                <input type="text"  value="" class="small_textbox" name="identify_name"  style="width:310px;"/>
-                            </div>
-                            <div class="blank0"></div>
-                            <div class="form_row control-group">
-                                <label class="form_lable small_form_lable">身份证号码:</label>
-                                <input type="text"  value="" class="small_textbox" name="identify_number"  style="width:310px;"/>
-                            </div>
-                            <div class="blank0"></div>
-                            <div class="form_row control-group">
-                                <label class="form_lable small_form_lable">身份证正面:</label>
-                                <div class="pic_box f_l mr20">
-                                    <i class="del_pic"></i>
-                                    <div class="pic_show" id="audit_data_legal_num">
-                                        <img id="identify_positive" src="" />
-                                        <input type="hidden" name="identify_positive_image" id="identify_positive_image"  value="" rel="num" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="blank0"></div>
-                            <div class="form_row control-group">
-                                <label class="form_lable small_form_lable">身份证反面:</label>
-                                <div class="pic_box f_l mr20">
-                                    <i class="del_pic"></i>
-                                    <div class="pic_show" id="audit_data_legal_credit_num">
-                                        <img id="identify_nagative" src="" />
-                                        <input type="hidden" name="identify_nagative_image" id="identify_nagative_image" value="" rel="num" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="blank0"></div>
-                            <div class="blank0"></div>
+                <!--<li>-->
+                    <!--&lt;!&ndash;身份验证&ndash;&gt;-->
+                    <!--<div class="it cf clearfix">-->
+                        <!--<div class="icon verified"></div>-->
+                        <!--<h3>实名认证</h3>-->
+                        <!--{if $userInfo['telephone']}-->
+                        <!--{if $userInfo['certstate']=='认证中'}-->
+                        <!--<p>已提交</p>-->
+                        <!--<div class="update"><a href="javascript:void(0)" id="">认证中</a></div>-->
+                        <!--{elseif $userInfo['certstate']=='认证成功'}-->
+                        <!--<p>已设置</p>-->
+                        <!--<div class="update"><a href="javascript:void(0)" id="">认证成功</a></div>-->
+                        <!--{elseif $userInfo['certstate']=='未通过'}-->
+                        <!--<input type="hidden" id="certFlag" name="step" value="1">-->
+                        <!--<p class="f_red">未通过</p>-->
+                        <!--<div class="update">-->
+                            <!--<a href="javascript:void(0)" class="J_setting" onclick="showCertDiv()" id="J_setting_paypwd">重新认证</a>-->
+                            <!--<br>-->
+                            <!--<a href="javascript:void(0)" class="J_setting" id="">查看原因</a>-->
+                        <!--</div>-->
+                        <!--{elseif $userInfo['certstate']=='未认证'}-->
+                        <!--<input type="hidden" id="certFlag" name="step" value="0">-->
+                        <!--<p class="f_red">未认证</p>-->
+                        <!--<div class="update"><a href="javascript:void(0)" onclick="showCertDiv()" class="J_setting" id="J_setting_paypwd">认证</a></div>-->
+                        <!--{/if}-->
+                        <!--{else}-->
+                        <!--<p class="f_red">请先设置手机号</p>-->
+                        <!--{/if}-->
+                    <!--</div>-->
+                    <!--&lt;!&ndash;填写验证信息&ndash;&gt;-->
+                    <!--<div class="setting_box" id="setting-id-box">-->
+                        <!--<form class="ajax_form_identify" action="">-->
+                            <!--<div class="blank0"></div>-->
+                            <!--<div class="form_row control-group">-->
+                                <!--<label class="form_lable small_form_lable" id="identify_name_str">身份证姓名:</label>-->
+                                <!--<input type="text"  value="" class="small_textbox" name="identify_name"  style="width:310px;"/>-->
+                            <!--</div>-->
+                            <!--<div class="blank0"></div>-->
+                            <!--<div class="form_row control-group">-->
+                                <!--<label class="form_lable small_form_lable">身份证号码:</label>-->
+                                <!--<input type="text"  value="" class="small_textbox" name="identify_number"  style="width:310px;"/>-->
+                            <!--</div>-->
+                            <!--<div class="blank0"></div>-->
+                            <!--<div class="form_row control-group">-->
+                                <!--<label class="form_lable small_form_lable">身份证正面:</label>-->
+                                <!--<div class="pic_box f_l mr20">-->
+                                    <!--<i class="del_pic"></i>-->
+                                    <!--<div class="pic_show" id="audit_data_legal_num">-->
+                                        <!--<img id="identify_positive" src="" />-->
+                                        <!--<input type="hidden" name="identify_positive_image" id="identify_positive_image"  value="" rel="num" />-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="blank0"></div>-->
+                            <!--<div class="form_row control-group">-->
+                                <!--<label class="form_lable small_form_lable">身份证反面:</label>-->
+                                <!--<div class="pic_box f_l mr20">-->
+                                    <!--<i class="del_pic"></i>-->
+                                    <!--<div class="pic_show" id="audit_data_legal_credit_num">-->
+                                        <!--<img id="identify_nagative" src="" />-->
+                                        <!--<input type="hidden" name="identify_nagative_image" id="identify_nagative_image" value="" rel="num" />-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="blank0"></div>-->
+                            <!--<div class="blank0"></div>-->
 
-                            <div class="form_row control-group">
-                                <label class="form_lable smaller_form_lable">手机号:</label>
-                                <div class="smaller_form_cont" id="beforeTel1"></div>
-                            </div>
-                            <div class="blank0"></div>
-                            <div class="form_row control-group">
-                                <label class="form_lable small_form_lable">验证码:</label>
-                                <input type="text" value="" class="small_textbox mr10" id="" name="verify"  style="width:188px;"/>
-                                <input type="button" value="获取验证码" class="ui_button send_sms_verify small_send_sms_verify bg_red" id="J_send_sms_verify_iden" />
-                            </div>
-                            <div class="blank15"></div>
-                            <div class="submit_btn_row control-group">
-                                <label class="form_lable small_form_lable"></label>
-                                <div class="ui-button theme_bgcolor" rel="green">
-                                    <div>
-                                        <span>提交</span>
-                                    </div>
-                                </div>
-                                <input type="hidden" value="1" name="ajax" />
-                                <input type="hidden" value="0" name="step" />
-                            </div>
-                            <div class="blank15"></div>
-                        </form>
-                    </div>
-                    <!---->
-                </li>
+                            <!--<div class="form_row control-group">-->
+                                <!--<label class="form_lable smaller_form_lable">手机号:</label>-->
+                                <!--<div class="smaller_form_cont" id="beforeTel1"></div>-->
+                            <!--</div>-->
+                            <!--<div class="blank0"></div>-->
+                            <!--<div class="form_row control-group">-->
+                                <!--<label class="form_lable small_form_lable">验证码:</label>-->
+                                <!--<input type="text" value="" class="small_textbox mr10" id="" name="verify"  style="width:188px;"/>-->
+                                <!--<input type="button" value="获取验证码" class="ui_button send_sms_verify small_send_sms_verify bg_red" id="J_send_sms_verify_iden" />-->
+                            <!--</div>-->
+                            <!--<div class="blank15"></div>-->
+                            <!--<div class="submit_btn_row control-group">-->
+                                <!--<label class="form_lable small_form_lable"></label>-->
+                                <!--<div class="ui-button theme_bgcolor" rel="green">-->
+                                    <!--<div>-->
+                                        <!--<span>提交</span>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<input type="hidden" value="1" name="ajax" />-->
+                                <!--<input type="hidden" value="0" name="step" />-->
+                            <!--</div>-->
+                            <!--<div class="blank15"></div>-->
+                        <!--</form>-->
+                    <!--</div>-->
+                    <!--&lt;!&ndash;&ndash;&gt;-->
+                <!--</li>-->
             </ul>
         </div>
     </div>
@@ -458,7 +451,6 @@
             dealTelCode(telNumber,$this);
         }
     }
-
     //解绑手机号-获取验证码
     function getNewTelCode(){
         var telNumber=$("#tel").attr("value");
@@ -620,8 +612,40 @@ $(function(){
             $("#beforeTel1").html(lphone);
         }
     });
+    //修改密码
+    function updatePsw(){
+        var oldPsw=$("#oldPsw").val();
+        var newPsw=$("#newPsw").val();
+        var rePsw=$("#rePsw").val();
+        if(oldPsw==''||newPsw==''||rePsw==''){
+            alert("请将信息填写完整");
+        }
+        else if(newPsw!=rePsw){
+            alert("两次密码要一致");
+        }
+        else {
+            $.ajax({
+                 type: "post",
+                 url: "{:url('home/User/updatePsw')}",
+                 data: {oldPsw:oldPsw,newPsw:newPsw},
+                 dataType: "json",
+                 success: function (responseData){
+                     if(responseData['code']==90019){  //旧密码错误
+                         alert(responseData['msg']);
+                     }
+                     else {
+                         alert(responseData['msg']);
+                         top.location.href="{:url('home/User/exitLogin')}";
+                     }
 
+                 },
+                 error:function(){
+                     alert("error");
+                 }
+            });
+        }
+    }
 
 </script>
->>>>>>> origin/master
+
 </html>

@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:83:"D:\AppServ\www\hf1707_zc\public/../application/home\view\publishpro\proBaseMsg.html";i:1517587242;s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517757175;s:72:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\nav.html";i:1519440615;s:75:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\footer.html";i:1517587242;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:83:"D:\AppServ\www\hf1707_zc\public/../application/home\view\publishpro\proBaseMsg.html";i:1519633878;s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517757175;s:72:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\nav.html";i:1519440615;s:75:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\footer.html";i:1517587242;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -298,7 +298,8 @@
                 <!--<input type="file" class="" name="img_file" accept="image/gif,image/jpeg,image/jpg,image/png"/>-->
             </label>
             <span class="prompt" style="margin-top:11px;" v-if="!isAddImg">支持jpg、jpeg、png、gif格式</span>
-            <span class="prompt" style="margin-top:11px;" v-if="isAddImg">已添加图片，可在右侧预览</span>
+            <span class="prompt" style="margin-top:11px;" v-if="isAddImg">支持jpg、jpeg、png、gif格式</span>
+            <!--<span class="prompt" style="margin-top:11px;" v-if="isAddImg">已添加图片，可在右侧预览</span>-->
         </div>
         <div class="blank0"></div>
         <!--项目详情-->
@@ -450,7 +451,7 @@
             daysNumber:proList.daysnumber?proList.daysnumber : '',
             tolamount:proList.tolamount?proList.tolamount:'',
 //            proDetails:proList?proList.intro : '',
-            projectimg:proList.projectimg? proList.projectimg: '__STATIC__/img/home/publishPro/empty_thumb.gif',
+            projectimg:proList.projectimg? '__STATIC__/'+proList.projectimg: '__STATIC__/img/home/publishPro/empty_thumb.gif',
             isAddImg:false//是否添加图片
         },
         //方法
@@ -471,38 +472,76 @@
 //fd
         }
     });
-
-    /*---图片预览-*/
-    $("#imgFile").change(function(){
-        var file = document.getElementById("imgFile").files;
-        var result=document.getElementById("imagePreview");
-        $(result).empty();
-            var reader    = new FileReader();
-            reader.readAsDataURL(file[0]);
-            reader.onload=function(e){
-                $(result).attr("src",this.result);
-            };
-    });
-
-    //点击下一步
-    $("#next").click(function(){
-        var formData = new FormData($("#project_form")[0]);
-        console.log(formData);
-        $.ajax({
-            url: "<?php echo url('home/Publishpro/saveProMsg'); ?>",
-            type: "POST",
-            data: formData,
-            dataType: "json",
-            async: false,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function(responseData) {
-                location.href="<?php echo url('home/Publishpro/jumpToAddReturn'); ?>";
-            },
-            error: function(responseData) {
+    //判断文件格式     /*---图片预览-*/
+    var flag=0;
+    isImg();
+    function isImg(){
+        $("#imgFile").change(function(){
+            var fileList=document.getElementById("imgFile").files[0];  //获取选择的文件对象（数组）
+            console.log(fileList);
+            var allowTypes = ["image/jpeg","image/png","image/gif","image/jpg"]; //允许上传的文件类型
+            if(fileList.type=='image/jpeg' || fileList.type=='image/png' || fileList.type=='image/gif' || fileList.type=='image/jpg'){
+                flag=1;
+                /*---图片预览-*/
+//                $("#imgFile").change(function(){
+                    var file = document.getElementById("imgFile").files;
+                    var result=document.getElementById("imagePreview");
+                    $(result).empty();
+                    var reader    = new FileReader();
+                    reader.readAsDataURL(file[0]);
+                    reader.onload=function(e){
+                        $(result).attr("src",this.result);
+                    };
+//                });
+            }
+            else {
+                flag=0;
+                $("#imagePreview").attr("src",'__STATIC__/img/home/publishPro/empty_thumb.gif');
+                alert("只能上传图片文件");
             }
         });
+    }
+    //点击下一步
+    $("#next").click(function(){
+        var proTitle=$("#proTitle").val();
+        var daysNumber=$("#daysNumber").val();
+        var tolamount=$("#tolamount").val();
+        var imgFile=$("#imgFile").val();
+        if(proTitle=='' || daysNumber=='' || tolamount==''){
+            alert("请将信息填写完整");
+        }
+        else if(imgFile==''){
+            alert("请选择图片封面");
+        }
+        else if(flag==0){
+            alert("只能上传图片文件");
+        }
+        else {
+            var formData = new FormData($("#project_form")[0]);
+            console.log(formData);
+            $.ajax({
+                url: "<?php echo url('home/Publishpro/saveProMsg'); ?>",
+                type: "POST",
+                data: formData,
+                dataType: "json",
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(responseData) {
+                    if(responseData['code']==90018){
+                        alert(responseData['msg']);
+                    }
+                    else {
+                        location.href="<?php echo url('home/Publishpro/jumpToAddReturn'); ?>";
+
+                    }
+                },
+                error: function(responseData) {
+                }
+            });
+        }
+
     });
     //保留数据
     $(function(){

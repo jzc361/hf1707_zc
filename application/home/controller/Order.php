@@ -24,10 +24,9 @@ class Order extends Auth
                 'msg'=>config('msg')['nologin']['nologin'],
                 'data'=>''
             ];
-<<<<<<< HEAD
+
             return json($reMsg);
-=======
->>>>>>> origin/master
+
         }else{
             /*$condition=[
                 'prodetailsid'=>$prodetailsid,
@@ -39,12 +38,12 @@ class Order extends Auth
 =======
             $order=db('orders')->where($condition)->select();*/
             $order=$this->getOrder($prodetailsid,$this->zc_user['userid']);
->>>>>>> origin/master
+
             //var_dump($order);exit;
             //已支持
             if(!empty($order)){
                 $reMsg=[
-<<<<<<< HEAD
+
                     'code'=>60004,
                     'msg'=>config('msg')['order']['excess'],
                     'data'=>''
@@ -57,19 +56,20 @@ class Order extends Auth
                 'data'=>''
             ];
             return json($reMsg);
-=======
-                    'code'=>60002,
-                    'msg'=>config('msg')['order']['orderFull'],
-                    'data'=>''
-                ];
+
+//                    'code'=>60002,
+//                    'msg'=>config('msg')['order']['orderFull'],
+//                    'data'=>''
+//                ];
             }
+
         /*$reMsg=[
             'code'=>'xx',
             'msg'=>'11',
             'data'=>''
         ];*/
->>>>>>> origin/master
-        }
+
+//        }
         return $reMsg;
         //return $this->fetch('{:url("home/order/addOrder"}');
     }
@@ -93,9 +93,9 @@ class Order extends Auth
             'userid'=>$this->zc_user['userid'],
             //'isdefault'=>1
         ];
-<<<<<<< HEAD
+
         $order=db('orders')->where($condition)->find();
-=======
+
         $addList=db('address a')
             ->field('a.*,b.name province_name,c.name city_name,d.name county_name')
             ->join('zc_region b','a.province=b.id')
@@ -108,12 +108,12 @@ class Order extends Auth
         //var_dump($addList);exit;
         $this->assign('prodetails',$prodetails);
         $this->assign('addList',$addList);
->>>>>>> origin/master
+
         $this->assign('do',$this->do);
         return $this->fetch('addOrder');
     }
 
-<<<<<<< HEAD
+
     //删除订单
     public function orderDelete(){
         $orderId=input('?get.orderId')?input('orderId'):"";
@@ -137,27 +137,28 @@ class Order extends Auth
         return json($reMsg);
     }
     //取消订单
-    public function orderCancel(){
-        $orderId=input('?get.orderId')?input('orderId'):"";
-        $res=db('orders')
-            ->where('userid',$this->zc_user['userid'])
-            ->where('ordersid',$orderId)
-            ->update(['orderstate'=>'交易关闭']);
-        if($res>0){
-            $reMsg=[
-                'code'=>20003,
-                'msg'=>config('msg')['oper']['del'],
-                'data'=>''
+    public function orderCancel()
+    {
+        $orderId = input('?get.orderId') ? input('orderId') : "";
+        $res = db('orders')
+            ->where('userid', $this->zc_user['userid'])
+            ->where('ordersid', $orderId)
+            ->update(['orderstate' => '交易关闭']);
+        if ($res > 0) {
+            $reMsg = [
+                'code' => 20003,
+                'msg' => config('msg')['oper']['del'],
+                'data' => ''
             ];
-        }else{
-            $reMsg=[
-                'code'=>20004,
-                'msg'=>config('msg')['oper']['delFail'],
-                'data'=>''
+        } else {
+            $reMsg = [
+                'code' => 20004,
+                'msg' => config('msg')['oper']['delFail'],
+                'data' => ''
             ];
         }
         return json($reMsg);
-=======
+    }
     //提交订单
     public function addOrder(){
         $addressid=input('post.addressid');
@@ -255,6 +256,6 @@ class Order extends Auth
             ->field('projectid')
             ->find();
         return $projectid['projectid'];
->>>>>>> origin/master
+
     }
 }

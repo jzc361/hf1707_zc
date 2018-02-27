@@ -51,15 +51,15 @@
     <div class="xqmain xqmain1000 col-md-10 col-sm-12 col-xs-12" style="margin-top:10px;">
         <div class="xqmain_main">
             <div class="page_title">回报设置 - {$proTitle}</div>
-            <div class="switch_nav">
-                <ul>
-                    <li><a href="{:url('home/Publishpro/jumpToProBaseMsg')}?isReturn">项目介绍</a></li>
-                    <li class="current"><a href="#">回报设置</a></li>
-                </ul>
-            </div>
-            <div class="blank"></div>
+            <!--<div class="switch_nav">-->
+                <!--<ul>-->
+                    <!--<li><a href="{:url('home/Publishpro/jumpToProBaseMsg')}?isReturn">项目介绍</a></li>-->
+                    <!--<li class="current"><a href="#">回报设置</a></li>-->
+                <!--</ul>-->
+            <!--</div>-->
+            <!--<div class="blank"></div>-->
             <div class="add_item_tip">
-                <h1>小提示：</h1>
+                <h1 style="margin-top: 0;margin-left: 7px;">小提示：</h1>
                 <ul>
                     <li>【建议设置3个以上的回报】，回报多样化更能提高关注度。</li>
                     <li>【建议设置几十、几百、上千元的支持档位】，回报差异化更能满足不同人的需求。</li>
@@ -110,14 +110,14 @@
                     <!--回报内容-->
                     <div class="form_row control-group">
                         <label class="form_lable">回报内容:</label>
-                        <textarea v-model="returnDetails" name="returnDetails" class="textareabox textbox"></textarea>
+                        <textarea style="width: 63%;overflow: hidden;"  v-model="returnDetails" name="returnDetails" class="textareabox textbox"></textarea>
                     </div>
                     <div class="blank0"></div>
                     <!--图片-->
                     <div class="form_row control-group">
                         <label class="form_lable">图片:</label>
                         <label class="fileupload" style="width:97px;">
-                            <input type="file" class="filebox" onchange="imgView()" id="imgFile" @change="getImgMsg($event)" name="imgFile" accept="image/gif,image/jpeg,image/jpg,image/png"  style="cursor:pointer;padding: 0;height: 39px;width: 97px;filter: alpha(opacity=0);-moz-opacity: 0;-khtml-opacity: 0;opacity: 0; "/>
+                            <input type="file" class="filebox" onchange="isImg()" id="imgFile"  name="imgFile" accept="image/gif,image/jpeg,image/jpg,image/png"  style="cursor:pointer;padding: 0;height: 39px;width: 97px;filter: alpha(opacity=0);-moz-opacity: 0;-khtml-opacity: 0;opacity: 0; "/>
                         </label>
                     </div>
                     <div class="blank0"></div>
@@ -145,7 +145,7 @@
                         </div>
                         <div id="repaid_content" class="f14" v-if="returnDetails==''">回报内容</div>
                         <div id="" class="f14" v-if="returnDetails!=''">{{returnDetails}}</div>
-                        <img src="" id="imagePreview" style="width: 100%" /><!--图片预览-->
+                        <img :src="preImg" id="imagePreview" style="width: 100%" /><!--图片预览-->
                         <div class="blank10"></div>
                         <div class="ui-button_green">
                             <div>
@@ -163,8 +163,13 @@
                 <div class="blank10"></div>
                 <div class="add_item_btn">
                     <div class="ui-button theme_bgcolor" rel="green">
+                    <div>
+                        <span @click="saveReturnMsg">保存新的回报项目</span>
+                    </div>
+                </div>
+                    <div class="ui-button theme_bgcolor" rel="green" style="background-color: lightgray;margin-left: 25px;">
                         <div>
-                            <span @click="saveReturnMsg">保存新的回报项目</span>
+                            <span @click="cancel">取消</span>
                         </div>
                     </div>
                     <!--<a href="javascript:void(0);" id="cancel_add">取消添加</a>-->
@@ -200,6 +205,7 @@
         el : '#vueDiv',
         //数据
         data:{
+            preImg:"__STATIC__/img/home/publishPro/empty_thumb.gif",
             showDetails:false,
             showBtn:true,
             showtable:false,
@@ -223,39 +229,59 @@
                 this.limitpart=this.limitpart.replace(/[^0-9]/g,'');
             },
             //获取图片信息
-            getImgMsg:function($event){
-                //var file = $event.target.files;
-                //console.log(file);
+//            getImgMsg:function($event){
+//                //var file = $event.target.files;
+//                //console.log(file);
+//            },
+            //取消设置回报
+            cancel:function(){
+                this.showtable=true;
+                this.showDetails=false;
+                this.showBtn=true;
             },
             //保存回报
             saveReturnMsg:function(){
+               // console.log(this.preImg);
+                console.log(flag);
                 //保存回报
                 var formData = new FormData($("#item_form")[0]);
                 var _this=this;
-                $.ajax({
-                    url: "{:url('home/Publishpro/saveReturnMsg')}",
-                    type: "POST",
-                    data: formData,
-                    dataType: "json",
-                    async: false,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function(responseData) {
-                        //保存好后的显示
-                        var $arr={price:_this.price,limitpart:_this.limitpart,returnDetails:_this.returnDetails};
-                        _this.returnArr.push($arr);
-                        //显示隐藏
-                        _this.showtable=true;
-                        _this.showDetails=false;
-                        _this.showBtn=true;
-                        _this.price='';
-                        _this.limitpart='';
-                        _this.returnDetails='';
-                    },
-                    error: function(responseData) {
-                    }
-                });
+                if(this.price=='' || this.limitpart=='' || this.returnDetails==''){
+                    alert("请将信息填写完整");
+                }
+                else if(flag==0){
+                    alert("请选择回报封面");
+                }
+                else if(flag==2){
+                    alert("请上传图片文件");
+                }
+                else {
+                    $.ajax({
+                        url: "{:url('home/Publishpro/saveReturnMsg')}",
+                        type: "POST",
+                        data: formData,
+                        dataType: "json",
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function(responseData) {
+                            //保存好后的显示
+                            var $arr={price:_this.price,limitpart:_this.limitpart,returnDetails:_this.returnDetails};
+                            _this.returnArr.push($arr);
+                            //显示隐藏
+                            _this.showtable=true;
+                            _this.showDetails=false;
+                            _this.showBtn=true;
+                            _this.price='';
+                            _this.limitpart='';
+                            _this.returnDetails='';
+                        },
+                        error: function(responseData) {
+                        }
+                    });
+                }
+
 
 
 
@@ -299,19 +325,26 @@
             },
             //提交审核
             sumbitPro:function(){
-                $.ajax({
-                     type: "post",
-                     url: "{:url('home/Publishpro/sumbitPro')}",
-                     dataType: "json",
-                     success: function (responseData){
-                         alert(responseData['msg']);
-                         location.href="{:url('home/Index/index')}";
-//                         location.reload(true);
-                     },
-                     error:function(){
-                         alert("error");
-                     }
-                });
+               //console.log(this.returnArr.length);
+                if(this.returnArr.length==0){
+                    alert("请至少添加一个回报");
+                }
+                else {
+                    $.ajax({
+                         type: "post",
+                         url: "{:url('home/Publishpro/sumbitPro')}",
+                         dataType: "json",
+                         success: function (responseData){
+                             alert(responseData['msg']);
+                             location.href="{:url('home/Index/index')}";
+    //                         location.reload(true);
+                         },
+                         error:function(){
+                             alert("error");
+                         }
+                    });
+                }
+//
             }
         },
         mounted:function(){
@@ -320,16 +353,47 @@
         }
     });
 
-    /*---图片预览-*/
-    function imgView(){
-        var file = document.getElementById("imgFile").files;
-        var result=document.getElementById("imagePreview");
-        $(result).empty();
-        var reader    = new FileReader();
-        reader.readAsDataURL(file[0]);
-        reader.onload=function(e){
-            $(result).attr("src",this.result);
-        };
+    var flag=0;
+    //isImg();
+    function isImg(){
+        $("#imgFile").change(function(){
+            var fileList=document.getElementById("imgFile").files[0];  //获取选择的文件对象（数组）
+            //console.log(fileList);
+            var allowTypes = ["image/jpeg","image/png","image/gif","image/jpg"]; //允许上传的文件类型
+            if(fileList.type=='image/jpeg' || fileList.type=='image/png' || fileList.type=='image/gif' || fileList.type=='image/jpg'){
+                flag=1;
+                /*---图片预览-*/
+//                $("#imgFile").change(function(){
+                var file = document.getElementById("imgFile").files;
+                var result=document.getElementById("imagePreview");
+                $(result).empty();
+                var reader    = new FileReader();
+                reader.readAsDataURL(file[0]);
+                reader.onload=function(e){
+                    $(result).attr("src",this.result);
+                };
+//                });
+            }
+            else {
+                flag=2;
+                $("#imagePreview").attr("src",'__STATIC__/img/home/publishPro/empty_thumb.gif');
+                //alert("只能上传图片文件");
+            }
+            console.log(flag);
+        });
     }
+
+
+    /*---图片预览-*/
+//    function imgView(){
+//        var file = document.getElementById("imgFile").files;
+//        var result=document.getElementById("imagePreview");
+//        $(result).empty();
+//        var reader    = new FileReader();
+//        reader.readAsDataURL(file[0]);
+//        reader.onload=function(e){
+//            $(result).attr("src",this.result);
+//        };
+//    }
 </script>
 </html>

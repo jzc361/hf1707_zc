@@ -640,6 +640,38 @@ class User extends Auth
        // var_dump($userInfo);
         return $this->fetch('security');
     }
+    //修改密码
+    public function updatePsw(){
+        $oldPsw=input('?post.oldPsw')?md5(input('post.oldPsw')):'';
+        $newPsw=input('?post.newPsw')?md5(input('post.newPsw')):'';
+        if(!empty($oldPsw)){
+            //判断旧密码是否相同
+            $userid=$this->zc_user['userid'];
+            $userPsw=db('user')->field('userpsw')->where('userid',$userid)->find();
+            $userPsw=$userPsw['userpsw'];
+//           echo $userPsw;
+//            echo $oldPsw;
+//            exit();
+            if($userPsw==$oldPsw){
+                //更改成功
+                Db::table('zc_user')->where('userid',$userid)->setField('userpsw',$newPsw);
+                $msgResp=[
+                    'code'=>90020,
+                    'msg'=>config('msg')['updatepsw']['success'],
+                    'data'=>[]
+                ];
+            }
+            else{
+                //旧密码错误
+                $msgResp=[
+                    'code'=>90019,
+                    'msg'=>config('msg')['updatepsw']['fail'],
+                    'data'=>[]
+                ];
+            }
+            return json($msgResp);
+        }
+    }
     //获取验证码
     public function getTelCode(){
        // Session::delete('sendTime');exit();

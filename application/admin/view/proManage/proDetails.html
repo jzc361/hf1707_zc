@@ -45,7 +45,7 @@
             <td style="text-align: center">项目名称</td>
             <td colspan="3" style="text-align: center">{$promsg[0]['projectname']}</td>
             <td rowspan="3" style="width: 260px;">
-                <img src="{$promsg[0]['projectimg']}" alt="" style="width: 100%;">
+                <img src="__STATIC__/{$promsg[0]['projectimg']}" alt="" style="width: 100%;">
             </td>
         </tr>
         <tr>
@@ -81,7 +81,7 @@
         {volist name="returnmsg" id="val"}
         <tr>
             <td>回报{$i}</td>
-            <td><img src="{$val.imgs}" alt="" style="width: 150px;height: 150px;"></td>
+            <td><img src="__STATIC__/{$val.imgs}" alt="" style="width: 150px;height: 150px;"></td>
             <td>￥{$val.price}元</td>
             <td>{$val.limitcount}份</td>
             <td>{$val.introduce}</td>
@@ -108,14 +108,13 @@
                 dataType: "json",
                 success: function (responseData){
                     alert(responseData.msg);
-                    top.location.href="{:url('admin/Promanage/index')}";
+                    top.location.href="{:url('admin/Promanage/index')}";//整个放大
                 },
                 error:function(){
                     alert("error");
                 }
             });
         }
-
     }
     //不通过
     function proDispass(id){
@@ -131,7 +130,8 @@
                 dataType: "json",
                 success: function (responseData){
                     alert(responseData.msg);
-                    top.location.href="{:url('admin/Promanage/index')}";
+//                    self.location=document.referrer;
+                    location.href="{:url('admin/Promanage/index')}"; //在框里
                 },
                 error:function(){
                     alert("error");
