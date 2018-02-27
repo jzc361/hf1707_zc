@@ -11,6 +11,7 @@ namespace app\admin\controller;
 
 use \think\Controller;
 use \think\Request;
+use \think\Db;
 class DataMart extends Controller
 {
 
@@ -18,36 +19,50 @@ class DataMart extends Controller
         return $this->fetch($htmlName);
     }
 
-    public function readyData(){
-        //获取页面初始化数据
-        //当前时间(年)
-        $nowtime = time();
-        $year =  date('Y', $nowtime);
 
-        //查询数据
-        $getData = db('project')
-            ->field('b.statename,a.begintime,a.endtime,a.projecttype')
-            ->alias('a')
-            ->join('state b','a.stateid=b.stateid')
-            ->where('a.begintime','like',$year.'%')
-            ->select();
+    //获取众筹类型页面初始化数据
+
+    public function getZcType(){
+
+        $allSort = db::query('SELECT
+	a.sortid,
+	a.sortname,
+	COUNT(b.sortid) cun,
+	b.begintime,
+	b.projecttype
+FROM
+	zc_sort a
+
+LEFT JOIN (
+	SELECT
+		sortid,
+		begintime,
+		projecttype
+	FROM
+		zc_project
+	WHERE
+		begintime LIKE {$year} and projecttype={$zcType}
+) b ON a.sortid = b.sortid
+
+GROUP BY a.sortid
+');
 
         $res = [
             'code'=>20008,
             'msg'=>config('msg')['oper']['selectFail'],
-            'data'=>$getData
+            'data'=>$allSort
         ];
         //查询成功--
-        if(count($getData)>0){
+        if(count($allSort)>0){
             $res = [
                 'code'=>20007,
                 'msg'=>config('msg')['oper']['select'],
-                'data'=>$getData
+                'data'=>$allSort
             ];
         }
         return $res;
-    }
 
+    }
     //获取所有众筹状态数据相关年份
     public function zcYeras(){
         $yearData = db('project')
@@ -61,26 +76,21 @@ class DataMart extends Controller
         $res = [
             'code'=>20008,
             'msg'=>config('msg')['oper']['selectFail'],
-            'data'=>""
+            'data'=>''
         ];
 
         if(count($yearData)>0){
-//            for($i=$begin;$i<=$end;$i++){
-//                $res[0]['data'].=$i;
-//            }
+            $allyear = [];
+            $statrNo = 0;
+            for($i=$end;$i>=$begin;$i--){
+
+                $allyear[$statrNo]['year'] = $i;
+                $statrNo++;
+            }
             $res['code']=20007;
             $res['msg']=config('msg')['oper']['select'];
+            $res['data']=$allyear;
         }
-
-        var_dump($res);
-        exit;
-        $res = [
-            'code'=>20008,
-            'msg'=>config('msg')['oper']['selectFail'],
-            'data'=>$yearData
-        ];
-        //查询成功--
-
         return $res;
     }
 

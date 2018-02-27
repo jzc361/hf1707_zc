@@ -31,8 +31,6 @@ class Index extends Controller
             $value['menuurl'] = url($value['menuurl'],$value['menuurlpara']);
         }
 
-//        var_dump($menuDate);//调试用断点
-//        exit;
         return $menuDate;
     }
 }

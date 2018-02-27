@@ -39,8 +39,10 @@
         <legend>项目类型统计</legend>
 
         <div style="display: inline-block;float: right;margin-right: 200px">
-            <div style="width: 120px;float: left" class="layui-field-box">
-                <select id='setYear'></select>
+            <div id='setYear' style="width: 120px;float: left" class="layui-field-box">
+                <select>
+                    <option v-for="allyear in allyear" value="">{{allyear.year}}</option>
+                </select>
             </div>
             <div  id='zctype' style="width: 175px;float: left" class="layui-field-box">
                 <select>
@@ -92,16 +94,14 @@
     var barChart = echarts.init(document.getElementById('barChart'));
     var pieChart = echarts.init(document.getElementById('pieChart'));
 
-    // 指定图表的配置项和数据
     //初始化数据
-
+    //所有年份
     $.ajax({
         url:"{:url('admin/datamart/zcYeras')}" ,
         data:"",
         type:"post",
         dataType:"json",
         success:function(res){
-            console.log(res);
             var yearVue = new Vue({
                 el: "#setYear",
                 data: {
@@ -111,23 +111,8 @@
         }
     });
 
-    $.ajax({
-       url:"{:url('admin/datamart/readydata')}" ,
-        data:"",
-        type:"post",
-        dataType:"json",
-        success:function(res){
-            console.log(res);
-//            var typeVue = new Vue({
-//                el: "#settype",
-//                data: {
-//                    'allproject': res.data
-//                }
-//            })
-        }
-    });
-
     // 使用刚指定的配置项和数据显示图表。
+    //柱状图数据
     var barData = {
         title: {
             text: '柱形图',
@@ -137,50 +122,71 @@
             data:['数量']
         },
         xAxis: {
-            data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+            data: []
         },
         yAxis: {},
         series: [{
             name: '销量',
             type: 'bar',
-            data: [5, 20, 36, 10, 10, 20]
+            data: []
         }]
     };
-    barChart.setOption(barData);
 
-    //饼图
+    //饼图数据
     var pieData = {
-
         series : [
-        {
-            name: '数量',
-            type: 'pie',
-            radius: '55%',
-            data:[
-                {value:235, name:'衬衫'},
-                {value:274, name:'羊毛衫'},
-                {value:310, name:'雪纺衫'},
-                {value:335, name:'裤子'},
-                {value:310, name:'高跟鞋'},
-                {value:335, name:'袜子'},
-                {value:400, name:'搜索引擎'}
-            ]
-        }
-    ]};
+            {
+                name: '数量',
+                type: 'pie',
+                radius: '55%',
+                data:[
+                    {value:235, name:'衬衫'},
+                    {value:274, name:'羊毛衫'},
+                    {value:310, name:'雪纺衫'},
+                    {value:335, name:'裤子'},
+                    {value:310, name:'高跟鞋'},
+                    {value:335, name:'袜子'},
+                    {value:400, name:'搜索引擎'}
+                ]
+            }
+        ]};
 
-    pieChart.setOption(pieData);
+    //获取所有基础数据
+    function readyLoad(){
+        $.ajax({
+            url:"{:url('admin/datamart/getZcType')}" ,
+            data:"",
+            type:"post",
+            dataType:"json",
+            //async:false,
+            success:function(res){
 
-//选择统计年份
-
-    var setYear=document.getElementById("setYear");
-    var date = new Date();
-    var nowYear = date.getFullYear();
-    for(var i=2000;i<=nowYear;i++) {
-        var op = new Option(i, i);
-        setYear.add(op);
+                if(res.code==20007){
+                    $resData = res.data;
+                    for(var $i = 0;$i<res.data.length;$i++){
+                        barData.xAxis.data[$i]=res.data[$i]['sortname'];
+                        barData.series[0].data[$i]=res.data[$i]['cun'];
+                        pieData.series[0].data[$i] = {name:res.data[$i]['sortname'],value:res.data[$i]['cun']};
+                    }
+                    console.log(res);
+                }
+            }
+        });
     }
+    //页面加载时获取一次数据
+    readyLoad();
     $("#setYear").change(function(){
 
+    });
+
+
+    //放置在ajax请求结束后执行的程序
+    $( document ).ajaxComplete(function( event, request, settings ) {
+        //柱状图显示
+        barChart.setOption(barData);
+
+        //饼图显示
+        pieChart.setOption(pieData);
     });
 </script>
 </html>
