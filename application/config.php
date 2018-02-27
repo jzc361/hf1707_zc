@@ -278,6 +278,7 @@ return [
             'home/project/proindex',
             'home/project/prodetails',
             'home/project/prorepay',
+            'home/project/showcomment',
             'home/user/showlogin',
             'home/user/showregister',
             'home/user/userlogin',
@@ -332,11 +333,14 @@ return [
         ],
         'nologin'=>['nologin'=>'请先登录'],//00000
 
-        'order'=>[
+
+        /*'order'=>[
             'addOrder'=>'提交订单成功，请于30分钟内付款',//60001
             'addOrderFail'=>'提交订单失败',//60003
             'orderFull'=>'支持数达上限'//60002
-        ],
+        ],*/
+
+
         'signOut'=>[
             'signOut'=>'已退出',//90011
             'outFail'=>'注销失败'//90010
@@ -347,7 +351,10 @@ return [
             'error'=>'购买失败',//60002
             'toOrder'=>'前往订单详情',//60003
             'toPay'=>'前往订单详情',//60004
-            'excess'=>'超过支持限额'//60005
+            'excess'=>'超过支持限额',//60005
+
+            'addOrder'=>'提交订单成功，请于30分钟内付款',//60011
+            'addOrderFail'=>'提交订单失败',//60013
         ],
         'letter'=>[
             'success'=>'发送成功',//70001
@@ -355,7 +362,10 @@ return [
             'codeFail'=>'验证码错误，请重新输入',  //70003
             'selfError'=>'不能给自己发私信',//70004
             'open'=>'打开私信窗口',//70005
-            ],
+
+        ],
+        //短信验证码
+
         'telCode'=>[
             'fail'=>'操作频繁，请隔5分钟再发送请求',//90012
             'success'=>'成功发送验证码'//90013
@@ -370,5 +380,5 @@ return [
         'details'=>['empty'=>'请填写项目详情'], //90018
         'updatepsw'=>['fail'=>'旧密码错误，请重新输入',//90019
             'success'=>'更改成功，请重新登录'], //90020
-    ]
+        ]
 ];

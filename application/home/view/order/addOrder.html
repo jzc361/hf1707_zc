@@ -23,8 +23,10 @@
             {$prodetails.projectname}
             <div class="support_price">
                 <input name="is_delivery" id="is_delivery" type="hidden" value="" />
-                支持金额 <span>¥{$prodetails.price}</span> 元
-
+                支持金额 <span>¥{$prodetails.price*$num}</span> 元
+                <font class="delivery_fee" style="margin: 0px 20px">
+                   ( 数量：{$num})
+                </font>
                 <font class="delivery_fee">
                     包邮
                 </font>
@@ -77,7 +79,7 @@
 
             <div class="blank20"></div>
             <div>
-                <div class="ui-button theme_bgcolor" rel="green" id="stand_by" onclick="addOrder({$prodetails.prodetailsid})">
+                <div class="ui-button theme_bgcolor" rel="green" id="stand_by" onclick="addOrder({$prodetails.prodetailsid},{$num})">
                     <div>
                         <span>确定，提交</span>
                     </div>
@@ -194,16 +196,16 @@
     //var mphone = phone.substr(0, 3) + '****' + phone.substr(7);
     //$('.phone').text(mphone)
     //提交订单
-    function addOrder(prodetailsid){
+    function addOrder(prodetailsid,num){
         var addressid=$(':checked').val();
-        console.log(addressid,prodetailsid);
+        console.log(addressid,prodetailsid,num);
         $.ajax({
             url:'{:url("Order/addOrder")}',
             type:"POST",
-            data:{prodetailsid:prodetailsid,addressid:addressid},
+            data:{prodetailsid:prodetailsid,num:num,addressid:addressid},
             dataType:'json',
             success:function(res){
-                if(res.code=='60001'){
+                if(res.code=='60011'){
                     //提交订单成功
                     var orderid=res.data;//订单id
                     console.log(orderid);

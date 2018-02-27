@@ -33,15 +33,29 @@ class Order extends Auth
                 'userid'=>$this->zc_user['userid']
             ];
             //var_dump($condition);exit;
-<<<<<<< HEAD
+
             $order=db('orders')->where($condition)->find();
-=======
+
             $order=db('orders')->where($condition)->select();*/
             $order=$this->getOrder($prodetailsid,$this->zc_user['userid']);
 
             //var_dump($order);exit;
-            //已支持
+            //支持上限
             if(!empty($order)){
+
+                $ordersnum=0;
+                foreach($order as $key=>$value){
+                    $ordersnum+=$value['ordersnum'];
+                }
+                if($ordersnum>=3){
+                    $reMsg=[
+                        'code'=>60005,
+                        'msg'=>config('msg')['order']['excess'],
+                        'data'=>''
+                    ];
+                    return json($reMsg);
+                }
+
                 $reMsg=[
 
                     'code'=>60004,
@@ -49,19 +63,24 @@ class Order extends Auth
                     'data'=>''
                 ];
                 return json($reMsg);
+
             }
             $reMsg=[
-                'code'=>60005,
+                'code'=>60003,
                 'msg'=>config('msg')['order']['toOrder'],
                 'data'=>''
             ];
+
+            //return json($reMsg);
+
+
             return json($reMsg);
 
 //                    'code'=>60002,
 //                    'msg'=>config('msg')['order']['orderFull'],
 //                    'data'=>''
 //                ];
-            }
+        }
 
         /*$reMsg=[
             'code'=>'xx',
@@ -70,13 +89,14 @@ class Order extends Auth
         ];*/
 
 //        }
-        return $reMsg;
+
         //return $this->fetch('{:url("home/order/addOrder"}');
     }
 
     //确认订单
     public function checkOrder(){
         $prodetailsid=input('get.prodetailsid');
+        $num=input('get.num');
         /*$condition=[
             'prodetailsid'=>$prodetailsid,
             'userid'=>$this->zc_user['userid']
@@ -106,6 +126,7 @@ class Order extends Auth
             ->select();
             //->find();
         //var_dump($addList);exit;
+        $this->assign('num',$num);
         $this->assign('prodetails',$prodetails);
         $this->assign('addList',$addList);
 
@@ -159,10 +180,12 @@ class Order extends Auth
         }
         return json($reMsg);
     }
+
     //提交订单
     public function addOrder(){
         $addressid=input('post.addressid');
         $prodetailsid=input('post.prodetailsid');
+        $num=input('post.num');
         $projectid=$this->getProjectid($prodetailsid);//项目id
         //var_dump($projectid);exit;
         $order=$this->getOrder($prodetailsid,$this->zc_user['userid']);
@@ -189,8 +212,8 @@ class Order extends Auth
             'userid'=>$this->zc_user['userid'],
             'prodetailsid'=>$prodetailsid,
             'addressid'=>$addressid,
-            'ordersprice'=>$data['price'],
-            'ordersnum'=>1,
+            'ordersprice'=>$data['price']*$num,
+            'ordersnum'=>$num,
             'orderstype'=>$data['projecttype'],
             'orderstime'=>date('Y-m-d H:i:s',time()),
             'orderstate'=>'未支付'
@@ -256,6 +279,18 @@ class Order extends Auth
             ->field('projectid')
             ->find();
         return $projectid['projectid'];
+
+    }
+
+    //更新支持人数
+    public function updateCurcount($projectid){
+        $curcount=db('orders a')
+            ->join('zc_prodetails b','a.prodetailsid=b.prodetailsid')
+            ->where('projectid',$projectid)
+            ->where('orderstate','<>','交易关闭')
+            ->field('count(ordersid) count')
+            ->find();
+        return $curcount;
 
     }
 }
