@@ -27,8 +27,7 @@ class Login extends Controller
                 'empid' => $account,
                 'emppsw' => $md5pwd
             ];
-            //数据库查询
-            //测试连接无问题
+
             $sel = Db::name('emp')
                 ->alias('a')
                 ->join('role b','a.roleid = b.roleid')

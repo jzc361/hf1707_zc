@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>X-admin2.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+
+    <link rel="stylesheet" href="__CSS__/admin/font.css">
+    <link rel="stylesheet" href="__CSS__/admin/xadmin.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!--Ztree插件-->
+    <link rel="stylesheet" href="__CSS__/admin/demo.css" type="text/css">
+    <link rel="stylesheet" href="__CSS__/admin/zTreeStyle.css" type="text/css">
+
+</head>
+
+<style>
+    .layui-form-label{
+        float: left;
+        display: block;
+        padding: 9px 15px;
+        width: 120px;
+        font-weight: 400;
+        text-align: right;
+    }
+</style>
+<body>
+<div class="x-body" id="vueData">
+    <fieldset class="layui-elem-field">
+        <legend>项目类型统计</legend>
+
+        <div style="display: inline-block;float: right;margin-right: 200px">
+            <div style="width: 120px;float: left" class="layui-field-box">
+                <select id='setYear'></select>
+            </div>
+            <div  id='zctype' style="width: 175px;float: left" class="layui-field-box">
+                <select>
+                    <option value="普通众筹">普通众筹</option>
+                    <option value="限时众筹">限时众筹</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="display: inline-block" class="layui-field-box">
+            <div id="barChart" style="width: 600px;height:400px;"></div>
+        </div>
+
+        <div style="display: inline-block" class="layui-field-box">
+            <div id="pieChart" style="width: 600px;height:400px;"></div>
+        </div>
+
+    </fieldset>
+</div>
+
+
+</body>
+<script type="text/javascript" src="__JS__/admin/jquery.min.js"></script>
+<script type="text/javascript" src="__STATIC__/lib/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript" src="__JS__/admin/xadmin.js"></script>
+<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+<!--[if lt IE 9]>
+<script src="__JS__/admin/html5.min.js"></script>
+<script src="__JS__/admin/respond.min.js"></script>
+<![endif]-->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!--引用vue-->
+<script src="__JS__/vue.js"></script>
+
+<!--引用jq文件-->
+<!--依赖JQ的文件在对应的放在依赖版本下引用-->
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="__JS__/admin/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="__JS__/admin/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="__JS__/admin/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="__JS__/jquery.cookie.js"></script>
+<!--echart加载-->
+<script src="__STATIC__/js/admin/echarts.js"></script>
+
+<script type="text/javascript">
+
+    var barChart = echarts.init(document.getElementById('barChart'));
+    var pieChart = echarts.init(document.getElementById('pieChart'));
+
+    // 指定图表的配置项和数据
+    //初始化数据
+
+    $.ajax({
+        url:"{:url('admin/datamart/zcYeras')}" ,
+        data:"",
+        type:"post",
+        dataType:"json",
+        success:function(res){
+            console.log(res);
+            var yearVue = new Vue({
+                el: "#setYear",
+                data: {
+                    'allyear': res.data
+                }
+            })
+        }
+    });
+
+    $.ajax({
+       url:"{:url('admin/datamart/readydata')}" ,
+        data:"",
+        type:"post",
+        dataType:"json",
+        success:function(res){
+            console.log(res);
+//            var typeVue = new Vue({
+//                el: "#settype",
+//                data: {
+//                    'allproject': res.data
+//                }
+//            })
+        }
+    });
+
+    // 使用刚指定的配置项和数据显示图表。
+    var barData = {
+        title: {
+            text: '柱形图',
+        },
+        tooltip: {},
+        legend: {
+            data:['数量']
+        },
+        xAxis: {
+            data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+        },
+        yAxis: {},
+        series: [{
+            name: '销量',
+            type: 'bar',
+            data: [5, 20, 36, 10, 10, 20]
+        }]
+    };
+    barChart.setOption(barData);
+
+    //饼图
+    var pieData = {
+
+        series : [
+        {
+            name: '数量',
+            type: 'pie',
+            radius: '55%',
+            data:[
+                {value:235, name:'衬衫'},
+                {value:274, name:'羊毛衫'},
+                {value:310, name:'雪纺衫'},
+                {value:335, name:'裤子'},
+                {value:310, name:'高跟鞋'},
+                {value:335, name:'袜子'},
+                {value:400, name:'搜索引擎'}
+            ]
+        }
+    ]};
+
+    pieChart.setOption(pieData);
+
+//选择统计年份
+
+    var setYear=document.getElementById("setYear");
+    var date = new Date();
+    var nowYear = date.getFullYear();
+    for(var i=2000;i<=nowYear;i++) {
+        var op = new Option(i, i);
+        setYear.add(op);
+    }
+    $("#setYear").change(function(){
+
+    });
+</script>
+</html>

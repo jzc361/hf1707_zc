@@ -85,6 +85,7 @@ new Vue({
 	//方法
 	methods:{
 		getService:function(){
+			console.log("获取客服信息");
 			var _this=this;
 			$.ajax({
 				type: "post",

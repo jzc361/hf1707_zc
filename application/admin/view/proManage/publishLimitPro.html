@@ -103,7 +103,7 @@
             <!--是否马上开始众筹-->
             <div class="setlist">
                 <label class="setmid" style="margin-right:25px;">马上开始</label>
-                <select  name="selectVal" v-model="selectVal"  class="btn_select f_l" @change="isstartNow(selectVal)">
+                <select  name="selectVal" id="selectVal" v-model="selectVal"  class="btn_select f_l" @change="isstartNow(selectVal)">
                     <option value="1">是</option>
                     <option value="0">否</option>
                 </select>
@@ -112,13 +112,13 @@
             <!--开始时间-->
             <div class="setlist" v-show="startNow">
                 <label class="setmid" style="margin-right:25px;">开始时间</label>
-                <input name="starttime" type="datetime-local" class="pro_lf textbox">
+                <input name="starttime" id="starttime" type="datetime-local" class="pro_lf textbox">
             </div>
             <div class="blank0"></div>
             <!--结束时间-->
             <div class="setlist">
                 <label class="setmid" style="margin-right:25px;">结束时间</label>
-                <input name="endtime" type="datetime-local" class="pro_lf textbox">
+                <input name="endtime" id="endtime" type="datetime-local" class="pro_lf textbox">
             </div>
             <div class="blank0"></div>
             <!--支持金额-->
@@ -131,7 +131,7 @@
           <!--限额-->
             <div class="setlist">
                 <label class="setmid">限额</label>
-                <input name="totalpart"  v-model="totalpart"  @keyup="limitInt()" class="pro_lf textbox">
+                <input name="totalpart"  id="totalpart" v-model="totalpart"  @keyup="limitInt()" class="pro_lf textbox">
                 <span class="setmid">份</span>
             </div>
             <div class="blank0"></div>
@@ -144,7 +144,7 @@
                     <!--<input type="file" class="" name="img_file" accept="image/gif,image/jpeg,image/jpg,image/png"/>-->
                 </label>
                 <span class="prompt" style="margin-top:11px;" v-if="!isAddImg">支持jpg、jpeg、png、gif格式</span>
-                <span class="prompt" style="margin-top:11px;" v-if="isAddImg">已添加图片，可在右侧预览</span>
+                <span class="prompt" style="margin-top:11px;" v-if="isAddImg">支持jpg、jpeg、png、gif格式</span>
             </div>
             <div class="blank0"></div>
             <!--项目详情-->
@@ -154,9 +154,9 @@
                 <!--<textarea name="probrief" id="probrief" class="textareabox textbox w350"></textarea>-->
             </div>
             <div class="blank0"></div>
-            <div>
-                <script id="editor" name="proDetails" type="text/plain"></script>
-            </div>
+            <!--<div>-->
+            <script id="editor" name="proDetails" type="text/plain"></script>
+            <!--</div>-->
             <!---->
             <!--保存-->
             <div class="blank5"></div>
@@ -249,6 +249,13 @@
 <script type="text/javascript"  src="__STATIC__/ueditor/dist/utf8-php/ueditor.all.js"></script>
 <script>
     var ue = UE.getEditor('editor');//富文本
+    ue.ready(function() {
+        //设置编辑器的内容
+//        ue.setContent('hello');
+        //获取html内容，返回: <p>hello</p>
+        prohtml = ue.getContent();
+
+    });
     new Vue({
         el : '#vueDiv',
         //数据
@@ -290,38 +297,99 @@
     });
 
     /*---图片预览-*/
-    $("#imgFile").change(function(){
-        var file = document.getElementById("imgFile").files;
-        var result=document.getElementById("imagePreview");
-        $(result).empty();
-        var reader    = new FileReader();
-        reader.readAsDataURL(file[0]);
-        reader.onload=function(e){
-            $(result).attr("src",this.result);
-        };
-    });
-    //项目提交
-    $("#submitpro").click(function(){
-        var formData = new FormData($("#project_form")[0]);
-        console.log(formData);
-        $.ajax({
-            type: "POST",
-            url: "{:url('admin/promanage/submitLimitPro')}",
-            data: formData,
-            dataType: "json",
-            async: false,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (responseData){
-                console.log(responseData);
-                alert(responseData.msg);
-                location.reload(true);
-            },
-            error:function(){
-                alert("error");
+    var flag=0;
+    isImg();
+    function isImg(){
+        $("#imgFile").change(function(){
+            var fileList=document.getElementById("imgFile").files[0];  //获取选择的文件对象（数组）
+            console.log(fileList);
+            var allowTypes = ["image/jpeg","image/png","image/gif","image/jpg"]; //允许上传的文件类型
+            if(fileList.type=='image/jpeg' || fileList.type=='image/png' || fileList.type=='image/gif' || fileList.type=='image/jpg'){
+                flag=1;
+                /*---图片预览-*/
+//                $("#imgFile").change(function(){
+                var file = document.getElementById("imgFile").files;
+                var result=document.getElementById("imagePreview");
+                $(result).empty();
+                var reader    = new FileReader();
+                reader.readAsDataURL(file[0]);
+                reader.onload=function(e){
+                    $(result).attr("src",this.result);
+                };
+//                });
+            }
+            else {
+                flag=0;
+                $("#imagePreview").attr("src",'__STATIC__/img/home/publishPro/empty_thumb.gif');
+                alert("只能上传图片文件");
             }
         });
+    }
+//    $("#imgFile").change(function(){
+//        var file = document.getElementById("imgFile").files;
+//        var result=document.getElementById("imagePreview");
+//        $(result).empty();
+//        var reader    = new FileReader();
+//        reader.readAsDataURL(file[0]);
+//        reader.onload=function(e){
+//            $(result).attr("src",this.result);
+//        };
+//    });
+    //项目提交
+    $("#submitpro").click(function(){
+        console.log(prohtml);
+        var formData = new FormData($("#project_form")[0]);
+        console.log(formData);
+        var proTitle=$("#proTitle").val();
+        var starttime=$("#starttime").val();
+        var endtime=$("#endtime").val();
+        var imgFile=$("#imgFile").val();
+        var tolprice=$("#tolprice").val();
+        var totalpart=$("#totalpart").val();
+        var selectVal=$("#selectVal").val();
+        if(proTitle=='' || tolprice==''|| totalpart==''){
+            alert("请将信息填写完整");
+        }
+        else if(selectVal==0 && starttime==''){    //不马上开始，要判断开始时间是否为空
+            alert("请选择开始时间");
+        }
+        else if(endtime==''){
+            alert("请选择结束时间");
+        }
+        else if(imgFile==''){
+            alert("请选择图片封面");
+        }
+        else if(flag==0){
+            alert("只能上传图片");
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: "{:url('admin/promanage/submitLimitPro')}",
+                data: formData,
+                dataType: "json",
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (responseData){
+                    if(responseData.code=='90018'){
+                        alert(responseData.msg);
+                    }
+                    else {
+                        console.log(responseData);
+                        alert(responseData.msg);
+                        location.reload(true);
+                    }
+
+                },
+                error:function(){
+                    alert("error");
+                }
+            });
+        }
+
+
     });
 
 

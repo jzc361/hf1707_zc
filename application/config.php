@@ -19,7 +19,7 @@ return [
     // 应用调试模式
     'app_debug'              => true,
     // 应用Trace
-    'app_trace'              => true,
+    'app_trace'              => false,
     // 应用模式状态
     'app_status'             => '',
     // 是否支持多模块
@@ -313,6 +313,7 @@ return [
         'publishPro'=>[
             'publish'=>'发布成功，等待审核',  //20009
             'publishFail'=>'发布失败',  //20010
+            'publishSuccess'=>'发布成功',  //20011
         ],
         'comment'=>[
             'success'=>'评论成功',//30001
@@ -332,11 +333,13 @@ return [
         ],
         'nologin'=>['nologin'=>'请先登录'],//00000
 
+
         /*'order'=>[
             'addOrder'=>'提交订单成功，请于30分钟内付款',//60001
             'addOrderFail'=>'提交订单失败',//60003
             'orderFull'=>'支持数达上限'//60002
         ],*/
+
 
         'signOut'=>[
             'signOut'=>'已退出',//90011
@@ -359,8 +362,10 @@ return [
             'codeFail'=>'验证码错误，请重新输入',  //70003
             'selfError'=>'不能给自己发私信',//70004
             'open'=>'打开私信窗口',//70005
+
         ],
         //短信验证码
+
         'telCode'=>[
             'fail'=>'操作频繁，请隔5分钟再发送请求',//90012
             'success'=>'成功发送验证码'//90013
@@ -371,8 +376,9 @@ return [
             'success'=>'绑定成功',//90015
             'relievefail'=>'解绑失败',//90016
             'relievesuccess'=>'解绑成功'//90017
+        ],
+        'details'=>['empty'=>'请填写项目详情'], //90018
+        'updatepsw'=>['fail'=>'旧密码错误，请重新输入',//90019
+            'success'=>'更改成功，请重新登录'], //90020
         ]
-
-    ]
-
 ];

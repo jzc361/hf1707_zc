@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:78:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\controll\person.html";i:1517381835;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:78:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\controll\person.html";i:1519440615;}*/ ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -26,13 +26,13 @@
                             <td>昵称</td><td>{{admin.empname}}</td>
                         </tr>
                         <tr>
-                            <td>角色</td><td>{{admin.rolename}}</td>
+                            <td>员工</td><td>{{admin.rolename}}</td>
                         </tr>
                         <tr>
-                            <td>角色详情</td><td>{{admin.roledetails}}</td>
+                            <td>员工详情</td><td>{{admin.roledetails}}</td>
                         </tr>
                         <tr>
-                            <td>角色状态</td><td>{{admin.empstate}}</td>
+                            <td>员工状态</td><td>{{admin.empstate}}</td>
                         </tr>
                         <tr>
                             <td>登录状态</td><td>{{admin.loginstate}}</td>

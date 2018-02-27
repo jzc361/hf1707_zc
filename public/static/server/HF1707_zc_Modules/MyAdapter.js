@@ -1,9 +1,9 @@
 function MyAdapter(){
     var mysql      = require('mysql');
     this.connection = mysql.createConnection({
-        host     : '39.106.138.89',
+        host     : '39.106.38.14',
         user     : 'root',
-        password : '12345678',
+        password : '123456',
         database : 'hf1707_zc'
     });
     this.connection.connect();

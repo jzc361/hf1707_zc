@@ -632,12 +632,48 @@ class User extends Auth
     //安全信息页面
     public function security()
     {
+<<<<<<< HEAD
+=======
+
+>>>>>>> dcbeded6f12c5ce72311acf5cb7d425f27aacd5c
         //获取用户信息
         $userid=$this->zc_user['userid'];
         $userInfo=db('user')->where('userid',$userid)->find();
         $this->assign('userInfo',$userInfo);
        // var_dump($userInfo);
         return $this->fetch('security');
+    }
+    //修改密码
+    public function updatePsw(){
+        $oldPsw=input('?post.oldPsw')?md5(input('post.oldPsw')):'';
+        $newPsw=input('?post.newPsw')?md5(input('post.newPsw')):'';
+        if(!empty($oldPsw)){
+            //判断旧密码是否相同
+            $userid=$this->zc_user['userid'];
+            $userPsw=db('user')->field('userpsw')->where('userid',$userid)->find();
+            $userPsw=$userPsw['userpsw'];
+//           echo $userPsw;
+//            echo $oldPsw;
+//            exit();
+            if($userPsw==$oldPsw){
+                //更改成功
+                Db::table('zc_user')->where('userid',$userid)->setField('userpsw',$newPsw);
+                $msgResp=[
+                    'code'=>90020,
+                    'msg'=>config('msg')['updatepsw']['success'],
+                    'data'=>[]
+                ];
+            }
+            else{
+                //旧密码错误
+                $msgResp=[
+                    'code'=>90019,
+                    'msg'=>config('msg')['updatepsw']['fail'],
+                    'data'=>[]
+                ];
+            }
+            return json($msgResp);
+        }
     }
     //获取验证码
     public function getTelCode(){
@@ -731,8 +767,11 @@ class User extends Auth
             }
         }
         else{
-            //echo "jss";
             //解绑
+            //删除session
+            if(session('?sendTime')){
+                session('sendTime',null);
+            }
             if(!empty($telNumber)){
                 $res=db('user')->where('userid',$userid)->update(['telephone'=>null]);
                 if($res==1){
@@ -818,7 +857,10 @@ class User extends Auth
         return $hash;
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> dcbeded6f12c5ce72311acf5cb7d425f27aacd5c
     //收货地址页面
     public function address()
     {

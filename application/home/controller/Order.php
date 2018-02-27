@@ -38,9 +38,11 @@ class Order extends Auth
 
             $order=db('orders')->where($condition)->select();*/
             $order=$this->getOrder($prodetailsid,$this->zc_user['userid']);
+
             //var_dump($order);exit;
             //支持上限
             if(!empty($order)){
+
                 $ordersnum=0;
                 foreach($order as $key=>$value){
                     $ordersnum+=$value['ordersnum'];
@@ -53,15 +55,41 @@ class Order extends Auth
                     ];
                     return json($reMsg);
                 }
+
+                $reMsg=[
+
+                    'code'=>60004,
+                    'msg'=>config('msg')['order']['excess'],
+                    'data'=>''
+                ];
+                return json($reMsg);
+
             }
             $reMsg=[
                 'code'=>60003,
                 'msg'=>config('msg')['order']['toOrder'],
                 'data'=>''
             ];
+
             //return json($reMsg);
+
+
+            return json($reMsg);
+
+//                    'code'=>60002,
+//                    'msg'=>config('msg')['order']['orderFull'],
+//                    'data'=>''
+//                ];
         }
-        return $reMsg;
+
+        /*$reMsg=[
+            'code'=>'xx',
+            'msg'=>'11',
+            'data'=>''
+        ];*/
+
+//        }
+
         //return $this->fetch('{:url("home/order/addOrder"}');
     }
 
@@ -101,6 +129,7 @@ class Order extends Auth
         $this->assign('num',$num);
         $this->assign('prodetails',$prodetails);
         $this->assign('addList',$addList);
+
         $this->assign('do',$this->do);
         return $this->fetch('addOrder');
     }
@@ -250,6 +279,7 @@ class Order extends Auth
             ->field('projectid')
             ->find();
         return $projectid['projectid'];
+
     }
 
     //更新支持人数
@@ -261,5 +291,6 @@ class Order extends Auth
             ->field('count(ordersid) count')
             ->find();
         return $curcount;
+
     }
 }

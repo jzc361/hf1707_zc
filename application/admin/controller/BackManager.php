@@ -284,7 +284,7 @@ class Backmanager extends Controller
         return json($res);
     }
 
-    //角色删除
+    //员工删除
     public function empDel(){
         $rid = isset($_POST['rid'])?$_POST['rid']:'';
         $res = [

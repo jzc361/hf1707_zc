@@ -215,61 +215,74 @@ class Promanage extends Controller
     public function submitLimitPro(){
         //上传预览图
         $file = request()->file('imgFile');
-        $proMsg=input('post.');
-        if($proMsg['selectVal']==1){ //马上开始众筹
-            $proMsg['starttime']=date("Y-m-d H:i:s",time());
-            //获取众筹中的id
-            $stateid=$this->getlimitstateid('众筹中');
-            //var_dump($stateid);exit();
+        $proMsg=$_POST;
+         //exit(var_dump($proMsg));
+        if(!isset($proMsg['proDetails']) || empty($proMsg['proDetails'])){
+            $msgResp=[
+                'code'=>90018, //请填写项目详情
+                'msg'=>config('msg')['details']['empty'],
+                'data'=>[]
+            ];
+            return json($msgResp);
         }
         else{
-            //获取未开始的id
-            $stateid=$this->getlimitstateid('未开始');
-            //var_dump($stateid);exit();
-        }
-       // var_dump($file);
-       // var_dump($proMsg);
-        if($file){
-            $path = ROOT_PATH . 'public/static/img/home/project';
-            $info = $file->move($path);
-            if($info){
-                // 成功上传后 获取上传信息
-                $imgPath=$info->getSaveName();
-                //插入数据
-                //插入众筹项目表
-                $data = [
-                    'projectname' =>$proMsg['proTitle'],
-                    'intro' =>$proMsg['proDetails'],
-                    'projectimg' =>'img/home/project/'.$imgPath,
-                    'limitstateid' =>$stateid,
-                    'sortid' =>$proMsg['proSort'],
-                    'createtime'=>date("Y-m-d H:i:s",time()),
-                    'begintime'=>$proMsg['starttime'],
-                    'endtime'=>$proMsg['endtime'],
-                    'projecttype'=>'限时众筹',
-                ];
-                $maxProId=Db::name('project')->insertGetId($data);
-                //回报众筹
-                $returnData=[
-                    'projectid'=>$maxProId,
-                    'price'=>$proMsg['tolprice'],
-                    'limitcount'=>$proMsg['totalpart'],
-                ];
-                $res=Db::name('prodetails')->insertGetId($returnData);
-                // var_dump($data);exit();
-
-            }else{
-                // 上传失败获取错误信息
-                echo $file->getError();
+            if($proMsg['selectVal']==1){ //马上开始众筹
+                $proMsg['starttime']=date("Y-m-d H:i:s",time());
+                //获取众筹中的id
+                $stateid=$this->getlimitstateid('众筹中');
+                //var_dump($stateid);exit();
             }
+            else{
+                //获取未开始的id
+                $stateid=$this->getlimitstateid('未开始');
+                //var_dump($stateid);exit();
+            }
+            // var_dump($file);
+            // var_dump($proMsg);
+            if($file){
+                $path = ROOT_PATH . 'public/static/img/home/project';
+                $info = $file->move($path);
+                if($info){
+                    // 成功上传后 获取上传信息
+                    $imgPath=$info->getSaveName();
+                    //插入数据
+                    //插入众筹项目表
+
+                    $data = [
+                        'projectname' =>$proMsg['proTitle'],
+                        'intro' =>$proMsg['proDetails'],
+                        'projectimg' =>'img/home/project/'.$imgPath,
+                        'limitstateid' =>$stateid,
+                        'sortid' =>$proMsg['proSort'],
+                        'createtime'=>date("Y-m-d H:i:s",time()),
+                        'begintime'=>$proMsg['starttime'],
+                        'endtime'=>$proMsg['endtime'],
+                        'projecttype'=>'限时众筹',
+                    ];
+                    $maxProId=Db::name('project')->insertGetId($data);
+                    //回报众筹
+                    $returnData=[
+                        'projectid'=>$maxProId,
+                        'price'=>$proMsg['tolprice'],
+                        'limitcount'=>$proMsg['totalpart'],
+                    ];
+                    $res=Db::name('prodetails')->insertGetId($returnData);
+                    // var_dump($data);exit();
+
+                }else{
+                    // 上传失败获取错误信息
+                    echo $file->getError();
+                }
+            }
+            //dump(Config::get());exit();
+            $msgResp=[
+                'code'=>200011, //发布成功
+                'msg'=>config('msg')['publishPro']['publishSuccess'],
+                'data'=>[]
+            ];
+            return json($msgResp);
         }
-        //dump(Config::get());exit();
-        $msgResp=[
-            'code'=>20009, //发布成功，等待审核
-            'msg'=>config('msg')['publishPro']['publish'],
-            'data'=>[]
-        ];
-        return json($msgResp);
+
     }
     //限时众筹显示
     public function limitProView(){

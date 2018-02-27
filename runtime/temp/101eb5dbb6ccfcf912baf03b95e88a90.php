@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:86:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\backmanager\rolemanager.html";i:1517820923;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:86:"D:\AppServ\www\hf1707_zc\public/../application/admin\view\backmanager\rolemanager.html";i:1519539504;}*/ ?>
 <!DOCTYPE html>
 <html>
   
@@ -41,15 +41,17 @@
           <div class="layui-field-box" id="allrole">
               <table class="layui-table" lay-even>
                   <tbody>
-
+                  <tr v-for="roleInfo in allrole" v-if="roleInfo.roleid==1">
+                      <th>角色id</th><th>角色名</th><th>角色简介</th><th>角色状态</th><th>权限管理/修改</th><th>角色删除</th>
+                  </tr>
                   <!--角色管理操作-->
                   <tr v-for="roleInfo in allrole" v-if="roleInfo.roleid==1">
-                      <td>{{roleInfo.rolename}}</td><td>{{roleInfo.roledetails}}</td><td>--</td><td>--</td>
+                      <td>{{roleInfo.roleid}}</td><td>{{roleInfo.rolename}}</td><td>{{roleInfo.roledetails}}</td><td>{{roleInfo.empstate}}</td><td>--</td><td>--</td>
                   </tr>
                   <tr v-for="roleInfo in allrole" v-if="roleInfo.roleid!=1">
-                      <td>{{roleInfo.rolename}}</td><td>{{roleInfo.roledetails}}</td>
+                      <td>{{roleInfo.roleid}}</td><td>{{roleInfo.rolename}}</td><td>{{roleInfo.roledetails}}</td><td>{{roleInfo.empstate}}</td>
                       <td>
-                        <a :rid="roleInfo.roleid" data-toggle="modal" data-target="#modalEdit" onclick="roleEdit(this)" href="#">权限修改</a>
+                        <a :rid="roleInfo.roleid" data-toggle="modal" data-target="#modalEdit" onclick="roleEdit(this)" href="#">权限/修改</a>
                       </td>
                      <td>
                          <a :rid="roleInfo.roleid" onclick="roleDel(this)" href="#">删除</a>
@@ -62,7 +64,7 @@
       <!--<blockquote class="layui-elem-quote layui-quote-nm"></blockquote>-->
   </div>
   <div style="text-align: center" class="layui-form-item">
-      <button class="btn layui-btn" data-toggle="modal" data-target="#modalAdd" style="width: 30%" id="roleAdd" lay-filter="add">
+      <button class="btn layui-btn" data-toggle="modal" data-target="#modalAdd" style="width: 30%" id="showAdd" lay-filter="add">
           添加角色
       </button>
   </div>
@@ -74,7 +76,7 @@
       <div class="modal-dialog" role="document">
           <div class="modal-content">
               <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modalAdd" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                   <h4 class="modal-title" id="modalLabelAdd">添加角色</h4>
                   <!--------------------------添加角色------------------------------>
               </div>
@@ -97,14 +99,33 @@
                       <label for="gradeAdd" class="layui-form-label">
                           <span class="x-red">*</span>权限选择
                       </label>
-                      <div class="layui-input-inline">
-                          <input type="text" id="gradeAdd" name="gradeAdd" required="" lay-verify=""
-                                 autocomplete="off" class="layui-input">
+                      <div class="content_wrap layui-input-inline">
+                          <div class="zTreeDemoBackground left">
+                              <ul id="gradeAdd" class="ztree"  style="background-color: whitesmoke;width: 192px;height: 100%;border-color: #e6e6e6"></ul>
+                          </div>
                       </div>
                       <div class="layui-form-mid layui-word-aux">
                           <span class="x-red">*</span>请合理分配权限
                       </div>
                   </div>
+
+                  <!--角色状态-->
+
+                  <div class="layui-form-item">
+                      <label for="stateAdd" class="layui-form-label">
+                          <span class="x-red">*</span>角色状态
+                      </label>
+                      <div class="layui-input-inline">
+                          <select name="stateAdd" id="stateAdd">
+                              <option value="使用">使用</option>
+                              <option value="停用">停用</option>
+                          </select>
+                      </div>
+                      <div class="layui-form-mid layui-word-aux">
+                          <span class="x-red">*</span>
+                      </div>
+                  </div>
+
                   <div class="layui-form-item">
                       <label for="introAdd" class="layui-form-label">
                           <span class="x-red">*</span>角色详情/介绍
@@ -121,7 +142,7 @@
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                  <button type="button" class="btn layui-btn">确认添加</button>
+                  <button id="roleAdd" type="button" class="btn layui-btn">确认添加</button>
               </div>
           </div>
       </div>
@@ -169,6 +190,24 @@
                           <span class="x-red">*</span>请合理分配权限
                       </div>
                   </div>
+
+                  <!--角色状态-->
+
+                  <div class="layui-form-item">
+                      <label for="stateEdit" class="layui-form-label">
+                          <span class="x-red">*</span>角色状态
+                      </label>
+                      <div class="layui-input-inline">
+                          <select name="stateEdit" id="stateEdit">
+                              <option value="使用">使用</option>
+                              <option value="停用">停用</option>
+                          </select>
+                      </div>
+                      <div class="layui-form-mid layui-word-aux">
+                          <span class="x-red">*</span>
+                      </div>
+                  </div>
+
                   <div class="layui-form-item">
                       <label for="introEdit" class="layui-form-label">
                           <span class="x-red">*</span>角色详情/介绍
@@ -216,7 +255,7 @@
   <script type="text/javascript" src="__JS__/admin/jquery-1.4.4.min.js"></script>
   <script type="text/javascript" src="__JS__/admin/jquery.ztree.core-3.5.js"></script>
   <script type="text/javascript" src="__JS__/admin/jquery.ztree.excheck-3.5.js"></script>
-
+  <script type="text/javascript" src="__JS__/jquery.cookie.js"></script>
 
 
 
@@ -244,7 +283,8 @@
       );
 
 //Ztree插件方法
-      function zTree($treeData){
+      //封装1.0.3
+      function zTree($treeData,$div){
           var setting = {
               check: {
                   enable: true
@@ -269,7 +309,7 @@
           }
           //ztree数据绑定与标签绑定
           $(document).ready(function(){
-              $.fn.zTree.init($("#roleEdit"), setting,$treeData);
+              $.fn.zTree.init($("#"+$div+""), setting,$treeData);
               setCheck();
               $("#py").bind("change", setCheck);
               $("#sy").bind("change", setCheck);
@@ -278,13 +318,143 @@
           });
 
       }
+      //动态添加ztree数据
+      //封装1.0.2
+      function ztreeCreate($ztreeData){
+          zNodes = [];
+          for(var $i = 0;$i<$ztreeData.length;$i++) {
+              //显示主枝
+              if ($ztreeData[$i]['menufid'] == 0) {
+                  zNodes.push({
+                      id: $ztreeData[$i]['menuid'],
+                      pId: $ztreeData[$i]['menufid'],
+                      name: $ztreeData[$i]['menuname'],
+                      open: true,
+                      checked: false
+                  })
+              } else if ($ztreeData[$i]['menuid'] == 8 || $ztreeData[$i]['menuid'] == 10) {
+                  zNodes.push({
+                      id: $ztreeData[$i]['menuid'],
+                      pId: $ztreeData[$i]['menufid'],
+                      name: $ztreeData[$i]['menuname'],
+                      open: true,
+                      checked: false
+                  })
+              } else {
+                  zNodes.push({
+                      id: $ztreeData[$i]['menuid'],
+                      pId: $ztreeData[$i]['menufid'],
+                      name: $ztreeData[$i]['menuname'],
+                      checked: false
+                  })
+              }
+          }
+          return zNodes;
+      }
 
+      //获取菜单
+      $('#showAdd').click(function(){
+          $.ajax({
+              url:"<?php echo url('admin/backmanager/getRoleMenu'); ?>",
+              data:'',
+              type:'post',
+              dataType:'json',
+              success:function(res){
+                  ztreeCreate(res.data);
+                  $div = 'gradeAdd';
+                  zTree(zNodes,$div);
+              }
+          })
+      });
       //添加角色
-      $("#roleAdd").click(function (){
+        //角色名字不能为空
+      $("#nameAdd").blur(function(){
+          $newRoleName = $("#nameAdd").val();
 
+          $newRoleName=$newRoleName.replace(/(^\s*)|(\s*$)/g, "");
+          //$.trim($newRoleName)
+
+          if($newRoleName==''){
+              alert('角色名不能为空,也不能为全空格');
+          }else {
+              //判断重复
+              $.ajax({
+                  url:"<?php echo url('admin/backmanager/checkRole'); ?>",
+                  data:'rolename='+$newRoleName,
+                  type:'post',
+                  dataType:'json',
+                  success:function(res){
+                      if(res.code==20007){
+                          alert('该角色已存在');
+                      }
+                  }
+              })
+          }
+      });
+      $("#roleAdd").click(function (){
+          //获取对应ztree(id)节点的选中数据
+          var roleAdd = $.fn.zTree.getZTreeObj("gradeAdd");
+          //获取选中(true)的所有属性获取该角色被给予的所有权限信息
+          var newmenu = roleAdd.getCheckedNodes(true);
+          //对获取的数据处理得到需要的数据
+          var newmenuid = [];
+          for(var $i = 0;$i<newmenu.length;$i++){
+              newmenuid.push({
+                  menuid:newmenu[$i]['id']
+              })
+          };
+          //新角色名称
+          var nameAdd = $("#nameAdd").val();
+          nameAdd=nameAdd.replace(/(^\s*)|(\s*$)/g, "");
+
+          //新角色介绍
+          var introAdd = $("#introAdd").val();
+
+          //设置判断值用于在Ajax返回值判断后是启用下一层Ajax
+          var $AjaxCheck = 0;
+
+          //新角色名称不能为空
+          if(nameAdd==""){
+              alert('角色名不能为空,也不能为全空格');
+          }else{
+              $.ajax({
+                  url:"<?php echo url('admin/backmanager/checkRole'); ?>",
+                  data:'rolename='+nameAdd,
+                  type:'post',
+                  dataType:'json',
+                  async:false,
+                  success:function(res){
+                      if(res.code==20007){
+                          alert('该角色已存在');
+                      }
+                      else{
+                          $AjaxCheck = 1;
+                      }
+                  }
+              })
+          }
+          if($AjaxCheck==1){
+              $.ajax({
+                  url:"<?php echo url('admin/backmanager/roleAdd'); ?>",
+                  data:{
+                      'rolename':nameAdd,
+                      'roleintro':introAdd,
+                      'rolemenu':newmenuid
+                  },
+                  type:'post',
+                  dataType:'json',
+                  async:false,
+                  success:function(res){
+                    if(res.code==20005){
+                        alert("新角色添加成功");
+                        window.location.reload();
+                    }
+                  }
+              })
+          }
       });
 
-      //删除角色
+      //删除角色//完成
       function roleDel(obj){
         $rid = $(obj).attr('rid');
           $checkDel = confirm('您确定要删除该角色吗？');
@@ -295,6 +465,7 @@
                   type:'post',
                   dataType:'json',
                   success:function(res){
+                      console.log(res);
                       alert(res.msg);
                       window.location.reload();
                   }
@@ -312,37 +483,8 @@
               success:function(res){
 
                     if(res!=''){
-                        //
-                        var zNodes = [];
-                        //循环遍历菜单添加数据
-                        for(var $i = 0;$i<res.data[0].length;$i++){
-                            //显示主枝
-                            if (res.data[0][$i]['menufid'] == 0) {
-                                zNodes.push({
-                                    id: res.data[0][$i]['menuid'],
-                                    pId: res.data[0][$i]['menufid'],
-                                    name: res.data[0][$i]['menuname'],
-                                    open: true,
-                                    checked: false
-                                })
-                            } else if (res.data[0][$i]['menuid'] == 8 || res.data[0][$i]['menuid'] == 10) {
-                                zNodes.push({
-                                    id: res.data[0][$i]['menuid'],
-                                    pId: res.data[0][$i]['menufid'],
-                                    name: res.data[0][$i]['menuname'],
-                                    open: true,
-                                    checked: false
-                                })
-                            } else {
-                                zNodes.push({
-                                    id: res.data[0][$i]['menuid'],
-                                    pId: res.data[0][$i]['menufid'],
-                                    name: res.data[0][$i]['menuname'],
-                                    checked: false
-                                })
-                            }
-                        }
-
+                        //调用创建ztree的方法
+                        var zNodes = ztreeCreate(res.data[0]);
                         //把有权限的选项给勾选
                         for(var $j=0;$j<res.data[1].length;$j++){
 
@@ -361,7 +503,9 @@
                         $("#nameEdit").attr("roleid",res.data[1][0]['roleid']);
 
                         //调用ztree
-                        zTree(zNodes);
+                        $div = 'roleEdit';
+                        zTree(zNodes,$div);
+
                     }
 
                 //zTree(res);

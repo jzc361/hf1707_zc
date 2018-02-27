@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:78:"D:\AppServ\www\hf1707_zc\public/../application/home\view\project\prolimit.html";i:1517631753;s:72:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\nav.html";i:1517587242;s:75:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\footer.html";i:1517587242;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:78:"D:\AppServ\www\hf1707_zc\public/../application/home\view\project\prolimit.html";i:1517812780;s:76:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\chatDiv.html";i:1517757175;s:72:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\nav.html";i:1519440615;s:75:"D:\AppServ\www\hf1707_zc\public/../application/home\view\public\footer.html";i:1517587242;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +11,71 @@
     <link rel="stylesheet" href="__CSS__/project.css">
 </head>
 <body style="background: #f9f9f9;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="__CSS__/zzsc.css">
+    <link rel="stylesheet" type="text/css" href="__CSS__/chat.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/font_Icon/iconfont.css">
+</head>
+<body>
+<div id="myChat" style="left: 200px;"></div>
+<div id="hisShow" class="contentR">
+    <div id="hisContent"></div>
+    <div id="page"></div>
+</div>
+<div>
+    <div style="z-index: 10000000" class="qqserver" id="service" @click="getService">
+        <div class="qqserver_fold" >
+            <div></div>
+        </div>
+        <div class="qqserver-body" style="display: block;">
+            <div class="qqserver-header" >
+                <div></div>
+                <!--<a href="<?php echo url('home/Publishpro/getServiceMsg'); ?>" ></a>-->
+                <span class="qqserver_arrow" ></span>
+            </div>
+            <div>
+                <ul>
+                    <li v-for="x in serviceList" style="cursor: pointer;">
+                        <div v-if="x.loginstate=='在线'" style="color: red">
+                            <div  @click="showchat(x.empid,x.empname,x.headimg)">
+                                <span>{{x.empname}}</span>
+                                ({{x.loginstate}})
+                                <!--<i>{{x.unreadcount}}</i>-->
+                            </div>
+                        </div>
+                        <div  v-if="x.loginstate=='离线'" style="color: black">
+                            <div @click="showchat(x.empid,x.empname,x.headimg)">
+                                <span>{{x.empname}}</span>
+                                ({{x.loginstate}})
+                                <!--<i>{{x.unreadcount}}</i>-->
+                            </div>
+                        </div>
+                        <br>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="__JS__/jquery-2.1.4.js"></script>
+<script src="__JS__/vue.js"></script>
+<script>
+   var getServiceMsgUrl = "<?php echo url('home/publishpro/getServiceMsg'); ?>";
+   var staticUrl='__STATIC__';
+   var getHisUrl = "<?php echo url('admin/Chat/showChat'); ?>";
+</script>
+<script src="__JS__/qqface.js"></script>
+<script src="__JS__/page.js"></script>
+<script src="__JS__/myChat.js"></script>
+<script src="__JS__/zzsc.js" ></script>
+<!--</html>-->
 <!--公共nav-->
 <link rel="stylesheet" href="__CSS__/bootstrap.min.css">
 <link rel="stylesheet" href="__CSS__/home/goTop.css">
@@ -94,6 +159,9 @@
                     <li>
                         <a href="<?php echo url('home/User/test'); ?>">查看通知(测试)</a>
                     </li>
+                    <li>
+                        <a href="<?php echo url('home/Letter/letter'); ?>">查看私信</a>
+                    </li>
                     <li class="divider">
                     </li>
                     <li>
@@ -112,6 +180,9 @@
 <script>
     function exitLogin(){
         if(confirm("确认退出？")){
+            if(localStorage.userMsg!=undefined){
+                localStorage.removeItem('userMsg');
+            }
             location.href="<?php echo url('home/User/exitLogin'); ?>";
         }
     }
