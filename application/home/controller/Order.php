@@ -24,51 +24,42 @@ class Order extends Auth
                 'msg'=>config('msg')['nologin']['nologin'],
                 'data'=>''
             ];
-<<<<<<< HEAD
+
             return json($reMsg);
-=======
->>>>>>> origin/master
+
         }else{
             /*$condition=[
                 'prodetailsid'=>$prodetailsid,
                 'userid'=>$this->zc_user['userid']
             ];
             //var_dump($condition);exit;
-<<<<<<< HEAD
+
             $order=db('orders')->where($condition)->find();
-=======
+
             $order=db('orders')->where($condition)->select();*/
             $order=$this->getOrder($prodetailsid,$this->zc_user['userid']);
->>>>>>> origin/master
             //var_dump($order);exit;
-            //已支持
+            //支持上限
             if(!empty($order)){
-                $reMsg=[
-<<<<<<< HEAD
-                    'code'=>60004,
-                    'msg'=>config('msg')['order']['excess'],
-                    'data'=>''
-                ];
-                return json($reMsg);
+                $ordersnum=0;
+                foreach($order as $key=>$value){
+                    $ordersnum+=$value['ordersnum'];
+                }
+                if($ordersnum>=3){
+                    $reMsg=[
+                        'code'=>60005,
+                        'msg'=>config('msg')['order']['excess'],
+                        'data'=>''
+                    ];
+                    return json($reMsg);
+                }
             }
             $reMsg=[
-                'code'=>60005,
+                'code'=>60003,
                 'msg'=>config('msg')['order']['toOrder'],
                 'data'=>''
             ];
-            return json($reMsg);
-=======
-                    'code'=>60002,
-                    'msg'=>config('msg')['order']['orderFull'],
-                    'data'=>''
-                ];
-            }
-        /*$reMsg=[
-            'code'=>'xx',
-            'msg'=>'11',
-            'data'=>''
-        ];*/
->>>>>>> origin/master
+            //return json($reMsg);
         }
         return $reMsg;
         //return $this->fetch('{:url("home/order/addOrder"}');
@@ -77,6 +68,7 @@ class Order extends Auth
     //确认订单
     public function checkOrder(){
         $prodetailsid=input('get.prodetailsid');
+        $num=input('get.num');
         /*$condition=[
             'prodetailsid'=>$prodetailsid,
             'userid'=>$this->zc_user['userid']
@@ -93,9 +85,9 @@ class Order extends Auth
             'userid'=>$this->zc_user['userid'],
             //'isdefault'=>1
         ];
-<<<<<<< HEAD
+
         $order=db('orders')->where($condition)->find();
-=======
+
         $addList=db('address a')
             ->field('a.*,b.name province_name,c.name city_name,d.name county_name')
             ->join('zc_region b','a.province=b.id')
@@ -106,14 +98,14 @@ class Order extends Auth
             ->select();
             //->find();
         //var_dump($addList);exit;
+        $this->assign('num',$num);
         $this->assign('prodetails',$prodetails);
         $this->assign('addList',$addList);
->>>>>>> origin/master
         $this->assign('do',$this->do);
         return $this->fetch('addOrder');
     }
 
-<<<<<<< HEAD
+
     //删除订单
     public function orderDelete(){
         $orderId=input('?get.orderId')?input('orderId'):"";
@@ -137,31 +129,34 @@ class Order extends Auth
         return json($reMsg);
     }
     //取消订单
-    public function orderCancel(){
-        $orderId=input('?get.orderId')?input('orderId'):"";
-        $res=db('orders')
-            ->where('userid',$this->zc_user['userid'])
-            ->where('ordersid',$orderId)
-            ->update(['orderstate'=>'交易关闭']);
-        if($res>0){
-            $reMsg=[
-                'code'=>20003,
-                'msg'=>config('msg')['oper']['del'],
-                'data'=>''
+    public function orderCancel()
+    {
+        $orderId = input('?get.orderId') ? input('orderId') : "";
+        $res = db('orders')
+            ->where('userid', $this->zc_user['userid'])
+            ->where('ordersid', $orderId)
+            ->update(['orderstate' => '交易关闭']);
+        if ($res > 0) {
+            $reMsg = [
+                'code' => 20003,
+                'msg' => config('msg')['oper']['del'],
+                'data' => ''
             ];
-        }else{
-            $reMsg=[
-                'code'=>20004,
-                'msg'=>config('msg')['oper']['delFail'],
-                'data'=>''
+        } else {
+            $reMsg = [
+                'code' => 20004,
+                'msg' => config('msg')['oper']['delFail'],
+                'data' => ''
             ];
         }
         return json($reMsg);
-=======
+    }
+
     //提交订单
     public function addOrder(){
         $addressid=input('post.addressid');
         $prodetailsid=input('post.prodetailsid');
+        $num=input('post.num');
         $projectid=$this->getProjectid($prodetailsid);//项目id
         //var_dump($projectid);exit;
         $order=$this->getOrder($prodetailsid,$this->zc_user['userid']);
@@ -188,8 +183,8 @@ class Order extends Auth
             'userid'=>$this->zc_user['userid'],
             'prodetailsid'=>$prodetailsid,
             'addressid'=>$addressid,
-            'ordersprice'=>$data['price'],
-            'ordersnum'=>1,
+            'ordersprice'=>$data['price']*$num,
+            'ordersnum'=>$num,
             'orderstype'=>$data['projecttype'],
             'orderstime'=>date('Y-m-d H:i:s',time()),
             'orderstate'=>'未支付'
@@ -255,6 +250,16 @@ class Order extends Auth
             ->field('projectid')
             ->find();
         return $projectid['projectid'];
->>>>>>> origin/master
+    }
+
+    //更新支持人数
+    public function updateCurcount($projectid){
+        $curcount=db('orders a')
+            ->join('zc_prodetails b','a.prodetailsid=b.prodetailsid')
+            ->where('projectid',$projectid)
+            ->where('orderstate','<>','交易关闭')
+            ->field('count(ordersid) count')
+            ->find();
+        return $curcount;
     }
 }

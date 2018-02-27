@@ -31,16 +31,7 @@ class Auth extends  Controller
         }
     }
 
-    //更新支持人数
-    public function updateCurcount($projectid){
-        $curcount=db('orders a')
-            ->join('zc_prodetails b','a.prodetailsid=b.prodetailsid')
-            ->where('projectid',$projectid)
-            ->where('orderstate','<>','交易关闭')
-            ->field('count(ordersid) count')
-            ->find();
-        return $curcount;
-    }
+
 }
 
 
