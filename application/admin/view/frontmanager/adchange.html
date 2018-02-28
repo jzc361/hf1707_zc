@@ -242,7 +242,8 @@
         console.log($newdetails);
         if($endStr<$nowT){
             $check = confirm("若结束时间小于当前时间,该广告将会下架!!");
-            if($check){//确定发送数据更新数据库
+            //确定发送数据更新数据库
+            if($check){
                 $.ajax({
                     url:"{:url('admin/backmanager/updata')}",
                     data:{

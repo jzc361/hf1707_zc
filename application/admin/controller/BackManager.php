@@ -15,7 +15,7 @@ class Backmanager extends Controller
 
     //查询所有角色
     public function allRole(){
-        $allRole = Db::name('emp')
+        $allRole = Db::name('role')
             ->alias('a')
             ->join('role b','a.roleid = b.roleid')
             ->select();
@@ -50,17 +50,31 @@ class Backmanager extends Controller
             $where = [
                 'roleid'=>$rid
             ];
-            //返回值
-            $data = db('role')->where($where)->delete();
+            $haveEmp = db('role')
+                ->alias('a')
+                ->join('emp b','a.roleid = b.roleid')
+                ->where('a.roleid',$rid)
+                ->select();
+            if(count($haveEmp)==0){
+                $data = db('role')->where($where)->delete();
 
-            if($data!=0){//删除成功
+                if($data!=0){//删除成功
+                    $res = [
+                        'code'=>20003,
+                        'msg'=>config('msg')['oper']['del'],
+                        'data'=>''
+                    ];
+                }
+                return json($res);
+            }else{
                 $res = [
-                    'code'=>20003,
-                    'msg'=>config('msg')['oper']['del'],
-                    'data'=>''
+                    'code'=>20004,
+                    'msg'=>config('msg')['oper']['delFail'],
+                    'data'=>'该角色分组又员工无法删除'
                 ];
+                return $res;
             }
-            return json($res);
+
         }else{
             return json($res);
         }

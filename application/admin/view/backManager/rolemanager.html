@@ -465,7 +465,11 @@
                   dataType:'json',
                   success:function(res){
                       console.log(res);
-                      alert(res.msg);
+                      if(res.data!=""){
+                          alert(res.msg+':'+res.data);
+                      }else {
+                          alert(res.msg);
+                      }
                       window.location.reload();
                   }
               })

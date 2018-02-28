@@ -40,12 +40,12 @@
 
         <div style="display: inline-block;float: right;margin-right: 200px">
             <div id='setYear' style="width: 120px;float: left" class="layui-field-box">
-                <select>
-                    <option v-for="allyear in allyear" value="">{{allyear.year}}</option>
+                <select id="year">
+                    <option v-for="allyear in allyear" :value="allyear.year">{{allyear.year}}</option>
                 </select>
             </div>
             <div  id='zctype' style="width: 175px;float: left" class="layui-field-box">
-                <select>
+                <select id="type">
                     <option value="普通众筹">普通众筹</option>
                     <option value="限时众筹">限时众筹</option>
                 </select>
@@ -94,22 +94,6 @@
     var barChart = echarts.init(document.getElementById('barChart'));
     var pieChart = echarts.init(document.getElementById('pieChart'));
 
-    //初始化数据
-    //所有年份
-    $.ajax({
-        url:"{:url('admin/datamart/zcYeras')}" ,
-        data:"",
-        type:"post",
-        dataType:"json",
-        success:function(res){
-            var yearVue = new Vue({
-                el: "#setYear",
-                data: {
-                    'allyear': res.data
-                }
-            })
-        }
-    });
 
     // 使用刚指定的配置项和数据显示图表。
     //柱状图数据
@@ -151,16 +135,72 @@
             }
         ]};
 
+    //初始化数据
+    //所有年份
+    $.ajax({
+        url:"{:url('admin/datamart/zcYeras')}" ,
+        data:"",
+        type:"post",
+        dataType:"json",
+        success:function(res){
+            var yearVue = new Vue({
+                el: "#setYear",
+                data: {
+                    'allyear': res.data
+                },
+                //加载完成后
+                mounted: function() {
+                    //要查询的年份
+
+                    $("#year").change(function(){
+                        //查询某年的所有数据
+
+                        readyLoad(this.value,'普通众筹')
+
+                        console.log(readyLoad(this.value,'普通众筹'));
+                        $( document ).ajaxComplete(function( event, request, settings ) {
+                            //柱状图显示
+
+                            barChart.setOption(barData);
+
+                            //饼图显示
+                            pieChart.setOption(pieData);
+                        });
+                    });
+                    //获得要查询的类型
+                    $("#type").change(function(){
+
+                        console.log(this.value);
+
+                        readyLoad(2018,this.value);
+                        $( document ).ajaxComplete(function( event, request, settings ) {
+                            //柱状图显示
+                            barChart.setOption(barData);
+
+                            //饼图显示
+                            pieChart.setOption(pieData);
+                        });
+                    });
+                }
+            })
+        }
+    });
+
+
+
     //获取所有基础数据
-    function readyLoad(){
+    function readyLoad(year,type){
         $.ajax({
             url:"{:url('admin/datamart/getZcType')}" ,
-            data:"",
+            data:{
+                'year':year,
+                'type':type
+            },
             type:"post",
             dataType:"json",
             //async:false,
             success:function(res){
-
+                //对Echart数据重新绑定
                 if(res.code==20007){
                     $resData = res.data;
                     for(var $i = 0;$i<res.data.length;$i++){
@@ -168,25 +208,24 @@
                         barData.series[0].data[$i]=res.data[$i]['cun'];
                         pieData.series[0].data[$i] = {name:res.data[$i]['sortname'],value:res.data[$i]['cun']};
                     }
-                    console.log(res);
+                    //console.log(res);
                 }
             }
         });
     }
     //页面加载时获取一次数据
-    readyLoad();
-    $("#setYear").change(function(){
-
-    });
-
+    var nowtime = (new Date()).getFullYear();
+    var type = '普通众筹';
+    readyLoad(nowtime,type);
 
     //放置在ajax请求结束后执行的程序
-    $( document ).ajaxComplete(function( event, request, settings ) {
-        //柱状图显示
-        barChart.setOption(barData);
+        $( document ).ajaxComplete(function( event, request, settings ) {
+            //柱状图显示
+            barChart.setOption(barData);
 
-        //饼图显示
-        pieChart.setOption(pieData);
-    });
+            //饼图显示
+            pieChart.setOption(pieData);
+        });
+
 </script>
 </html>
